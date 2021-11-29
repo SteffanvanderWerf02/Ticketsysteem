@@ -56,6 +56,7 @@
                                             Login
                                         </button>
                                         <a href="./register.php" class="btn btn-primary mt-3 float-right">
+                                            <span class="material-icons align-middle">add</span>
                                             Registeren
                                         </a>
                                     </div>

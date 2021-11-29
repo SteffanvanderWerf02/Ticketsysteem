@@ -1,26 +1,67 @@
+:root {
+    --color: #707070;
+    --white-color: #fff;
+    --btn-bg--hover-color: #178036;
+    --btn-bg-color: #1c9941;
+}
+
 /* Utility */
 
 * {
     box-sizing: border-box;
 }
-
 body {
     margin: 0;
     padding: 0;
     font-family: 'Roboto', Arial, Helvetica, sans-serif;
     font-size: 16px;
+    color: var(--color);
 }
 
 textarea {
     font-family: 'Roboto', Arial, Helvetica, sans-serif;
     resize: none;
 }
+
 .pointer {
 cursor: pointer;
 }
 
 a {
     text-decoration: none;
+    color: var(--color);
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+input[type='radio']:after {
+    width: 12px;
+    height: 12px;
+    border-radius: 12px;
+    top: -1px;
+    left: -1px;
+    position: relative;
+    background-color: #fff;
+    content: '';
+    display: inline-block;
+    visibility: visible;
+    border: 2px solid var(--color);
+}
+
+input[type="radio"]:checked::after {
+    width: 12px;
+        height: 12px;
+        border-radius: 12px;
+        top: -1px;
+        left: -1px;
+        position: relative;
+        background-color: var(--btn-bg-color);
+        content: '';
+        display: inline-block;
+        visibility: visible;
+        border: 2px solid var(--btn-bg-color);
 }
 
 #content {
@@ -259,16 +300,17 @@ a {
     border-radius: 24px;;
     border: 1px solid transparent;
     cursor: pointer;
+    text-decoration: none;
 }
-
 .btn-primary {
-    background-color: #23c6ed;
+    background-color: var(--btn-bg-color);
     color: #fff;
 }
 
 .btn-primary:hover {
-    background-color: #22a9ca;
+    background-color: var(--btn-bg--hover-color);
     color: #fff;
+    text-decoration: none;
 }
 
 .card-form .card-body {

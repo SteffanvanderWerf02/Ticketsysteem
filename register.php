@@ -1,3 +1,48 @@
+<?php
+if (isset($_POST['register'])) {
+    if (isset($_POST['account']) && $acountType = filter_input(INPUT_POST, "account", FILTER_SANITIZE_NUMBER_INT)) {
+        if ($acountType === 1) {
+            if (isset($_POST['companyName']) && $companyName = filter_input(INPUT_POST, "companyName", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
+                if (isset($_POST['kvkNumber']) && $kvk = filter_input(INPUT_POST, "kvkNumber", FILTER_SANITIZE_NUMBER_INT)) {
+                } else {
+                    echo "U kvk nummer bevat letters inplaats van cijfers";
+                }
+            } else {
+                echo "De naam van u bedrijf bevat speciale tekens. Deze zijn niet toegestaan.";
+            }
+        }
+    }
+
+    if (isset($_POST['email']) && $email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL)) {
+        if (isset($_POST['username']) && $username = filter_input(INPUT_POST, "username", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
+            if (isset($_POST['password']) && $password = filter_input(INPUT_POST, "password", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
+                if (isset($_POST['postalcode']) && $postalcode = filter_input(INPUT_POST, "postalcode", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
+                    if (isset($_POST['city']) && $city = filter_input(INPUT_POST, "city", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
+                        if (isset($_POST['streetname']) && $streetname = filter_input(INPUT_POST, "streetname", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
+                            if (isset($_POST['housenumber']) && $housenumber = filter_input(INPUT_POST, "housenumber", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
+                            } else {
+                                echo "Uw huisnummer bevat speciale tekens die niet zijn toegestaan.";
+                            }
+                        } else {
+                            echo "Uw straatnaam bevat speciale tekens die niet zijn toegestaan.";
+                        }
+                    } else {
+                        echo "Uw woonplaats bevat speciale tekens die niet zijn toegestaan.";
+                    }
+                } else {
+                    echo "Uw postcode bevat speciale tekens die niet zijn toegestaan.";
+                }
+            } else {
+                echo "Uw wachtwoord bevat speciale tekens die niet zijn toegestaan.";
+            }
+        } else {
+            echo "Uw username bevat speciale tekens die niet zijn toegestaan.";
+        }
+    } else {
+        echo "Uw emailadres bevat speciale tekens die niet zijn toegestaan.";
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="nl" class="h-100">
 
@@ -18,7 +63,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,700&display=swap" rel="stylesheet">
-    <title>Bottom up - Inloggen</title>
+    <title>Bottom up - Register</title>
 </head>
 
 <body class="h-100 bg-front">
@@ -29,7 +74,7 @@
                     <div class="card">
                         <div class="card-body">
                             <form action="<?= $_SERVER['PHP_SELF'] ?>" method="POST">
-                                <div class="col-lg-12 text-center mt-3 mb-3 ">
+                                <div class="col-lg-12 text-center">
                                     <img src="./assets/img/logo/newLogo.svg" style="height:150px;" alt="logo">
                                 </div>
                                 <div class="row mb-2">
@@ -39,8 +84,38 @@
                                         </label>
                                     </div>
                                     <div class="col-lg-12">
-                                        <label><input type="radio" name="account" id="acount" checked>Particulier</label>
-                                        <label><input type="radio" name="account">Zakelijk</label>
+                                        <label><input type="radio" <?=(isset($acountType) && $acountType == 0) ? "checked" : "" ;?> name="account" onclick="switchForm(this);" value="0" id="acount">Particulier</label>
+                                        <label><input type="radio" <?=(isset($acountType) && $acountType == 1) ? "checked" : "" ;?> name="account" onclick="switchForm(this);" value="1" id="business">Zakelijk</label>
+                                    </div>
+                                </div>
+                                <div class="row mb-2 buisness <?=(isset($acountType) && $acountType == 0) ? "d-none" : "" ;?>">
+                                    <div class="col-lg-12">
+                                        <label for="companyName">
+                                            Bedrijfsnaam
+                                        </label>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <input class="form-control" type="text" name="companyName" id="companyName">
+                                    </div>
+                                </div>
+                                <div class="row mb-2 buisness <?=(isset($acountType) && $acountType == 0) ? "d-none" : "" ;?>">
+                                    <div class="col-lg-12">
+                                        <label for="kvkNumber">
+                                            Kvk nummer
+                                        </label>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <input class="form-control" type="number" name="kvkNumber" id="kvkNumber">
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-lg-12">
+                                        <label for="email">
+                                            E-mail
+                                        </label>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <input class="form-control" type="email" name="email" id="email">
                                     </div>
                                 </div>
                                 <div class="row mb-2">
@@ -60,7 +135,7 @@
                                         </label>
                                     </div>
                                     <div class="col-lg-12">
-                                        <input class="form-control" type="text" name="password" id="password">
+                                        <input class="form-control" type="password" name="password" id="password">
                                     </div>
                                 </div>
                                 <div class="row mb-2">
@@ -93,7 +168,7 @@
                                 </div>
                                 <div class="row mb-2 text-right">
                                     <div class="col-lg-12">
-                                        <input class="btn btn-primary" value="Registeren" type="text" name="register">
+                                        <input class="btn btn-primary" value="Registeren" type="submit" name="register">
                                     </div>
                                 </div>
                             </form>
@@ -103,6 +178,20 @@
             </div>
         </div>
     </div>
+    <script>
+        function switchForm(radio) {
+            let elements = document.getElementsByClassName('buisness');
+            if (radio.value == 0) {
+                for (let index = 0; index < elements.length; index++) {
+                    elements[index].classList.add('d-none');
+                }
+            } else {
+                for (let index = 0; index < elements.length; index++) {
+                    elements[index].classList.remove('d-none');
+                }
+            }
+        }
+    </script>
 </body>
 
 </html>
