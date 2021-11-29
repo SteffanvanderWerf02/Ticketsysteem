@@ -97,6 +97,25 @@ a {
     margin: 0;
 }
 
+.ml-0 {
+    margin-left: 0;
+}
+
+.ml-1 {
+    margin-left: .5rem;
+}
+
+.ml-2 {
+    margin-left: 1rem;
+}
+
+.ml-3 {
+    margin-left: 1.5rem;
+}
+
+.ml-4 {
+    margin-left: 2rem;
+}
 .mt-0 {
     margin-top: 0;
 }
@@ -228,8 +247,8 @@ a {
     line-height: 1.5;
     color: #495057;
     background-color: #fff;
-    border: 1px solid #ced4da;
-    border-radius: .25rem;
+    border: 1px solid #b2b6bb;
+    border-radius: 24px;
 }
 
 .btn {
@@ -237,7 +256,7 @@ a {
     padding: .375rem .75rem;
     font-size: 1rem;
     line-height: 1.5;
-    border-radius: .25rem;
+    border-radius: 24px;;
     border: 1px solid transparent;
     cursor: pointer;
 }
