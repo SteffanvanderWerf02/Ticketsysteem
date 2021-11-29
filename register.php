@@ -75,7 +75,7 @@ if (isset($_POST['register'])) {
                         <div class="card-body">
                             <form action="<?= $_SERVER['PHP_SELF'] ?>" method="POST">
                                 <div class="col-lg-12 text-center">
-                                    <img src="./assets/img/logo/newLogo.svg" style="height:150px;" alt="logo">
+                                    <a href="./index.php"><img src="./assets/img/logo/newLogo.svg" style="height:150px;" alt="logo"></a>
                                 </div>
                                 <div class="row mb-2">
                                     <div class="col-lg-12">
