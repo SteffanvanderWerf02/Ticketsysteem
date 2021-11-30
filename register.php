@@ -2,9 +2,11 @@
 include_once("connection.php");
 if (isset($_POST['register'])) {
     if (isset($_POST['account']) && $acountType = filter_input(INPUT_POST, "account", FILTER_SANITIZE_NUMBER_INT)) {
-        if ($acountType === 1) {
-            if (isset($_POST['companyName']) && $companyName = filter_input(INPUT_POST, "companyName", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
-                if (isset($_POST['kvkNumber']) && $kvk = filter_input(INPUT_POST, "kvkNumber", FILTER_SANITIZE_NUMBER_INT)) {
+        if ($acountType == 1) {
+            if (isset($_POST['companyName'])) {
+                $companyName = filter_input(INPUT_POST, "companyName", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                if (isset($_POST['kvkNumber'])) {
+                    $kvk = filter_input(INPUT_POST, "kvkNumber", FILTER_SANITIZE_NUMBER_INT);
                 } else {
                     echo "U kvk nummer bevat letters inplaats van cijfers";
                 }
@@ -25,25 +27,48 @@ if (isset($_POST['register'])) {
 
                                     // Password hash
                                     $hash_password = password_hash($password, PASSWORD_DEFAULT);
-                                    if ($acountType == 1) {
-                                        if ($stmt = mysqli_prepare($db, "
+
+                                    $stmt = mysqli_prepare($db, "
+                                        SELECT 1
+                                        FROM customer
+                                        WHERE name = ?
+                                    ") or die(mysqli_error($db));
+                                    mysqli_stmt_bind_param($stmt, "s", $username);
+                                    mysqli_stmt_execute($stmt) or die(mysqli_error($db));
+                                    mysqli_stmt_store_result($stmt) or die(mysqli_error($db));
+                                    if (mysqli_stmt_num_rows($stmt) == 0) {
+                                        mysqli_stmt_close($stmt);
+                                        $stmt = mysqli_prepare($db, "
                                             SELECT 1
-                                            FROM company
-                                            WHERE name = ?
-                                        ")) {
-                                            mysqli_stmt_bind_param($stmt, "s", $companyName);
-                                            if (mysqli_stmt_execute($stmt)) {
-                                                if (mysqli_stmt_num_rows($stmt) >= 1) {
+                                            FROM customer
+                                            WHERE email_adres = ?
+                                        ") or die(mysqli_error($db));
+                                        mysqli_stmt_bind_param($stmt, "s", $email);
+                                        mysqli_stmt_execute($stmt) or die(mysqli_error($db));
+                                        mysqli_stmt_store_result($stmt) or die(mysqli_error($db));
+
+                                        if (mysqli_stmt_num_rows($stmt) == 0) {
+                                            mysqli_stmt_close($stmt);
+                                            if ($acountType == 1) {
+                                                $stmt = mysqli_prepare($db, "
+                                                    SELECT 1
+                                                    FROM company
+                                                    WHERE name = ?
+                                                ") or die(mysqli_error($db));
+
+                                                mysqli_stmt_bind_param($stmt, "s", $companyName);
+                                                mysqli_stmt_execute($stmt) or die(mysqli_error($db));
+                                                mysqli_stmt_store_result($stmt);
+                                                if (mysqli_stmt_num_rows($stmt) == 0) {
                                                     mysqli_stmt_close($stmt);
                                                     // added company
-                                                    if ($stmt = mysqli_prepare($db, "
+                                                    $stmt = mysqli_prepare($db, "
                                                         INSERT
                                                         INTO company (
                                                             name,
                                                             postalcode,
                                                             house_number,
                                                             phone_number,
-                                                            email_adres,
                                                             status,
                                                             kvk
                                                         )
@@ -53,120 +78,97 @@ if (isset($_POST['register'])) {
                                                             ?,
                                                             ?,
                                                             ?,
-                                                            ?,
                                                             0,
                                                             ?
                                                         )
-                                                    ")) {
-                                                        mysqli_stmt_bind_param($stmt, "sssisiis", $companyName, $postalcode, $housenumber, $phonenumber, $email, $kvk);
-                                                        if (mysqli_stmt_execute($stmt)) {
-                                                            mysqli_stmt_close($stmt);
+                                                    ") or die(mysqli_error($db));
+                                                    mysqli_stmt_bind_param($stmt, "ssssi", $companyName, $postalcode, $housenumber, $phonenumber, $kvk);
+                                                    mysqli_stmt_execute($stmt) or die(mysqli_error($db));
+                                                    mysqli_stmt_store_result($stmt) or die(mysqli_error($db));
+                                                    mysqli_stmt_close($stmt);
 
-                                                            // added user
+                                                    // added user
+                                                    $companyStmt = mysqli_prepare($db, "
+                                                        SELECT id
+                                                        FROM company
+                                                        WHERE name = ?
+                                                    ") or die(mysqli_error($db));
+                                                    mysqli_stmt_bind_param($companyStmt, "s", $companyName);
+                                                    mysqli_stmt_execute($companyStmt) or die(mysqli_error($db));
+                                                    mysqli_stmt_bind_result($companyStmt, $companyId);
+                                                    mysqli_stmt_fetch($companyStmt) or die(mysqli_error($db));
+                                                    mysqli_stmt_close($companyStmt);
+                                                    $stmt = mysqli_prepare($db, "
+                                                        INSERT
+                                                        INTO customer (
+                                                            company_id,
+                                                            name,
+                                                            postalcode,
+                                                            house_number,
+                                                            phone_number,
+                                                            email_adres,
+                                                            hash_password,
+                                                            status
 
-
-                                                            if ($companyStmt = mysqli_prepare($db, "
-                                                                SELECT id
-                                                                FROM company
-                                                                WHERE name = ?
-                                                            ")) {
-                                                                mysqli_stmt_bind_param($companyStmt, "s", $companyName);
-                                                                if (mysqli_stmt_execute($companyStmt)) {
-                                                                    mysqli_stmt_bind_result($companyStmt, $companyId);
-                                                                    mysqli_stmt_store_result($companyStmt);
-                                                                    mysqli_stmt_close($companyStmt);
-                                                                    if ($stmt = mysqli_prepare($db, "
-                                                                        INSERT
-                                                                        INTO customer (
-                                                                            company_id,
-                                                                            name,
-                                                                            postalcode,
-                                                                            house_number,
-                                                                            phone_number,
-                                                                            email_adres,
-                                                                            hash_password,
-                                                                            status
-
-                                                                        )
-                                                                        VALUES 
-                                                                        (
-                                                                            ?,
-                                                                            ?,
-                                                                            ?,
-                                                                            ?,
-                                                                            ?,
-                                                                            ?,
-                                                                            ?,
-                                                                            0
-                                                                        )
-                                                                    ")) {
-                                                                        mysqli_stmt_bind_param($stmt, "issssssi", $companyId, $companyName, $postalcode, $housenumber, $phonenumber, $email, $hash_password);
-                                                                        if (mysqli_stmt_execute($stmt)) {
-                                                                            mysqli_stmt_close($stmt);
-                                                                            echo "Wanner je hier komt heb je een wereld wonder verricht voor de zakelijke account";
-                                                                        } else {
-                                                                            echo mysqli_error($db);
-                                                                        }
-                                                                    } else {
-                                                                        echo mysqli_error($db);
-                                                                    }
-                                                                } else {
-                                                                    echo mysqli_error($db);
-                                                                }
-                                                            } else {
-                                                                echo mysqli_error($db);
-                                                            }
-                                                        } else {
-                                                            echo mysqli_error($db);
-                                                        }
-                                                    } else {
-                                                        echo mysqli_error($db);
-                                                    }
+                                                        )
+                                                        VALUES 
+                                                        (
+                                                            ?,
+                                                            ?,
+                                                            ?,
+                                                            ?,
+                                                            ?,
+                                                            ?,
+                                                            ?,
+                                                            0
+                                                        )
+                                                    ") or die(mysqli_error($db));
+                                                    mysqli_stmt_bind_param($stmt, "issssss", $companyId, $companyName, $postalcode, $housenumber, $phonenumber, $email, $hash_password);
+                                                    mysqli_stmt_execute($stmt) or die(mysqli_error($db));
+                                                    mysqli_stmt_close($stmt);
+                                                    
+                                                    
+                                                    echo "U heeft een Zakelijk account aangemaakt deze word gecontroleerd";
                                                 } else {
-                                                    echo mysqli_error($db);
+                                                    echo "Dit bedrijf bestaat al";
                                                 }
                                             } else {
-                                                echo mysqli_error($db);
+                                                $stmt = mysqli_prepare($db, "
+                                                    INSERT
+                                                    INTO customer (
+                                                        company_id,
+                                                        name,
+                                                        postalcode,
+                                                        house_number,
+                                                        phone_number,
+                                                        email_adres,
+                                                        hash_password,
+                                                        status
+            
+                                                    )
+                                                    VALUES 
+                                                    (
+                                                        NULL,
+                                                        ?,
+                                                        ?,
+                                                        ?,
+                                                        ?,
+                                                        ?,
+                                                        ?,
+                                                        1
+                                                    )
+                                                ") or die(mysqli_error($db));
+                                                mysqli_stmt_bind_param($stmt, "ssssss", $username, $postalcode, $housenumber, $phonenumber, $email, $hash_password);
+                                                mysqli_stmt_execute($stmt) or die(mysqli_error($db));
+                                                mysqli_stmt_close($stmt);
+
+                                                echo "U heeft een particulier account aangemaakt. U kunt inloggen";
                                             }
                                         } else {
-                                            echo mysqli_error($db);
+                                            echo "Dit email adres bestaat al";
                                         }
                                     } else {
-                                        if ($stmt = mysqli_prepare($db, "
-                                        INSERT
-                                        INTO customer (
-                                            company_id,
-                                            name,
-                                            postalcode,
-                                            house_number,
-                                            phone_number,
-                                            email_adres,
-                                            hash_password,
-                                            status
-
-                                        )
-                                        VALUES 
-                                        (
-                                            NULL,
-                                            ?,
-                                            ?,
-                                            ?,
-                                            ?,
-                                            ?,
-                                            ?,
-                                            1
-                                        )
-                                    ")) {
-                                        mysqli_stmt_bind_param($stmt, "ssssss", $username, $postalcode, $housenumber, $phonenumber, $email, $hash_password);
-                                        if (mysqli_stmt_execute($stmt)) {
-                                            mysqli_stmt_close($stmt);
-                                            echo "Wanner je hier komt heb je een wereld wonder verricht voor de Particulier account";
-                                        } else {
-                                            echo mysqli_error($db);
-                                        }
-                                    } else {
-                                        echo mysqli_error($db);
-                                    } 
+                                        echo "Deze naam bestaat al";
                                     }
                                 } else {
                                     echo "Uw telefoonnummer bevat speciale tekens die niet zijn toegestaan.";

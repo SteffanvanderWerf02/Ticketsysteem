@@ -1,3 +1,34 @@
+<?php
+include_once("connection.php");
+
+if (isset($_POST['login'])) {
+    if (isset($_POST['username']) && $username = filter_input(INPUT_POST, "username", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
+        if (isset($_POST['password']) && $password = filter_input(INPUT_POST, "password", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
+            $stmt = mysqli_prepare($db, "
+                SELECT  name,
+                        hash_password
+                FROM customer
+                WHERE name = ?
+            ") or die(mysqli_error($db));
+            mysqli_stmt_bind_param($stmt, "s", $username);
+            mysqli_stmt_execute($stmt) or die(mysqli_error($db));
+            mysqli_stmt_bind_result($stmt, $username, $hash_password);
+            mysqli_stmt_fetch($stmt) or die(mysqli_error($db));
+            mysqli_stmt_close($stmt);
+            
+            if (password_verify($password,$hash_password)) {
+                echo "correct";
+            }else {
+                echo "De gebruikers naam of wachtwoord zijn niet correct";
+            }
+        } else {
+            echo "Uw wachtwoord is niet ingevuld";
+        }
+    } else {
+        echo "Uw gebruikersnaam is niet ingevuld";
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="nl" class="h-100">
 
@@ -22,13 +53,13 @@
 </head>
 
 <body class="h-100 bg-front">
-        <div class="container h-100">
+    <div class="container h-100">
         <div class="row h-100">
             <div class="col-lg-12 d-flex h-100">
                 <div class="login-container mx-auto">
                     <div class="card">
                         <div class="card-body">
-                            <form action="<?=$_SERVER['PHP_SELF']?>" method="POST">
+                            <form action="<?= $_SERVER['PHP_SELF'] ?>" method="POST">
                                 <div class="col-lg-12 text-center mt-3 mb-3 ">
                                     <img src="./assets/img/logo/newLogo.svg" style="height:150px;" alt="logo">
                                 </div>
@@ -39,7 +70,7 @@
                                         </label>
                                     </div>
                                     <div class="col-lg-12 mb-1">
-                                        <input id="login-email" type="text" placeholder="Gebruikersnaam"  name="username" class="form-control">
+                                        <input id="login-email" type="text" placeholder="Gebruikersnaam" name="username" class="form-control">
                                     </div>
                                     <div class="col-lg-12 mb-1">
                                         <label for="login-password">
@@ -47,7 +78,7 @@
                                         </label>
                                     </div>
                                     <div class="col-lg-12 mb-1">
-                                        <input id="login-password" type="password" placeholder="Wachtwoord"  name="password " class="form-control">
+                                        <input id="login-password" type="password" placeholder="Wachtwoord" name="password" class="form-control">
                                     </div>
                                     <div class="col-lg-12 mb-1">
                                         <a href="./forgot-password.php">Wachtwoord vergeten?</a>
