@@ -1,3 +1,34 @@
+<?php
+include_once("connection.php");
+
+if (isset($_POST['login'])) {
+    if (isset($_POST['username']) && $username = filter_input(INPUT_POST, "username", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
+        if (isset($_POST['password']) && $password = filter_input(INPUT_POST, "password", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
+            $stmt = mysqli_prepare($db, "
+                SELECT  name,
+                        hash_password
+                FROM customer
+                WHERE name = ?
+            ") or die(mysqli_error($db));
+            mysqli_stmt_bind_param($stmt, "s", $username);
+            mysqli_stmt_execute($stmt) or die(mysqli_error($db));
+            mysqli_stmt_bind_result($stmt, $username, $hash_password);
+            mysqli_stmt_fetch($stmt) or die(mysqli_error($db));
+            mysqli_stmt_close($stmt);
+            
+            if (password_verify($password,$hash_password)) {
+                echo "correct";
+            }else {
+                echo "De gebruikers naam of wachtwoord zijn niet correct";
+            }
+        } else {
+            echo "Uw wachtwoord is niet ingevuld";
+        }
+    } else {
+        echo "Uw gebruikersnaam is niet ingevuld";
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="nl" class="h-100">
 
@@ -15,47 +46,50 @@
     <link rel="shortcut icon" href="./assets/img/favicons/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="./assets/css/style.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,700&display=swap" rel="stylesheet">
     <title>Bottom up - Inloggen</title>
 </head>
 
 <body class="h-100 bg-front">
-        <div class="container h-100">
+    <div class="container h-100">
         <div class="row h-100">
             <div class="col-lg-12 d-flex h-100">
                 <div class="login-container mx-auto">
                     <div class="card">
                         <div class="card-body">
-                            <form action="<?=$_SERVER['PHP_SELF']?>" method="POST">
+                            <form action="<?= $_SERVER['PHP_SELF'] ?>" method="POST">
                                 <div class="col-lg-12 text-center mt-3 mb-3 ">
                                     <img src="./assets/img/logo/newLogo.svg" style="height:150px;" alt="logo">
                                 </div>
                                 <div class="row">
-                                    <div class="col-lg-12">
-                                        <label for="login-email" class="mb-1">
+                                    <div class="col-lg-12 mb-1">
+                                        <label for="login-email">
                                             Gebruikersnaam
                                         </label>
                                     </div>
-                                    <div class="col-lg-12">
-                                        <input id="login-email" type="text" placeholder="Gebruikersnaam"  name="username" class="form-control">
+                                    <div class="col-lg-12 mb-1">
+                                        <input id="login-email" type="text" placeholder="Gebruikersnaam" name="username" class="form-control">
                                     </div>
-                                    <div class="col-lg-12">
-                                        <label for="login-password" class="mb-1">
+                                    <div class="col-lg-12 mb-1">
+                                        <label for="login-password">
                                             Wachtwoord
                                         </label>
                                     </div>
-                                    <div class="col-lg-12">
-                                        <input id="login-password" type="password" placeholder="Wachtwoord"  name="password " class="form-control">
+                                    <div class="col-lg-12 mb-1">
+                                        <input id="login-password" type="password" placeholder="Wachtwoord" name="password" class="form-control">
                                     </div>
-                                    <div class="col-lg-12">
+                                    <div class="col-lg-12 mb-1">
                                         <a href="./forgot-password.php">Wachtwoord vergeten?</a>
-                                        <a href="./register.php" class="btn btn-primary mt-3 float-right">
-                                            <span class="material-icons align-middle">lock</span>
-                                            Registeren
-                                        </a>
-                                        <button type="submit" name="login" class="btn btn-primary mt-3 float-right">
+                                        <button type="submit" name="login" class="btn btn-primary ml-2 mt-3 float-right">
                                             <span class="material-icons align-middle">lock</span>
                                             Login
                                         </button>
+                                        <a href="./register.php" class="btn btn-primary mt-3 float-right">
+                                            <span class="material-icons align-middle">add</span>
+                                            Registeren
+                                        </a>
                                     </div>
                                 </div>
                             </form>
