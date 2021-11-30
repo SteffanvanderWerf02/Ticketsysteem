@@ -1,4 +1,5 @@
 <?php
+include_once("connection.php");
 if (isset($_POST['register'])) {
     if (isset($_POST['account']) && $acountType = filter_input(INPUT_POST, "account", FILTER_SANITIZE_NUMBER_INT)) {
         if ($acountType === 1) {
@@ -21,6 +22,9 @@ if (isset($_POST['register'])) {
                         if (isset($_POST['streetname']) && $streetname = filter_input(INPUT_POST, "streetname", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
                             if (isset($_POST['housenumber']) && $housenumber = filter_input(INPUT_POST, "housenumber", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
                                 if (isset($_POST['phonenumber']) && $phonenumber = filter_input(INPUT_POST, "phonenumber", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
+
+                                    // Password hash
+                                    $hash_password = password_hash($password, PASSWORD_DEFAULT);
                                     if ($acountType == 1) {
                                         if ($stmt = mysqli_prepare($db, "
                                             SELECT 1
@@ -38,8 +42,8 @@ if (isset($_POST['register'])) {
                                                             name,
                                                             postalcode,
                                                             house_number,
-                                                            phone_number
-                                                            email_adres
+                                                            phone_number,
+                                                            email_adres,
                                                             status,
                                                             kvk
                                                         )
@@ -50,11 +54,11 @@ if (isset($_POST['register'])) {
                                                             ?,
                                                             ?,
                                                             ?,
-                                                            ?,
+                                                            0,
                                                             ?
                                                         )
                                                     ")) {
-                                                        mysqli_stmt_bind_param($stmt, "sssisiis", $companyName, $postalcode, $housenumber, $phonenumber, $email, 0, $kvk);
+                                                        mysqli_stmt_bind_param($stmt, "sssisiis", $companyName, $postalcode, $housenumber, $phonenumber, $email, $kvk);
                                                         if (mysqli_stmt_execute($stmt)) {
                                                             mysqli_stmt_close($stmt);
 
@@ -74,11 +78,11 @@ if (isset($_POST['register'])) {
                                                                     if ($stmt = mysqli_prepare($db, "
                                                                         INSERT
                                                                         INTO customer (
-                                                                            company_id
+                                                                            company_id,
                                                                             name,
                                                                             postalcode,
                                                                             house_number,
-                                                                            phone_number
+                                                                            phone_number,
                                                                             email_adres,
                                                                             hash_password,
                                                                             status
@@ -93,12 +97,13 @@ if (isset($_POST['register'])) {
                                                                             ?,
                                                                             ?,
                                                                             ?,
-                                                                            ?
+                                                                            0
                                                                         )
                                                                     ")) {
-                                                                        mysqli_stmt_bind_param($stmt, "issssssi", $companyId, $companyName, $postalcode, $housenumber, $phonenumber, $email, $hash_password, 0);
+                                                                        mysqli_stmt_bind_param($stmt, "issssssi", $companyId, $companyName, $postalcode, $housenumber, $phonenumber, $email, $hash_password);
                                                                         if (mysqli_stmt_execute($stmt)) {
                                                                             mysqli_stmt_close($stmt);
+                                                                            echo "Wanner je hier komt heb je een wereld wonder verricht voor de zakelijke account";
                                                                         } else {
                                                                             echo mysqli_error($db);
                                                                         }
@@ -127,7 +132,41 @@ if (isset($_POST['register'])) {
                                             echo mysqli_error($db);
                                         }
                                     } else {
-                                        // code voor particulier
+                                        if ($stmt = mysqli_prepare($db, "
+                                        INSERT
+                                        INTO customer (
+                                            company_id,
+                                            name,
+                                            postalcode,
+                                            house_number,
+                                            phone_number,
+                                            email_adres,
+                                            hash_password,
+                                            status
+
+                                        )
+                                        VALUES 
+                                        (
+                                            NULL,
+                                            ?,
+                                            ?,
+                                            ?,
+                                            ?,
+                                            ?,
+                                            ?,
+                                            1
+                                        )
+                                    ")) {
+                                        mysqli_stmt_bind_param($stmt, "ssssss", $username, $postalcode, $housenumber, $phonenumber, $email, $hash_password);
+                                        if (mysqli_stmt_execute($stmt)) {
+                                            mysqli_stmt_close($stmt);
+                                            echo "Wanner je hier komt heb je een wereld wonder verricht voor de Particulier account";
+                                        } else {
+                                            echo mysqli_error($db);
+                                        }
+                                    } else {
+                                        echo mysqli_error($db);
+                                    } 
                                     }
                                 } else {
                                     echo "Uw telefoonnummer bevat speciale tekens die niet zijn toegestaan.";
@@ -196,11 +235,11 @@ if (isset($_POST['register'])) {
                                         </label>
                                     </div>
                                     <div class="col-lg-12">
-                                        <label><input type="radio" <?=(isset($acountType) && $acountType == 0 ) ? "checked" : "" ;?> checked name="account" onclick="switchForm(this);" value="0" id="acount">Particulier</label>
-                                        <label><input type="radio" <?=(isset($acountType) && $acountType == 1) ? "checked" : "" ;?> name="account" onclick="switchForm(this);" value="1" id="business">Zakelijk</label>
+                                        <label><input type="radio" <?= (isset($acountType) && $acountType == 0) ? "checked" : ""; ?> checked name="account" onclick="switchForm(this);" value="0" id="acount">Particulier</label>
+                                        <label><input type="radio" <?= (isset($acountType) && $acountType == 1) ? "checked" : ""; ?> name="account" onclick="switchForm(this);" value="1" id="business">Zakelijk</label>
                                     </div>
                                 </div>
-                                <div class="row mb-2 buisness <?=(!isset($acountType)) ? "d-none" : "" ;?> <?=(isset($acountType) && $acountType == 0) ? "d-none" : "" ;?>">
+                                <div class="row mb-2 buisness <?= (!isset($acountType)) ? "d-none" : ""; ?> <?= (isset($acountType) && $acountType == 0) ? "d-none" : ""; ?>">
                                     <div class="col-lg-12">
                                         <label for="companyName">
                                             Bedrijfsnaam
@@ -210,7 +249,7 @@ if (isset($_POST['register'])) {
                                         <input class="form-control" type="text" name="companyName" id="companyName">
                                     </div>
                                 </div>
-                                <div class="row mb-2 buisness <?=(!isset($acountType)) ? "d-none" : "" ;?>  <?=(isset($acountType) && $acountType == 0) ? "d-none" : "" ;?>">
+                                <div class="row mb-2 buisness <?= (!isset($acountType)) ? "d-none" : ""; ?>  <?= (isset($acountType) && $acountType == 0) ? "d-none" : ""; ?>">
                                     <div class="col-lg-12">
                                         <label for="kvkNumber">
                                             Kvk nummer
@@ -248,6 +287,16 @@ if (isset($_POST['register'])) {
                                     </div>
                                     <div class="col-lg-12">
                                         <input class="form-control" type="password" name="password" id="password">
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-lg-12">
+                                        <label for="phonenumber">
+                                            Telefoon nummer
+                                        </label>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <input class="form-control" type="number" name="phonenumber" id="phonenumber">
                                     </div>
                                 </div>
                                 <div class="row mb-2">
