@@ -84,11 +84,11 @@ if (isset($_POST['register'])) {
                                         </label>
                                     </div>
                                     <div class="col-lg-12">
-                                        <label><input type="radio" <?=(isset($acountType) && $acountType == 0) ? "checked" : "" ;?> name="account" onclick="switchForm(this);" value="0" id="acount">Particulier</label>
+                                        <label><input type="radio" <?=(isset($acountType) && $acountType == 0 ) ? "checked" : "" ;?> checked name="account" onclick="switchForm(this);" value="0" id="acount">Particulier</label>
                                         <label><input type="radio" <?=(isset($acountType) && $acountType == 1) ? "checked" : "" ;?> name="account" onclick="switchForm(this);" value="1" id="business">Zakelijk</label>
                                     </div>
                                 </div>
-                                <div class="row mb-2 buisness <?=(isset($acountType) && $acountType == 0) ? "d-none" : "" ;?>">
+                                <div class="row mb-2 buisness <?=(!isset($acountType)) ? "d-none" : "" ;?> <?=(isset($acountType) && $acountType == 0) ? "d-none" : "" ;?>">
                                     <div class="col-lg-12">
                                         <label for="companyName">
                                             Bedrijfsnaam
@@ -98,7 +98,7 @@ if (isset($_POST['register'])) {
                                         <input class="form-control" type="text" name="companyName" id="companyName">
                                     </div>
                                 </div>
-                                <div class="row mb-2 buisness <?=(isset($acountType) && $acountType == 0) ? "d-none" : "" ;?>">
+                                <div class="row mb-2 buisness <?=(!isset($acountType)) ? "d-none" : "" ;?>  <?=(isset($acountType) && $acountType == 0) ? "d-none" : "" ;?>">
                                     <div class="col-lg-12">
                                         <label for="kvkNumber">
                                             Kvk nummer
