@@ -1,30 +1,90 @@
 <?php
 include_once("connection.php");
-
+// session_destroy();
 if (isset($_POST['login'])) {
 
     if (isset($_POST['username']) && $username = filter_input(INPUT_POST, "username", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
         if (isset($_POST['password']) && $password = filter_input(INPUT_POST, "password", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
             $stmt = mysqli_prepare($db, "
-                SELECT  name,
-                        hash_password
+                SELECT  customer_id,
+                        name,
+                        company_id,
+                        hash_password,
+                        status
                 FROM customer
                 WHERE name = ?
             ") or die(mysqli_error($db));
             mysqli_stmt_bind_param($stmt, "s", $username);
             mysqli_stmt_execute($stmt) or die(mysqli_error($db));
             mysqli_stmt_store_result($stmt) or die(mysqli_error($db));
-            mysqli_stmt_bind_result($stmt, $username, $hash_password);
+            mysqli_stmt_bind_result($stmt, $customerId, $username, $companyId, $hash_password, $status);
             mysqli_stmt_fetch($stmt);
             if (mysqli_stmt_num_rows($stmt) > 0) {
                 mysqli_stmt_close($stmt);
                 if (password_verify($password, $hash_password)) {
-                    echo "correct";
+                    if ($companyId == NULL) {
+                        $_SESSION["loggedIn"] = true;
+                        $_SESSION["customerId"] = $customerId;
+                        $_SESSION["accountType"] = 0; // 0 = Particulier account                        
+                    } else if ($companyId == 1) {
+                        $stmt = mysqli_prepare($db, "
+                            SELECT  customer.status
+                            FROM customer
+                            WHERE customer_id = ?
+                        ") or die(mysqli_error($db));
+                        mysqli_stmt_bind_param($stmt, "i", $customerId);
+                        mysqli_stmt_execute($stmt) or die(mysqli_error($db));
+                        mysqli_stmt_store_result($stmt) or die(mysqli_error($db));
+                        mysqli_stmt_bind_result($stmt, $customerStatus);
+                        mysqli_stmt_fetch($stmt);
+                        if (mysqli_stmt_num_rows($stmt) > 0) {
+                            if ($customerStatus == 1) {
+                                mysqli_stmt_close($stmt);
+                                $_SESSION["loggedIn"] = true;
+                                $_SESSION["customerId"] = $customerId;
+                                $_SESSION["accountType"] = 2; // 2 = Bottom up user
+                                $_SESSION["companyId"] = $companyId;
+
+                                header("Location: ./pages/home.php");
+                            } else {
+                                echo "De gebruikers naam of wachtwoord zijn niet correct of u account is nog niet actief";
+                            }
+                        }
+                    } else {
+                        $stmt = mysqli_prepare($db, "
+                            SELECT  customer.status,
+                                    company.status
+                            FROM customer
+                            INNER JOIN company
+                            ON company.id = customer.company_id
+                            WHERE customer.customer_id = ?
+                        ") or die(mysqli_error($db));
+                        mysqli_stmt_bind_param($stmt, "i", $customerId);
+                        mysqli_stmt_execute($stmt) or die(mysqli_error($db));
+                        mysqli_stmt_store_result($stmt) or die(mysqli_error($db));
+                        mysqli_stmt_bind_result($stmt, $customerStatus, $companyStatus);
+                        mysqli_stmt_fetch($stmt);
+                        if (mysqli_stmt_num_rows($stmt) > 0) {
+                            if ($customerStatus == 1 && $companyStatus == 1) {
+                                mysqli_stmt_close($stmt);
+                                $_SESSION["loggedIn"] = true;
+                                $_SESSION["customerId"] = $customerId;
+                                $_SESSION["accountType"] = 1; // 1 = Zakelijk account type
+                                $_SESSION["companyId"] = $companyId;
+
+                                header("Location: ./pages/home.php");
+                            } else {
+                                echo "De gebruikers naam of wachtwoord zijn niet correct of u account is nog niet actief";
+                            }
+                        } else {
+                            echo "De gebruikers naam of wachtwoord zijn niet correct of u account is nog niet actief";
+                        }
+                    }
                 } else {
-                    echo "De gebruikers naam of wachtwoord zijn niet correct";
+                    echo "De gebruikers naam of wachtwoord zijn niet correct of u account is nog niet actief";
                 }
             } else {
-                echo "De gebruikers naam of wachtwoord zijn niet correct";
+                echo "De gebruikers naam of wachtwoord zijn niet correct of u account is nog niet actief";
             }
         } else {
             echo "Uw wachtwoord is niet ingevuld";
