@@ -54,7 +54,7 @@ if (isset($_POST['login'])) {
                         $stmt = mysqli_prepare($db, "
                             SELECT  customer.status,
                                     company.status
-                            FROM customer
+                            FROM    customer
                             INNER JOIN company
                             ON company.id = customer.company_id
                             WHERE customer.customer_id = ?

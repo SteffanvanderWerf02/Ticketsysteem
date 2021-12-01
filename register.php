@@ -64,7 +64,8 @@ if (isset($_POST['register'])) {
                                                     // added company
                                                     $stmt = mysqli_prepare($db, "
                                                         INSERT
-                                                        INTO company (
+                                                        INTO company 
+                                                        (
                                                             name,
                                                             postalcode,
                                                             house_number,
