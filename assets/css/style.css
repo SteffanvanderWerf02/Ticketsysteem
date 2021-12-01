@@ -458,13 +458,35 @@ a {
 
 /* handmatige css */
 
-.square {
-  height: 140px;
-  border-radius: 0.75rem;
-  border: 1px solid black;
+.test {
+  height: 50%;
+  background-color: black;
 }
 
-.align-row {
+.red {
+  background-color: red;
+  position: absolute;
+  height: 50%;
+  width: 930px;
+}
+
+.square {
+  height: 150px;
+  border-radius: 0.75rem;
+  text-align: center;
+  max-width: 175px;
+}
+
+.square:hover {
+  background-color: rgba(0, 0, 0, 0.125);
+}
+
+a.fill-div {
   display: flex;
   align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  text-decoration: none;
+  color: black;
 }
