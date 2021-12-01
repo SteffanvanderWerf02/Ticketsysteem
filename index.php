@@ -13,9 +13,9 @@ if (isset($_POST['login'])) {
             ") or die(mysqli_error($db));
             mysqli_stmt_bind_param($stmt, "s", $username);
             mysqli_stmt_execute($stmt) or die(mysqli_error($db));
+            mysqli_stmt_store_result($stmt) or die(mysqli_error($db));
             mysqli_stmt_bind_result($stmt, $username, $hash_password);
             mysqli_stmt_fetch($stmt);
-
             if (mysqli_stmt_num_rows($stmt) > 0) {
                 mysqli_stmt_close($stmt);
                 if (password_verify($password, $hash_password)) {
