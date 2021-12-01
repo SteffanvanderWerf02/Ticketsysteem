@@ -2,6 +2,7 @@
 include_once("connection.php");
 
 if (isset($_POST['login'])) {
+
     if (isset($_POST['username']) && $username = filter_input(INPUT_POST, "username", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
         if (isset($_POST['password']) && $password = filter_input(INPUT_POST, "password", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
             $stmt = mysqli_prepare($db, "
@@ -13,12 +14,16 @@ if (isset($_POST['login'])) {
             mysqli_stmt_bind_param($stmt, "s", $username);
             mysqli_stmt_execute($stmt) or die(mysqli_error($db));
             mysqli_stmt_bind_result($stmt, $username, $hash_password);
-            mysqli_stmt_fetch($stmt) or die(mysqli_error($db));
-            mysqli_stmt_close($stmt);
-            
-            if (password_verify($password,$hash_password)) {
-                echo "correct";
-            }else {
+            mysqli_stmt_fetch($stmt);
+
+            if (mysqli_stmt_num_rows($stmt) > 0) {
+                mysqli_stmt_close($stmt);
+                if (password_verify($password, $hash_password)) {
+                    echo "correct";
+                } else {
+                    echo "De gebruikers naam of wachtwoord zijn niet correct";
+                }
+            } else {
                 echo "De gebruikers naam of wachtwoord zijn niet correct";
             }
         } else {
