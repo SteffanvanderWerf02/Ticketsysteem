@@ -8,9 +8,32 @@
 <body>
     <div class="container">
         <div class="row">
-            <div class=".col-lg-12">hello</div>
+            <div class="col-lg-3">
+                <div class="row">
+                    <div class="col-lg-6 square"></div>
+                    <div class="col-lg-6"></div>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="row">
+                    <div class="col-lg-6 square"></div>
+                    <div class="col-lg-6"></div>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="row">
+                    <div class="col-lg-6 square"></div>
+                    <div class="col-lg-6"></div>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="row">
+                    <div class="col-lg-6 square"></div>
+                    <div class="col-lg-6"></div>
+                </div>
+            </div>
         </div>
-            
+        
 
     </div>
 </body>
