@@ -304,15 +304,21 @@ input[type="radio"]:checked::after {
     cursor: pointer;
     text-decoration: none;
 }
-
+.btn-clear {
+    background-color: transparent;
+    color: var(--white-color);
+}
+.btn-clear:hover {
+    text-decoration: underline;
+}
 .btn-primary {
     background-color: var(--btn-bg-color);
-    color: #fff;
+    color: var(--white-color);
 }
 
 .btn-primary:hover {
     background-color: var(--btn-bg--hover-color);
-    color: #fff;
+    color: var(--white-color);
     text-decoration: none;
 }
 
@@ -343,19 +349,26 @@ header {
     background-color: var(--btn-bg-color);
 }
 
-header img{
+header img {
     height: 100px;
 }
 
-header li{
+header .nav {
     display: flex;
-
+    justify-content: space-around;
     list-style: none;
 }
 
-header li a{
+header .nav a{
     color: white;
 }
+
+header .nav span.material-icons{
+    color: var(--white-color);
+    font-size: 2rem;
+
+}
+
 
 /* Login / Register page */
 
