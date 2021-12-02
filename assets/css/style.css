@@ -531,4 +531,26 @@ input[type="radio"]:checked::after {
 .green_stroke{
     background-color: var(--btn-bg-color);
     
+    
+}
+.green_stroke ul{
+    color: var(--white-color);
+    list-style: none;
+    text-align: center;
+    margin: 0;
+   
+}
+
+.green_stroke li{
+    display: inline;
+}
+
+.footerlogo img{
+    margin-left: 20px;
+}
+
+
+.social_media_links li{
+    margin: 20px;
+    
 }
