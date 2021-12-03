@@ -30,7 +30,7 @@ if (isset($_POST['register'])) {
 
                                     $stmt = mysqli_prepare($db, "
                                         SELECT 1
-                                        FROM customer
+                                        FROM user
                                         WHERE name = ?
                                     ") or die(mysqli_error($db));
                                     mysqli_stmt_bind_param($stmt, "s", $username);
@@ -40,7 +40,7 @@ if (isset($_POST['register'])) {
                                         mysqli_stmt_close($stmt);
                                         $stmt = mysqli_prepare($db, "
                                             SELECT 1
-                                            FROM customer
+                                            FROM user
                                             WHERE email_adres = ?
                                         ") or die(mysqli_error($db));
                                         mysqli_stmt_bind_param($stmt, "s", $email);
@@ -101,7 +101,7 @@ if (isset($_POST['register'])) {
                                                     mysqli_stmt_close($companyStmt);
                                                     $stmt = mysqli_prepare($db, "
                                                         INSERT
-                                                        INTO customer (
+                                                        INTO user (
                                                             company_id,
                                                             name,
                                                             postalcode,
@@ -136,7 +136,7 @@ if (isset($_POST['register'])) {
                                             } else {
                                                 $stmt = mysqli_prepare($db, "
                                                     INSERT
-                                                    INTO customer (
+                                                    INTO user (
                                                         company_id,
                                                         name,
                                                         postalcode,
