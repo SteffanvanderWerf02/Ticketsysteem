@@ -8,7 +8,7 @@ include_once("../connection.php");
     <title>Bottom up - voorpagina</title>
 </head>
 <body>
-    <!-- Footer include -->
+    <!--Header include -->
     <?php include_once("../components/header.html")?>
     <?php
     echo var_dump($_SESSION);

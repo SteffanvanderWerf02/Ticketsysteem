@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" class="h-100">
 <head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="assets/css/style.css">
+    <?php include_once("../components/head.html")?>
+    <title>Bottom up - voorpagina</title>
     <title>Overzicht</title>
 </head>
 <body class="h-100">
+    <!--Header include -->
+    <?php include_once("../components/header.html")?>
     <div class="container h-100">
         <div class="row h-100">
             <div class="col-lg-3 my-auto">
@@ -30,5 +32,7 @@
             </div>
         </div>
     </div>
+    <!-- Footer include -->
+    <?php include_once("../components/footer.html")?>
 </body>
 </html>
