@@ -80,7 +80,7 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
-
+.idea
 .idea/
 # PHP database connectie file
 connection.php
