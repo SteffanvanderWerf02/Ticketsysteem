@@ -6,33 +6,33 @@ if (isset($_POST['login'])) {
     if (isset($_POST['username']) && $username = filter_input(INPUT_POST, "username", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
         if (isset($_POST['password']) && $password = filter_input(INPUT_POST, "password", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
             $stmt = mysqli_prepare($db, "
-                SELECT  customer_id,
+                SELECT  user_id,
                         name,
                         company_id,
                         hash_password,
                         status
-                FROM customer
+                FROM    user
                 WHERE name = ?
             ") or die(mysqli_error($db));
             mysqli_stmt_bind_param($stmt, "s", $username);
             mysqli_stmt_execute($stmt) or die(mysqli_error($db));
             mysqli_stmt_store_result($stmt) or die(mysqli_error($db));
-            mysqli_stmt_bind_result($stmt, $customerId, $username, $companyId, $hash_password, $status);
+            mysqli_stmt_bind_result($stmt, $userId, $username, $companyId, $hash_password, $status);
             mysqli_stmt_fetch($stmt);
             if (mysqli_stmt_num_rows($stmt) > 0) {
                 mysqli_stmt_close($stmt);
                 if (password_verify($password, $hash_password)) {
                     if ($companyId == NULL) {
                         $_SESSION["loggedIn"] = true;
-                        $_SESSION["customerId"] = $customerId;
+                        $_SESSION["userId"] = $userId;
                         $_SESSION["accountType"] = 0; // 0 = Particulier account                        
                     } else if ($companyId == 1) {
                         $stmt = mysqli_prepare($db, "
-                            SELECT  customer.status
-                            FROM customer
-                            WHERE customer_id = ?
+                            SELECT  user.status
+                            FROM user
+                            WHERE user_id = ?
                         ") or die(mysqli_error($db));
-                        mysqli_stmt_bind_param($stmt, "i", $customerId);
+                        mysqli_stmt_bind_param($stmt, "i", $userId);
                         mysqli_stmt_execute($stmt) or die(mysqli_error($db));
                         mysqli_stmt_store_result($stmt) or die(mysqli_error($db));
                         mysqli_stmt_bind_result($stmt, $customerStatus);
@@ -41,7 +41,7 @@ if (isset($_POST['login'])) {
                             if ($customerStatus == 1) {
                                 mysqli_stmt_close($stmt);
                                 $_SESSION["loggedIn"] = true;
-                                $_SESSION["customerId"] = $customerId;
+                                $_SESSION["userId"] = $userId;
                                 $_SESSION["accountType"] = 2; // 2 = Bottom up user
                                 $_SESSION["companyId"] = $companyId;
 
@@ -52,14 +52,14 @@ if (isset($_POST['login'])) {
                         }
                     } else {
                         $stmt = mysqli_prepare($db, "
-                            SELECT  customer.status,
+                            SELECT  user.status,
                                     company.status
-                            FROM    customer
+                            FROM    user
                             INNER JOIN company
-                            ON company.id = customer.company_id
-                            WHERE customer.customer_id = ?
+                            ON company.id = user.company_id
+                            WHERE user.user_id = ?
                         ") or die(mysqli_error($db));
-                        mysqli_stmt_bind_param($stmt, "i", $customerId);
+                        mysqli_stmt_bind_param($stmt, "i", $userId);
                         mysqli_stmt_execute($stmt) or die(mysqli_error($db));
                         mysqli_stmt_store_result($stmt) or die(mysqli_error($db));
                         mysqli_stmt_bind_result($stmt, $customerStatus, $companyStatus);
@@ -68,7 +68,7 @@ if (isset($_POST['login'])) {
                             if ($customerStatus == 1 && $companyStatus == 1) {
                                 mysqli_stmt_close($stmt);
                                 $_SESSION["loggedIn"] = true;
-                                $_SESSION["customerId"] = $customerId;
+                                $_SESSION["userId"] = $userId;
                                 $_SESSION["accountType"] = 1; // 1 = Zakelijk account type
                                 $_SESSION["companyId"] = $companyId;
 
