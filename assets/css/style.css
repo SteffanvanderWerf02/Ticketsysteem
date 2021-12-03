@@ -8,7 +8,7 @@
 /* Utility */
 
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 body {
     margin: 0;
@@ -19,8 +19,8 @@ body {
 }
 
 textarea {
-    font-family: 'Roboto', Arial, Helvetica, sans-serif;
-    resize: none;
+  font-family: "Roboto", Arial, Helvetica, sans-serif;
+  resize: none;
 }
 
 .pointer {
@@ -65,23 +65,23 @@ input[type="radio"]:checked::after {
 }
 
 #content {
-    position: relative;
-    min-height: 100vh;
+  position: relative;
+  min-height: 100vh;
 }
 
 .container {
-    width: 100%;
-    padding-right: 15px;
-    padding-left: 15px;
-    margin-right: auto;
-    margin-left: auto;
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
 }
 
 .row {
-    display: flex;
-    flex-wrap: wrap;
-    margin-right: -15px;
-    margin-left: -15px;
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -15px;
+  margin-left: -15px;
 }
 
 .col-lg-12,
@@ -120,22 +120,22 @@ input[type="radio"]:checked::after {
 .col-xxl-3,
 .col-xxl-2,
 .col-xxl-1 {
-    position: relative;
-    width: 100%;
-    padding-right: 15px;
-    padding-left: 15px;
+  position: relative;
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
 }
 
 .my-auto {
-    margin: auto 0;
+  margin: auto 0;
 }
 
 .mx-auto {
-    margin: 0 auto;
+  margin: 0 auto;
 }
 
 .m-0 {
-    margin: 0;
+  margin: 0;
 }
 
 .ml-0 {
@@ -158,126 +158,126 @@ input[type="radio"]:checked::after {
     margin-left: 2rem;
 }
 .mt-0 {
-    margin-top: 0;
+  margin-top: 0;
 }
 
 .mt-1 {
-    margin-top: .5rem;
+  margin-top: 0.5rem;
 }
 
 .mt-2 {
-    margin-top: 1rem;
+  margin-top: 1rem;
 }
 
 .mt-3 {
-    margin-top: 1.5rem;
+  margin-top: 1.5rem;
 }
 
 .mt-4 {
-    margin-top: 2rem;
+  margin-top: 2rem;
 }
 
 .mb-0 {
-    margin-bottom: .5rem;
+  margin-bottom: 0.5rem;
 }
 
 .mb-1 {
-    margin-bottom: .5rem;
+  margin-bottom: 0.5rem;
 }
 
 .mb-2 {
-    margin-bottom: 1rem;
+  margin-bottom: 1rem;
 }
 
 .mb-3 {
-    margin-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .mb-4 {
-    margin-bottom: 2rem;
+  margin-bottom: 2rem;
 }
 
 .float-left {
-    float: left;
+  float: left;
 }
 
 .float-right {
-    float: right;
+  float: right;
 }
 
 .text-center {
-    text-align: center;
+  text-align: center;
 }
 
 .text-left {
-    text-align: left;
+  text-align: left;
 }
 
 .text-right {
-    text-align: right;
+  text-align: right;
 }
 
 .justify-content-center {
-    justify-content: center;
+  justify-content: center;
 }
 
 .justify-content-right {
-    justify-content: flex-end;
+  justify-content: flex-end;
 }
 
 .align-middle {
-    vertical-align: middle;
+  vertical-align: middle;
 }
 
 .align-items-center {
-    align-items: center;
+  align-items: center;
 }
 
 .list-unstyled {
-    list-style: none;
-    padding-left: 0;
-    margin: 0;
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
 }
 
 .h-100 {
-    height: 100%;
+  height: 100%;
 }
 
 .w-50 {
-    width: 50%;
+  width: 50%;
 }
 
 .h-25 {
-    height: 25%;
+  height: 25%;
 }
 
 .d-flex {
-    display: flex;
+  display: flex;
 }
 .d-inline {
     display: inline;
 }
 .d-none {
-    display: none;
+  display: none;
 }
 
 .card {
-    position: relative;
-    display: flex;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    min-width: 0;
-    word-wrap: break-word;
-    background-color: #fff;
-    background-clip: border-box;
-    border: 1px solid rgba(0, 0, 0, .125);
-    border-radius: .25rem;
+  position: relative;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: #fff;
+  background-clip: border-box;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 0.25rem;
 }
 
 .card-body {
-    flex: 1 1 auto;
-    min-height: 1px;
-    padding: 1.25rem;
+  flex: 1 1 auto;
+  min-height: 1px;
+  padding: 1.25rem;
 }
 
 .form-control {
@@ -323,7 +323,7 @@ input[type="radio"]:checked::after {
 }
 
 .card-form .card-body {
-    flex: unset;
+  flex: unset;
 }
 
 .form-row {
@@ -331,16 +331,16 @@ input[type="radio"]:checked::after {
 }
 
 .full-link {
-    color: #0A54AB;
+  color: #0a54ab;
 }
 
 .full-link::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
 }
 
 /*header */
@@ -373,10 +373,10 @@ header .nav span.material-icons{
 /* Login / Register page */
 
 .bg-front {
-    background-image: url("../img/bg-login.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center center;
+  background-image: url("../img/bg-login.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
 }
 
 .login-container {
@@ -562,7 +562,6 @@ footer li{
         padding-left: 22px;
     }
 }
-
 
 /* XXl laptops and XXl monitors  */
 
