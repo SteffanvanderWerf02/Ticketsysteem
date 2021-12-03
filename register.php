@@ -1,5 +1,5 @@
 <?php
-include_once("connection.php");
+include_once("./connection.php");
 if (isset($_POST['register'])) {
     if (isset($_POST['account']) && $acountType = filter_input(INPUT_POST, "account", FILTER_SANITIZE_NUMBER_INT)) {
         if ($acountType == 1) {

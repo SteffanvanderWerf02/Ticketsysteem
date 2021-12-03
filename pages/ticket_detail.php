@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="utf-8">
-        <link rel="stylesheet" type="text/css" href="assets/css/style.css" />
+        <?php include_once("../components/head.html")?>
         <link rel="stylesheet" type="text/css" href="assets/css/ticket_detail.css" />
         <title>ticket detail</title>
     </head>
     <body>
+        <!-- Header include -->
+        <?php include_once("../components/header.html")?>
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
@@ -73,5 +74,7 @@
                 </div>
             </div>
         </div>
+        <!-- Footer include -->
+        <?php include_once("../components/footer.html")?>
     </body>
 </html>
