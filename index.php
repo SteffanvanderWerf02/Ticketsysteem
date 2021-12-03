@@ -19,13 +19,13 @@
 </head>
 
 <body class="h-100 bg-front">
-        <div class="container h-100">
+    <div class="container h-100">
         <div class="row h-100">
             <div class="col-lg-12 d-flex h-100">
                 <div class="login-container mx-auto">
                     <div class="card">
                         <div class="card-body">
-                            <form action="<?=$_SERVER['PHP_SELF']?>" method="POST">
+                            <form action="<?= $_SERVER['PHP_SELF'] ?>" method="POST">
                                 <div class="col-lg-12 text-center mt-3 mb-3 ">
                                     <img src="./assets/img/logo/newLogo.svg" style="height:150px;" alt="logo">
                                 </div>
@@ -36,7 +36,7 @@
                                         </label>
                                     </div>
                                     <div class="col-lg-12">
-                                        <input id="login-email" type="text" placeholder="Gebruikersnaam"  name="username" class="form-control">
+                                        <input id="login-email" type="text" placeholder="Gebruikersnaam" name="username" class="form-control">
                                     </div>
                                     <div class="col-lg-12">
                                         <label for="login-password" class="mb-1">
@@ -44,7 +44,7 @@
                                         </label>
                                     </div>
                                     <div class="col-lg-12">
-                                        <input id="login-password" type="password" placeholder="Wachtwoord"  name="password " class="form-control">
+                                        <input id="login-password" type="password" placeholder="Wachtwoord" name="password " class="form-control">
                                     </div>
                                     <div class="col-lg-12">
                                         <a href="./forgot-password.php">Wachtwoord vergeten?</a>
