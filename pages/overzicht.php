@@ -2,8 +2,7 @@
 <html lang="en" class="h-100">
 <head>
     <?php include_once("../components/head.html")?>
-    <title>Bottom up - voorpagina</title>
-    <title>Overzicht</title>
+    <title>Bottom up - Overzicht</title>
 </head>
 <body class="h-100">
     <!--Header include -->
