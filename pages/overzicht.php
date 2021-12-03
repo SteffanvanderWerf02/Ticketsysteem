@@ -1,3 +1,6 @@
+<?php
+include_once ("../connection.php")
+?>
 <!DOCTYPE html>
 <html lang="en" class="h-100">
 <head>
