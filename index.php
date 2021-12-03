@@ -1,6 +1,16 @@
 <?php
 include_once("./connection.php");
-// session_destroy();
+
+// Delete all session data when logout button is pressed
+if (isset($_POST['logout'])) {
+    session_destroy();
+    ?>
+    <div class="alert alert-success">
+            U bent succesvol uitgelogt.
+        </div>
+    <?php
+}
+
 if (isset($_POST['login'])) {
 
     if (isset($_POST['username']) && $username = filter_input(INPUT_POST, "username", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
@@ -56,7 +66,7 @@ if (isset($_POST['login'])) {
                                     company.status
                             FROM    user
                             INNER JOIN company
-                            ON company.id = user.company_id
+                            ON company.company_id = user.company_id
                             WHERE user.user_id = ?
                         ") or die(mysqli_error($db));
                         mysqli_stmt_bind_param($stmt, "i", $userId);

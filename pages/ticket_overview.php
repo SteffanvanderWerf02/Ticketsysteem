@@ -100,7 +100,7 @@
         </div>
     </div>
      <!-- Footer include -->
-     <?php include_once("../components/footer.html")?>
+     <?php include_once("../components/footer.php")?>
 </body>
 
 </html>

@@ -67,6 +67,7 @@ if (isset($_POST['register'])) {
                                                         INTO company 
                                                         (
                                                             name,
+                                                            email_adres,
                                                             postalcode,
                                                             house_number,
                                                             phone_number,
@@ -79,18 +80,19 @@ if (isset($_POST['register'])) {
                                                             ?,
                                                             ?,
                                                             ?,
+                                                            ?,
                                                             0,
                                                             ?
                                                         )
                                                     ") or die(mysqli_error($db));
-                                                    mysqli_stmt_bind_param($stmt, "ssssi", $companyName, $postalcode, $housenumber, $phonenumber, $kvk);
+                                                    mysqli_stmt_bind_param($stmt, "sssssi", $companyName, $email, $postalcode, $housenumber, $phonenumber, $kvk);
                                                     mysqli_stmt_execute($stmt) or die(mysqli_error($db));
                                                     mysqli_stmt_store_result($stmt) or die(mysqli_error($db));
                                                     mysqli_stmt_close($stmt);
 
                                                     // added user
                                                     $companyStmt = mysqli_prepare($db, "
-                                                        SELECT id
+                                                        SELECT company_id
                                                         FROM company
                                                         WHERE name = ?
                                                     ") or die(mysqli_error($db));

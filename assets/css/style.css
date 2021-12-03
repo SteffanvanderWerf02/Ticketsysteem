@@ -1,8 +1,13 @@
 :root {
     --color: #707070;
     --white-color: #fff;
-    --btn-bg--hover-color: #178036;
     --btn-bg-color: #1c9941;
+    --btn-bg-hover-color: #178036;
+    --btn-bg-denied-color: #dc3545;
+    --btn-bg-denied-hover-color: #c52c3b;
+    --red: #dc3545;
+    --green: #1c9941;
+    --alert-succes:#d4edda;
 }
 
 /* Utility */
@@ -22,7 +27,12 @@ textarea {
   font-family: "Roboto", Arial, Helvetica, sans-serif;
   resize: none;
 }
-
+.red {
+  color: var(--red);
+}
+.green{
+  color: var(--green);
+}
 .pointer {
     cursor: pointer;
 }
@@ -66,7 +76,7 @@ input[type="radio"]:checked::after {
 
 #content {
   position: relative;
-  min-height: 100vh;
+  min-height: 80vh;
 }
 
 .container {
@@ -206,15 +216,15 @@ input[type="radio"]:checked::after {
 }
 
 .text-center {
-  text-align: center;
+  text-align: center!important;
 }
 
 .text-left {
-  text-align: left;
+  text-align: left!important;
 }
 
 .text-right {
-  text-align: right;
+  text-align: right!important;
 }
 
 .justify-content-center {
@@ -311,13 +321,23 @@ input[type="radio"]:checked::after {
 .btn-clear:hover {
     text-decoration: underline;
 }
+.btn-denied {
+    background-color: var(--btn-bg-denied-color);
+    color: var(--white-color);
+}
+
+.btn-denied:hover {
+    background-color: var(--btn-bg-denied-hover-color);
+    color: var(--white-color);
+    text-decoration: none;
+}
 .btn-primary {
     background-color: var(--btn-bg-color);
     color: var(--white-color);
 }
 
 .btn-primary:hover {
-    background-color: var(--btn-bg--hover-color);
+    background-color: var(--btn-bg-hover-color);
     color: var(--white-color);
     text-decoration: none;
 }
@@ -343,6 +363,19 @@ input[type="radio"]:checked::after {
   left: 0;
 }
 
+.alert {
+  position: relative;
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 1rem;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+} 
+
+.alert-success {
+  color: var(--green);
+  background-color: var(--alert-succes);
+  font-weight: bold;
+}
 /*header */
 
 header {
@@ -392,13 +425,6 @@ header .nav span.material-icons{
   background-color: black;
 }
 
-.red {
-  background-color: red;
-  position: absolute;
-  height: 50%;
-  width: 930px;
-}
-
 .square {
   height: 150px;
   border-radius: 0.75rem;
@@ -429,7 +455,7 @@ a.fill-div {
 .table td,
 .table thead th {
   padding: 0.75rem;
-  vertical-align: top;
+  vertical-align: middle;
   border-top: 1px solid #dee2e6;
   text-align: left;
 }
