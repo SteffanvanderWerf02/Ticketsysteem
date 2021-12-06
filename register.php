@@ -61,6 +61,7 @@ if (isset($_POST['register'])) {
                                                 mysqli_stmt_store_result($stmt);
                                                 if (mysqli_stmt_num_rows($stmt) == 0) {
                                                     mysqli_stmt_close($stmt);
+                                                    
                                                     // added company
                                                     $stmt = mysqli_prepare($db, "
                                                         INSERT
