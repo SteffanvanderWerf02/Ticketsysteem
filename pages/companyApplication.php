@@ -63,9 +63,12 @@ require_once("../components/functions.php");
         mysqli_stmt_execute($stmt) or die(mysqli_error($db));
         mysqli_stmt_store_result($stmt) or die(mysqli_error($db));
         mysqli_stmt_bind_result($stmt, $userEmail, $username);
-        if (mysqli_stmt_num_rows($stmt) > 0) { //check if there is an user with that Id
+
+        //check if there is an user with that Id
+        if (mysqli_stmt_num_rows($stmt) > 0) { 
             mysqli_stmt_fetch($stmt);
             mysqli_stmt_close($stmt);
+
             // updates the status from user acount(s) from the activated company
             $stmt = mysqli_prepare($db, "
                 UPDATE  user
@@ -110,7 +113,8 @@ require_once("../components/functions.php");
         mysqli_stmt_store_result($stmt) or die(mysqli_error($db));
         mysqli_stmt_bind_result($stmt, $email, $name);
 
-        if (mysqli_stmt_num_rows($stmt) > 0) { //check if there is an company with that Id
+        //check if there is an company with that Id
+        if (mysqli_stmt_num_rows($stmt) > 0) { 
             mysqli_stmt_fetch($stmt);
             mysqli_stmt_close($stmt);
 
@@ -153,7 +157,9 @@ require_once("../components/functions.php");
         mysqli_stmt_execute($stmt) or die(mysqli_error($db));
         mysqli_stmt_store_result($stmt) or die(mysqli_error($db));
         mysqli_stmt_bind_result($stmt, $userEmail, $username);
-        if (mysqli_stmt_num_rows($stmt) > 0) { //check if there is an user with that Id
+        
+        //check if there is an user with that Id
+        if (mysqli_stmt_num_rows($stmt) > 0) { 
             mysqli_stmt_fetch($stmt);
             mysqli_stmt_close($stmt);
             
