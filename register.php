@@ -112,7 +112,6 @@ if (isset($_POST['register'])) {
                                                             email_adres,
                                                             hash_password,
                                                             status
-
                                                         )
                                                         VALUES 
                                                         (
