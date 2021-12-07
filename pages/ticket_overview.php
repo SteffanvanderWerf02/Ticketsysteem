@@ -4,7 +4,6 @@
     <title>Bottom up - Overzicht</title>
     <?php include_once("../components/head.html")?>
 </head>
-
 <body>
     <!-- Header include -->
     <?php include_once("../components/header.html")?>
