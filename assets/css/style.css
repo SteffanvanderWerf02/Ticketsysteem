@@ -420,6 +420,30 @@ a.fill-div {
   color: black;
 }
 
+/*Ticket overview*/
+
+.title {
+  padding-right: 10px;
+}
+.table {
+  width: 100%;
+  margin-bottom: 1rem;
+  color: var(--color);
+}
+.table td,
+.table thead th {
+  padding: 0.75rem;
+  vertical-align: top;
+  border-top: 1px solid #dee2e6;
+  text-align: left;
+}
+.input-rounded {
+  border: auto;
+  margin: 0 auto;
+  border: 1px var(--border-color);
+  border-radius: 24px;
+}
+
 /* Footer */
 
 .grey_stroke{

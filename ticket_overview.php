@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="nl">
+    <?php require "components/header.html"?>
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="assets/css/style.css">
     <title>Bottom up - Overzicht</title>
 </head>
 
@@ -14,8 +15,9 @@
         <div class="row">
             <div class="col-lg-12">
                 <form action="welcome_get.php" method="get">
-                        <h2>Ticket id<input type="text" name="ticket-id">
-                            Titel<input type="text" name="titel">
+                        <h2>
+                            Ticket id<input type="text" class="rounded" name="ticket-id">
+                            Titel<input type="text" class="rounded" name="titel">
                             <div class="btn btn-primary">
                                 <button class="btn btn-primary" name="submit" type="submit">Zoeken</button>
                             </div>
@@ -101,5 +103,5 @@
         </div>
     </div>
 </body>
-
 </html>
+<?php require "components/footer.html"?>
