@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="nl">
-    <?php require "components/header.html"?>
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -108,4 +107,3 @@
      <?php include_once("../components/footer.php")?>
 </body>
 </html>
-<?php require "components/footer.html"?>
