@@ -1,11 +1,8 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../assets/css/style.css">
     <title>Bottom up - Overzicht</title>
+    <?php include_once("../components/head.html")?>
 </head>
 
 <body>
@@ -60,15 +57,15 @@
             <div class="col-lg-10">
                 <table class="table">
                     <thead>
-                    <tr>
-                        <th>id</th>
-                        <th>Aanmaak datum</th>
-                        <th>Titel</th>
-                        <th>Bedrijf</th>
-                        <th>Prioriteit</th>
-                        <th>Status</th>
-                        <th>Categorie</th>
-                    </tr>
+                        <tr>
+                            <th>id</th>
+                            <th>Aanmaak datum</th>
+                            <th>Titel</th>
+                            <th>Bedrijf</th>
+                            <th>Prioriteit</th>
+                            <th>Status</th>
+                            <th>Categorie</th>
+                        </tr>
                     </thead>
                     <tbody>
                         <tr>
@@ -89,15 +86,15 @@
                             <td>Open</td>
                             <td>Klacht</td>
                         </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>21/11/2021</td>
-                                <td>Lorem ipsum</td>
-                                <td>Wehner LLC</td>
-                                <td>Gemiddeld</td>
-                                <td>In Behandeling</td>
-                                <td>Vraag</td>
-                            </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>21/11/2021</td>
+                            <td>Lorem ipsum</td>
+                            <td>Wehner LLC</td>
+                            <td>Gemiddeld</td>
+                            <td>In Behandeling</td>
+                            <td>Vraag</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
