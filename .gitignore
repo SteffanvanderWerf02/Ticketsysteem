@@ -83,4 +83,4 @@ $RECYCLE.BIN/
 .idea
 .idea/
 # PHP database connectie file
-connection.php
+config.php

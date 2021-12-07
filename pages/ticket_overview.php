@@ -10,6 +10,8 @@
 </head>
 
 <body>
+    <!-- Header include -->
+    <?php include_once("../components/header.html")?>
     <div class="container">
         <h1>Tickets</h1>
         <div class="row">
@@ -102,6 +104,8 @@
             </div>
         </div>
     </div>
+     <!-- Footer include -->
+     <?php include_once("../components/footer.php")?>
 </body>
 </html>
 <?php require "components/footer.html"?>
