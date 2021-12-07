@@ -1,14 +1,36 @@
 <?php
+include_once("../config.php");
 include_once("../connection.php");
 // adding basic functions
 require_once("../components/functions.php");
 
 
 if (isset($_POST['passwordConfirm'])) {
+    if (isset($_POST['token']) && $token = filter_input(INPUT_POST, "token", FILTER_SANITIZE_SPECIAL_CHARS)) {
     if (isset($_POST['email_adres']) && $email = filter_input(INPUT_POST, "email", FILTER_VALIDATE_EMAIL)) {
         if (isset($_POST['password']) && $password = filter_input(INPUT_POST, "password", FILTER_SANITIZE_SPECIAL_CHARS)) {
             if (isset($_POST['repeat-password']) && $repeatPassword = filter_input(INPUT_POST, "repeat-password", FILTER_SANITIZE_SPECIAL_CHARS)) {
-                
+                $stmt = mysqli_prepare($db, "
+                    SELECT  email_adress,
+                            token_expireDate
+                    FROM    user
+                    WHERE   email_adres = ?
+                            AND passwordForget_token = ?
+                ") or die(mysqli_error($db));
+                mysqli_stmt_bind_param($stmt, "ss", $email, $token);
+                mysqli_stmt_execute($stmt) or die(mysqli_error($db));
+                mysqli_stmt_store_result($stmt) or die(mysqli_error($db));
+                 mysqli_stmt_bind_result($stmt, $email, $expireDate);
+                mysqli_stmt_fetch($stmt);
+                 echo $email. $expireDate;
+                    exit();
+                if (mysqli_stmt_num_rows($stmt) > 0) {
+                   
+                    mysqli_stmt_close($stmt);
+                   
+                }else {
+                    echo "U Token komt niet overeen met het mailadres";
+                }  
             }else{
                 echo "Uw heeft het veld herhaal wachtwoord niet correct ingevuld";
             }
@@ -17,6 +39,9 @@ if (isset($_POST['passwordConfirm'])) {
         }
     }else{
         echo "Uw heeft het veld email adres niet correct ingevuld";
+    }
+    }else{
+        echo "U heeft de token niet correct ingevuld";
     }
 }
 
@@ -123,6 +148,7 @@ if (isset($_POST['generateToken'])) {
                                 <?php
                                 } else {
                                 ?>
+                                    <input type="hidden" name="token" value=<?=$_GET['token']?>>
                                     <div class="row">
                                         <div class="col-lg-12 mb-1">
                                             <label for="email">
