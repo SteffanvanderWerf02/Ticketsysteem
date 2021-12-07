@@ -19,6 +19,10 @@ body {
     color: var(--color);
 }
 
+.material-icons {
+    font-size: 1rem;
+}
+
 textarea {
     font-family: "Roboto", Arial, Helvetica, sans-serif;
     resize: none;
@@ -63,6 +67,59 @@ input[type="radio"]:checked::after {
     display: inline-block;
     visibility: visible;
     border: 2px solid var(--btn-bg-color);
+}
+
+.custom-file {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    height: 2.5rem;
+}
+
+.custom-control-label::before, .custom-file-label, .custom-select {
+    transition: background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+.custom-file-label::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 3;
+    display: block;
+    padding: .375rem .75rem;
+    line-height: 1.5;
+    color: var(--white-color);
+    content: "Browse";
+    background-color: var(--btn-bg-color);
+    border-left: inherit;
+    border-radius: 0 25px 25px 0;
+}
+
+.custom-file-label {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1;
+    height: 2.5rem;
+    padding: .375rem .75rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    border: 1px solid #b2b6bb;
+    border-radius: 25px;
+}
+
+.custom-file-input {
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: 2.5rem;
+    margin: 0;
+    opacity: 0;
 }
 
 #content {
@@ -295,14 +352,16 @@ input[type="radio"]:checked::after {
     color: #495057;
     background-color: #fff;
     border: 1px solid #b2b6bb;
-    border-radius: 24px;
+    border-radius: 25px;
 }
+
 .btn {
     display: inline-block;
     padding: .375rem .75rem;
     font-size: 1rem;
     line-height: 1.5;
-    border-radius: 24px;;
+    border-radius: 24px;
+    ;
     border: 1px solid transparent;
     cursor: pointer;
     text-decoration: none;
