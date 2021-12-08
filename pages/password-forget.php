@@ -11,7 +11,7 @@ if (isset($_POST['passwordConfirm'])) {
             if (isset($_POST['repeat-password']) && $repeatPassword = filter_input(INPUT_POST, "repeat-password", FILTER_SANITIZE_SPECIAL_CHARS)) {
                 if (isset($_POST['token']) && $token = filter_input(INPUT_POST, "token", FILTER_SANITIZE_SPECIAL_CHARS)) {
                     $stmt = mysqli_prepare($db, "
-                        SELECT  1
+                        SELECT  token_expireDate
                         FROM    user
                         WHERE   passwordForget_token = ?
                                 AND email_adres = ?
@@ -20,22 +20,30 @@ if (isset($_POST['passwordConfirm'])) {
                     mysqli_stmt_execute($stmt) or mysqli_error($db);
                     mysqli_stmt_store_result($stmt);
                     if (mysqli_stmt_num_rows($stmt) > 0) {
+                        mysqli_stmt_bind_result($stmt, $expireDate);
+                        mysqli_stmt_fetch($stmt);
                         mysqli_stmt_close($stmt);
-                        if ($password == $repeatPassword) {
-                            $hashPassword = password_hash($password, PASSWORD_DEFAULT);
-                            $stmt = mysqli_prepare($db, "
+                        $date_now = date("Y-m-d h:i:s"); // this format is string comparable
+                        if ($date_now < $expireDate) {
+                            if ($password == $repeatPassword) {
+                                $hashPassword = password_hash($password, PASSWORD_DEFAULT);
+                                $stmt = mysqli_prepare($db, "
                                 UPDATE  user
                                 SET     hash_password = ?,
-                                        passwordForget_token = NULL
+                                        passwordForget_token = NULL,
+                                        token_expireDate = NULL
                                 WHERE   passwordForget_token = ?
                             ") or die(mysqli_error($db));
-                            mysqli_stmt_bind_param($stmt, "ss", $hashPassword, $token) or mysqli_error($db);
-                            mysqli_stmt_execute($stmt) or mysqli_error($db);
+                                mysqli_stmt_bind_param($stmt, "ss", $hashPassword, $token) or mysqli_error($db);
+                                mysqli_stmt_execute($stmt) or mysqli_error($db);
+                            } else {
+                                echo "U wachtwoorden komen niet overeen";
+                            }
                         } else {
-                            echo "U wachtwoorden komen niet overeen";
+                            echo "Uw token is niet correct of is verlopen.";
                         }
                     } else {
-                        echo "U token is niet correct";
+                        echo "Uw token is niet correct of is verlopen.";
                     }
                 } else {
                     echo "Uw token is niet correct of is verlopen.";
@@ -49,10 +57,8 @@ if (isset($_POST['passwordConfirm'])) {
     } else {
         echo "U heeft het veld email adres niet correct ingevuld";
     }
-    }else{
-        echo "U heeft de token niet correct ingevuld";
-    }
 }
+
 
 if (isset($_POST['generateToken'])) {
     if (isset($_POST['email_adres']) && $email = filter_input(INPUT_POST, "email_adres", FILTER_VALIDATE_EMAIL)) {
