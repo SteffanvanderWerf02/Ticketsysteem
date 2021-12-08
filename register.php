@@ -1,4 +1,5 @@
 <?php
+include_once("./config.php");
 include_once("./connection.php");
 if (isset($_POST['register'])) {
     if (isset($_POST['account']) && $acountType = filter_input(INPUT_POST, "account", FILTER_SANITIZE_NUMBER_INT)) {
@@ -113,7 +114,6 @@ if (isset($_POST['register'])) {
                                                             email_adres,
                                                             hash_password,
                                                             status
-
                                                         )
                                                         VALUES 
                                                         (

@@ -1,4 +1,5 @@
 <?php
+include_once("./config.php");
 include_once("./connection.php");
 
 // Delete all session data when logout button is pressed
@@ -156,7 +157,7 @@ if (isset($_POST['login'])) {
                                         <input id="login-password" type="password" placeholder="Wachtwoord" name="password" class="form-control">
                                     </div>
                                     <div class="col-lg-12 mb-1">
-                                        <a href="./forgot-password.php">Wachtwoord vergeten?</a>
+                                        <a href="./pages/password-forget.php">Wachtwoord vergeten?</a>
                                         <button type="submit" name="login" class="btn btn-primary ml-2 mt-3 float-right">
                                             <span class="material-icons align-middle">lock</span>
                                             Login

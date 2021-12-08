@@ -1,4 +1,5 @@
 <?php
+include_once("../config.php");
 include_once("../connection.php");
 // adding basic functions
 require_once("../components/functions.php");
