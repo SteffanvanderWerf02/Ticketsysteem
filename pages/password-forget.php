@@ -1,33 +1,64 @@
 <?php
+include_once("../config.php");
 include_once("../connection.php");
 // adding basic functions
 require_once("../components/functions.php");
 
 
 if (isset($_POST['passwordConfirm'])) {
-    if (isset($_POST['email_adres']) && $email = filter_input(INPUT_POST, "email", FILTER_VALIDATE_EMAIL)) {
+    if (isset($_POST['email']) && $email = filter_input(INPUT_POST, "email", FILTER_VALIDATE_EMAIL)) {
         if (isset($_POST['password']) && $password = filter_input(INPUT_POST, "password", FILTER_SANITIZE_SPECIAL_CHARS)) {
             if (isset($_POST['repeat-password']) && $repeatPassword = filter_input(INPUT_POST, "repeat-password", FILTER_SANITIZE_SPECIAL_CHARS)) {
-                
-            }else{
-                echo "Uw heeft het veld herhaal wachtwoord niet correct ingevuld";
+                if (isset($_POST['token']) && $token = filter_input(INPUT_POST, "token", FILTER_SANITIZE_SPECIAL_CHARS)) {
+                    $stmt = mysqli_prepare($db, "
+                        SELECT  1
+                        FROM    user
+                        WHERE   passwordForget_token = ?
+                                AND email_adres = ?
+                    ") or die(mysqli_error($db));
+                    mysqli_stmt_bind_param($stmt, "ss", $token, $email) or mysqli_error($db);
+                    mysqli_stmt_execute($stmt) or mysqli_error($db);
+                    mysqli_stmt_store_result($stmt);
+                    if (mysqli_stmt_num_rows($stmt) > 0) {
+                        mysqli_stmt_close($stmt);
+                        if ($password == $repeatPassword) {
+                            $hashPassword = password_hash($password, PASSWORD_DEFAULT);
+                            $stmt = mysqli_prepare($db, "
+                                UPDATE  user
+                                SET     hash_password = ?,
+                                        passwordForget_token = NULL
+                                WHERE   passwordForget_token = ?
+                            ") or die(mysqli_error($db));
+                            mysqli_stmt_bind_param($stmt, "ss", $hashPassword, $token) or mysqli_error($db);
+                            mysqli_stmt_execute($stmt) or mysqli_error($db);
+                        } else {
+                            echo "U wachtwoorden komen niet overeen";
+                        }
+                    } else {
+                        echo "U token is niet correct";
+                    }
+                } else {
+                    echo "Uw token is niet correct of is verlopen.";
+                }
+            } else {
+                echo "U heeft het veld herhaal wachtwoord niet correct ingevuld";
             }
-        }else{
-            echo "Uw heeft het veld wachtwoord niet correct ingevuld";
+        } else {
+            echo "U heeft het veld wachtwoord niet correct ingevuld";
         }
-    }else{
-        echo "Uw heeft het veld email adres niet correct ingevuld";
+    } else {
+        echo "U heeft het veld email adres niet correct ingevuld";
     }
 }
 
 if (isset($_POST['generateToken'])) {
-    if (isset($_POST['email']) && $email = filter_input(INPUT_POST, "email_adres", FILTER_VALIDATE_EMAIL)) {
+    if (isset($_POST['email_adres']) && $email = filter_input(INPUT_POST, "email_adres", FILTER_VALIDATE_EMAIL)) {
 
         $stmt = mysqli_prepare($db, "
             SELECT  user_id,
                     name
-            FROM user
-            WHERE email_adres = ?
+            FROM    user
+            WHERE   email_adres = ?
         ") or die(mysqli_error($db));
         mysqli_stmt_bind_param($stmt, "s", $email);
         mysqli_stmt_execute($stmt) or die(mysqli_error($db));
@@ -37,15 +68,15 @@ if (isset($_POST['generateToken'])) {
             mysqli_stmt_bind_result($stmt, $userId, $name);
             mysqli_stmt_fetch($stmt);
             mysqli_stmt_close($stmt);
-            
+
             //Generate a random string.
             $token = openssl_random_pseudo_bytes(16);
-            
+
             //Convert the binary data into hexadecimal representation.
             $token = bin2hex($token);
             $t = time() + 3600 * 24;
             $expireDate = date("Y-m-d h:m:s", $t);
-            
+
             // update token into Database
             $stmt = mysqli_prepare($db, "
             UPDATE user
@@ -73,7 +104,7 @@ if (isset($_POST['generateToken'])) {
         } else {
             echo "Deze gebruiker niet bekent.";
         }
-    }else {
+    } else {
         echo "U heeft het veld email adres niet ingevuld";
     }
 }
@@ -123,6 +154,7 @@ if (isset($_POST['generateToken'])) {
                                 <?php
                                 } else {
                                 ?>
+                                    <input type="hidden" name="token" value="<?= $_GET["token"] ?>">
                                     <div class="row">
                                         <div class="col-lg-12 mb-1">
                                             <label for="email">
@@ -130,7 +162,7 @@ if (isset($_POST['generateToken'])) {
                                             </label>
                                         </div>
                                         <div class="col-lg-12 mb-1">
-                                            <input id="email" type="email" placeholder="Wachtwoord" name="email" class="form-control">
+                                            <input id="email" type="email" placeholder="Email" name="email" class="form-control">
                                         </div>
                                     </div>
                                     <div class="row">

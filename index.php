@@ -1,4 +1,5 @@
 <?php
+include_once("./config.php");
 include_once("./connection.php");
 
 // Delete all session data when logout button is pressed
