@@ -49,6 +49,9 @@ if (isset($_POST['passwordConfirm'])) {
     } else {
         echo "U heeft het veld email adres niet correct ingevuld";
     }
+    }else{
+        echo "U heeft de token niet correct ingevuld";
+    }
 }
 
 if (isset($_POST['generateToken'])) {
