@@ -7,8 +7,8 @@ if (isset($_POST['logout'])) {
     session_destroy();
     ?>
     <div class="alert alert-success">
-            U bent succesvol uitgelogt.
-        </div>
+            U bent succesvol uitgelogd.
+    </div>
     <?php
 }
 

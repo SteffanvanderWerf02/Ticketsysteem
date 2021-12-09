@@ -9,10 +9,10 @@ if (isset($_POST['register'])) {
                 if (isset($_POST['kvkNumber'])) {
                     $kvk = filter_input(INPUT_POST, "kvkNumber", FILTER_SANITIZE_NUMBER_INT);
                 } else {
-                    echo "U kvk nummer bevat letters inplaats van cijfers";
+                    echo "<div class='alert alert-danger'>Uw kvk nummer bevat letters in plaats van cijfers</div>";
                 }
             } else {
-                echo "De naam van u bedrijf bevat speciale tekens. Deze zijn niet toegestaan.";
+                echo "<div class='alert alert-danger'>De naam van uw bedrijf bevat speciale tekens. Deze zijn niet toegestaan.</div>";
             }
         }
     }
@@ -132,9 +132,9 @@ if (isset($_POST['register'])) {
                                                     mysqli_stmt_close($stmt);
                                                     
                                                     
-                                                    echo "U heeft een Zakelijk account aangemaakt deze word gecontroleerd";
+                                                    echo "<div class='alert alert-success'>U heeft een Zakelijk account aangemaakt, deze word gecontroleerd.</div>";
                                                 } else {
-                                                    echo "Dit bedrijf bestaat al";
+                                                    echo "<div class='alert alert-danger'>Dit bedrijf bestaat al</div>";
                                                 }
                                             } else {
                                                 $stmt = mysqli_prepare($db, "
@@ -166,37 +166,37 @@ if (isset($_POST['register'])) {
                                                 mysqli_stmt_execute($stmt) or die(mysqli_error($db));
                                                 mysqli_stmt_close($stmt);
 
-                                                echo "U heeft een particulier account aangemaakt. U kunt inloggen";
+                                                echo "<div class='alert alert-success'>U heeft een particulier account aangemaakt. U kunt inloggen.</div>";
                                             }
                                         } else {
-                                            echo "Dit email adres bestaat al";
+                                            echo "<div class='alert alert-danger'>Dit email adres bestaat al.</div>";
                                         }
                                     } else {
-                                        echo "Deze naam bestaat al";
+                                        echo "<div class='alert alert-danger'>Deze naam bestaat al.</div>";
                                     }
                                 } else {
-                                    echo "Uw telefoonnummer bevat speciale tekens die niet zijn toegestaan.";
+                                    echo "<div class='alert alert-danger'>Uw telefoonnummer bevat speciale tekens die niet zijn toegestaan.</div>";
                                 }
                             } else {
-                                echo "Uw huisnummer bevat speciale tekens die niet zijn toegestaan.";
+                                echo "<div class='alert alert-danger'>Uw huisnummer bevat speciale tekens die niet zijn toegestaan.</div>";
                             }
                         } else {
-                            echo "Uw straatnaam bevat speciale tekens die niet zijn toegestaan.";
+                            echo "<div class='alert alert-danger'>Uw straatnaam bevat speciale tekens die niet zijn toegestaan.</div>";
                         }
                     } else {
-                        echo "Uw woonplaats bevat speciale tekens die niet zijn toegestaan.";
+                        echo "<div class='alert alert-danger'>Uw woonplaats bevat speciale tekens die niet zijn toegestaan.</div>";
                     }
                 } else {
-                    echo "Uw postcode bevat speciale tekens die niet zijn toegestaan.";
+                    echo "<div class='alert alert-danger'>Uw postcode bevat speciale tekens die niet zijn toegestaan.</div>";
                 }
             } else {
-                echo "Uw wachtwoord bevat speciale tekens die niet zijn toegestaan.";
+                echo "<div class='alert alert-danger'>Uw wachtwoord bevat speciale tekens die niet zijn toegestaan.</div>";
             }
         } else {
-            echo "Uw username bevat speciale tekens die niet zijn toegestaan.";
+            echo "<div class='alert alert-danger'>Uw username bevat speciale tekens die niet zijn toegestaan.</div>";
         }
     } else {
-        echo "Uw emailadres bevat speciale tekens die niet zijn toegestaan.";
+        echo "<div class='alert alert-danger'> Uw emailadres bevat speciale tekens die niet zijn toegestaan.</div>";
     }
 }
 ?>
@@ -237,7 +237,7 @@ if (isset($_POST['register'])) {
                                 <div class="row mb-2">
                                     <div class="col-lg-12">
                                         <label for="acount">
-                                            Acount soort:
+                                            Account soort:
                                         </label>
                                     </div>
                                     <div class="col-lg-12">
