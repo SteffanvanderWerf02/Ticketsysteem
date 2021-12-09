@@ -1,24 +1,26 @@
 <!DOCTYPE html>
 <html lang="nl">
+
 <head>
     <title>Bottom up - Overzicht</title>
-    <?php include_once("../components/head.html")?>
+    <?php include_once("../components/head.html") ?>
 </head>
+
 <body>
     <!-- Header include -->
-    <?php include_once("../components/header.html")?>
-    <div class="container">
-        <h1>Tickets</h1>
-        <div class="row">
+    <?php include_once("../components/header.html") ?>
+    <div id="content" class="container">
+        <h1>Ticket overzicht</h1>
+        <div class="row mb-3">
             <div class="col-lg-12">
-                <form action="welcome_get.php" method="get">
-                        <h2>
-                            Ticket id<input type="text" class="rounded" name="ticket-id">
-                            Titel<input type="text" class="rounded" name="titel">
-                            <div class="btn btn-primary">
-                                <button class="btn btn-primary" name="submit" type="submit">Zoeken</button>
-                            </div>
-                        </h2>
+                <form action="<?= $_SERVER["PHP_SELF"] ?>" method="GET">
+                    <label>Ticket id
+                        <input type="text" name="ticket_id" class="rounded form-control w-25 d-inline" name="ticket-id">
+                    </label>
+                    <label class="ml-2">Titel
+                        <input type="text" name="ticket_title" class="rounded form-control w-25 d-inline" name="titel">
+                    </label>
+                    <button class="btn btn-primary" name="submit" type="submit"><span class="material-icons align-middle">search</span> Zoeken</button>
                 </form>
             </div>
         </div>
@@ -26,35 +28,38 @@
             <div class="col-lg-2">
                 <div class="row mb-2">
                     <div class="col-lg-12">
+                        <h4 class="mt-0">Status filteren:</h4>
+                    </div>
+                    <div class="col-lg-12">
                         <form action="<?= $_SERVER["PHP_SELF"] ?>" method="get">
-                            <button class="btn btn-primary" name="submit" type="submit">Nieuw</button>
+                            <button class="btn btn-primary" name="filter" value="new" type="submit">Nieuw</button>
                         </form>
                     </div>
                 </div>
                 <div class="row mb-2">
                     <div class="col-lg-12">
                         <form action="<?= $_SERVER["PHP_SELF"] ?>" method="get">
-                            <button class="btn btn-primary" name="submit" type="submit">In Behandeling</button>
+                            <button class="btn btn-primary" name="filter" value="transit" type="submit">In Behandeling</button>
                         </form>
                     </div>
                 </div>
                 <div class="row mb-2">
                     <div class="col-lg-12">
                         <form action="<?= $_SERVER["PHP_SELF"] ?>" method="get">
-                            <button class="btn btn-primary" name="submit" type="submit">On hold</button>
+                            <button class="btn btn-primary" name="filter" value="onHold" type="submit">On hold</button>
                         </form>
                     </div>
                 </div>
                 <div class="row mb-2">
                     <div class="col-lg-12">
                         <form action="<?= $_SERVER["PHP_SELF"] ?>" method="get">
-                            <button class="btn btn-primary" name="submit" type="submit">Gesloten</button>
+                            <button class="btn btn-primary" name="filter" value="closed" type="submit">Gesloten</button>
                         </form>
                     </div>
                 </div>
             </div>
             <div class="col-lg-10">
-                <table class="table">
+                <table cellspacing="0" cellpadding="0"  class="table">
                     <thead>
                         <tr>
                             <th>id</th>
@@ -63,6 +68,7 @@
                             <th>Bedrijf</th>
                             <th>Prioriteit</th>
                             <th>Status</th>
+                            <th>Hooftcategorie</th>
                             <th>Categorie</th>
                         </tr>
                     </thead>
@@ -74,6 +80,7 @@
                             <td>Schoen - Renner</td>
                             <td>Laag</td>
                             <td>Gesloten</td>
+                            <td>ticket</td>
                             <td>Vragen</td>
                         </tr>
                         <tr>
@@ -83,6 +90,7 @@
                             <td>Hansen - Hettinger</td>
                             <td>Hoog</td>
                             <td>Open</td>
+                            <td>ticket</td>
                             <td>Klacht</td>
                         </tr>
                         <tr>
@@ -92,6 +100,7 @@
                             <td>Wehner LLC</td>
                             <td>Gemiddeld</td>
                             <td>In Behandeling</td>
+                            <td>ticket</td>
                             <td>Vraag</td>
                         </tr>
                     </tbody>
@@ -99,7 +108,8 @@
             </div>
         </div>
     </div>
-     <!-- Footer include -->
-     <?php include_once("../components/footer.php")?>
+    <!-- Footer include -->
+    <?php include_once("../components/footer.php") ?>
 </body>
+
 </html>

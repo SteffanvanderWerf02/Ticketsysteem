@@ -56,7 +56,7 @@ if (isset($_POST['login'])) {
                                 $_SESSION["accountType"] = 2; // 2 = Bottom up user
                                 $_SESSION["companyId"] = $companyId;
 
-                                header("Location: ./pages/home.php");
+                                header("Location: ./pages/ticket_overview.php");
                             } else {
                                 echo "De gebruikers naam of wachtwoord zijn niet correct of u account is nog niet actief";
                             }
