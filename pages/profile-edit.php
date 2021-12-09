@@ -1,5 +1,6 @@
 <?php
-include_once("../connection.php")
+include_once("../config.php");
+include_once("../connection.php");
 ?>
 
 <!DOCTYPE html>
@@ -82,13 +83,19 @@ include_once("../connection.php")
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <div class="col-lg-6">
+                        <div class="col-lg-12">
                             <label for="city">Woonplaats</label>
                             <input type="text" id="city" value="<?= $city ?>" name="" class="form-control">
                         </div>
+                    </div>
+                    <div class="row mb-3">
                         <div class="col-lg-6">
-                            <label for="street">Straatnaam + huisnummer</label>
-                            <input type="text" id="street" value="<?= $streetname . " " . $houseNumber ?>" name="" class="form-control">
+                            <label for="street">Straatnaam</label>
+                            <input type="text" id="street" value="<?= $streetname ?>" name="" class="form-control">
+                        </div>
+                        <div class="col-lg-6">
+                            <label for="housenumber">Huisnummer</label>
+                            <input type="text" id="housenumber" value="<?= $houseNumber ?>" name="" class="form-control">
                         </div>
                     </div>
                     <div class="row mb-3">
