@@ -4,23 +4,40 @@ include_once("../connection.php");
 ?>
 
 <!DOCTYPE html>
-<html lang="en" class="h-100">
+<html lang="nl">
 
 <head>
     <?php include_once("../components/head.html") ?>
     <title>Bottom up - Profiel</title>
 </head>
 
-<body class="h-100">
+<body>
     <!--Header include -->
     <?php include_once("../components/header.html") ?>
-    <div class="container">
+    <div id="content" class="container">
         <div class="row">
             <div class="col-lg-12">
                 <h1>Gebruikers Informatie</h1>
             </div>
             <div class="col-lg-12 mb-3">
-                <a href=""><span class="material-icons align-middle">add</span>Nieuwe gebruiker aanmaken</a>
+                <a class="d-block mb-1" href=""><span class="material-icons align-middle">add</span>Nieuwe gebruiker aanmaken</a>
+                <?php
+                $stmt = mysqli_prepare($db, "
+                    SELECT  count(company_id) as amount
+                    FROM 	company
+                    WHERE 	status = 0
+                ") or die(mysqli_error($db));
+                mysqli_stmt_execute($stmt) or die(mysqli_error($db));
+                mysqli_stmt_store_result($stmt) or die(mysqli_error($db));
+                if (mysqli_stmt_num_rows($stmt) > 0) {
+                    mysqli_stmt_bind_result($stmt, $amount);
+                    mysqli_stmt_fetch($stmt);
+                    mysqli_stmt_close($stmt);
+                }else {
+                    $amount = 0;
+                }
+                ?>
+                <a class="d-block" href="./companyApplication.php"><span class="badge badge-pill badge-primary"><?=$amount?></span> Nieuwe Bedrijfaanvragen</a>
             </div>
             <div class="col-lg-6">
                 <?php
@@ -56,6 +73,7 @@ include_once("../connection.php");
                                 <input type="file" title="Kies uw profielfoto" class="custom-file-input" id="customFile">
                                 <label class="custom-file-label" for="customFile">Kies Bestand</label>
                             </div>
+                            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
                             <script>
                                 $(".custom-file-input").on("change", function() {
                                     var fileName = $(this).val().split("\\").pop();
@@ -66,42 +84,48 @@ include_once("../connection.php");
                     </div>
                     <div class="row mb-3">
                         <div class="col-lg-12">
-                            <label for="username">Gebruikersnaam</label>
-                            <input type="text" id="username" value="<?= $name ?>" name="" class="form-control" readonly required>
+                            <label for="username">Email</label>
+                            <input type="email" id="username" value="<?=$email?>" name="" class="form-control" required>
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-lg-12">
-                            <label for="password">Wachtwoord</label>
-                            <input type="text" id="password" name="" class="form-control">
+                            <label for="username">Gebruikersnaam</label>
+                            <input type="text" id="username" value="<?=$name?>" name="" class="form-control" readonly required>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-lg-12">
+                            <label for="password">Wijzig Wachtwoord</label>
+                            <input type="password" id="password" name="" class="form-control">
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-lg-12">
                             <label for="postal">Postcode</label>
-                            <input type="text" id="postal" value="<?= $postalcode ?>" name="" class="form-control">
+                            <input type="text" id="postal" value="<?= $postalcode ?>" name="" class="form-control" required>
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-lg-12">
                             <label for="city">Woonplaats</label>
-                            <input type="text" id="city" value="<?= $city ?>" name="" class="form-control">
+                            <input type="text" id="city" value="<?= $city ?>" name="" class="form-control" required>
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-lg-6">
                             <label for="street">Straatnaam</label>
-                            <input type="text" id="street" value="<?= $streetname ?>" name="" class="form-control">
+                            <input type="text" id="street" value="<?= $streetname ?>" name="" class="form-control" required>
                         </div>
                         <div class="col-lg-6">
                             <label for="housenumber">Huisnummer</label>
-                            <input type="text" id="housenumber" value="<?= $houseNumber ?>" name="" class="form-control">
+                            <input type="text" id="housenumber" value="<?= $houseNumber ?>" name="" class="form-control" required>
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-lg-12">
                             <label for="kvk_number">KVK nummer</label>
-                            <input type="text" id="form-kvk_number" name="" class="form-control">
+                            <input type="text" id="form-kvk_number" name="" class="form-control" required>
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -114,7 +138,7 @@ include_once("../connection.php");
         </div>
     </div>
     <!-- Footer include -->
-    <?php include_once("../components/footer.html") ?>
+    <?php include_once("../components/footer.php") ?>
 </body>
 
 </html>

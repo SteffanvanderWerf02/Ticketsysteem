@@ -325,7 +325,9 @@ input[type="radio"]:checked::after {
 .h-25 {
     height: 25%;
 }
-
+.d-block {
+    display: block!important;
+  }
 .d-flex {
   display: flex!important;
 }
@@ -445,6 +447,26 @@ input[type="radio"]:checked::after {
   color: var(--green);
   background-color: var(--alert-succes);
   font-weight: bold;
+}
+.badge-primary {
+    color: var(--white-color);
+    background-color: var(--btn-bg-color);
+}
+.badge-pill {
+    padding-right: 0.6em;
+    padding-left: 0.6em;
+    border-radius: 10rem;
+}
+.badge {
+    display: inline-block;
+    padding: 0.25em 0.4em;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 25px;
 }
 /*header */
 
