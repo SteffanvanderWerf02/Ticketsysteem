@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-    <?php include_once("../components/head.html")?>
     <title>Bottom up - Overzicht</title>
+    <?php include_once("../components/head.html")?>
 </head>
-
 <body>
     <!-- Header include -->
     <?php include_once("../components/header.html")?>
@@ -13,8 +12,9 @@
         <div class="row">
             <div class="col-lg-12">
                 <form action="welcome_get.php" method="get">
-                        <h2>Ticket id<input type="text" name="ticket-id">
-                            Titel<input type="text" name="titel">
+                        <h2>
+                            Ticket id<input type="text" class="rounded" name="ticket-id">
+                            Titel<input type="text" class="rounded" name="titel">
                             <div class="btn btn-primary">
                                 <button class="btn btn-primary" name="submit" type="submit">Zoeken</button>
                             </div>
@@ -56,15 +56,15 @@
             <div class="col-lg-10">
                 <table class="table">
                     <thead>
-                    <tr>
-                        <th>id</th>
-                        <th>Aanmaak datum</th>
-                        <th>Titel</th>
-                        <th>Bedrijf</th>
-                        <th>Prioriteit</th>
-                        <th>Status</th>
-                        <th>Categorie</th>
-                    </tr>
+                        <tr>
+                            <th>id</th>
+                            <th>Aanmaak datum</th>
+                            <th>Titel</th>
+                            <th>Bedrijf</th>
+                            <th>Prioriteit</th>
+                            <th>Status</th>
+                            <th>Categorie</th>
+                        </tr>
                     </thead>
                     <tbody>
                         <tr>
@@ -85,22 +85,21 @@
                             <td>Open</td>
                             <td>Klacht</td>
                         </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>21/11/2021</td>
-                                <td>Lorem ipsum</td>
-                                <td>Wehner LLC</td>
-                                <td>Gemiddeld</td>
-                                <td>In Behandeling</td>
-                                <td>Vraag</td>
-                            </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>21/11/2021</td>
+                            <td>Lorem ipsum</td>
+                            <td>Wehner LLC</td>
+                            <td>Gemiddeld</td>
+                            <td>In Behandeling</td>
+                            <td>Vraag</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
      <!-- Footer include -->
-     <?php include_once("../components/footer.html")?>
+     <?php include_once("../components/footer.php")?>
 </body>
-
 </html>

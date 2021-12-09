@@ -1,6 +1,17 @@
 <?php
+include_once("./config.php");
 include_once("./connection.php");
-// session_destroy();
+
+// Delete all session data when logout button is pressed
+if (isset($_POST['logout'])) {
+    session_destroy();
+    ?>
+    <div class="alert alert-success">
+            U bent succesvol uitgelogt.
+        </div>
+    <?php
+}
+
 if (isset($_POST['login'])) {
 
     if (isset($_POST['username']) && $username = filter_input(INPUT_POST, "username", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
@@ -56,7 +67,7 @@ if (isset($_POST['login'])) {
                                     company.status
                             FROM    user
                             INNER JOIN company
-                            ON company.id = user.company_id
+                            ON company.company_id = user.company_id
                             WHERE user.user_id = ?
                         ") or die(mysqli_error($db));
                         mysqli_stmt_bind_param($stmt, "i", $userId);
@@ -146,7 +157,7 @@ if (isset($_POST['login'])) {
                                         <input id="login-password" type="password" placeholder="Wachtwoord" name="password" class="form-control">
                                     </div>
                                     <div class="col-lg-12 mb-1">
-                                        <a href="./forgot-password.php">Wachtwoord vergeten?</a>
+                                        <a href="./pages/password-forget.php">Wachtwoord vergeten?</a>
                                         <button type="submit" name="login" class="btn btn-primary ml-2 mt-3 float-right">
                                             <span class="material-icons align-middle">lock</span>
                                             Login

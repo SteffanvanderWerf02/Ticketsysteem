@@ -1,4 +1,5 @@
 <?php 
+include_once("../config.php");
 include_once("../connection.php");
 ?>
 <!DOCTYPE html>
@@ -14,6 +15,6 @@ include_once("../connection.php");
     echo var_dump($_SESSION);
     ?>
     <!-- Footer include -->
-    <?php include_once("../components/footer.html")?>
+    <?php include_once("../components/footer.php")?>
 </body>
 </html>

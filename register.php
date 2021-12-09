@@ -1,4 +1,5 @@
 <?php
+include_once("./config.php");
 include_once("./connection.php");
 if (isset($_POST['register'])) {
     if (isset($_POST['account']) && $acountType = filter_input(INPUT_POST, "account", FILTER_SANITIZE_NUMBER_INT)) {
@@ -61,12 +62,14 @@ if (isset($_POST['register'])) {
                                                 mysqli_stmt_store_result($stmt);
                                                 if (mysqli_stmt_num_rows($stmt) == 0) {
                                                     mysqli_stmt_close($stmt);
+                                                    
                                                     // added company
                                                     $stmt = mysqli_prepare($db, "
                                                         INSERT
                                                         INTO company 
                                                         (
                                                             name,
+                                                            email_adres,
                                                             postalcode,
                                                             house_number,
                                                             phone_number,
@@ -79,18 +82,19 @@ if (isset($_POST['register'])) {
                                                             ?,
                                                             ?,
                                                             ?,
+                                                            ?,
                                                             0,
                                                             ?
                                                         )
                                                     ") or die(mysqli_error($db));
-                                                    mysqli_stmt_bind_param($stmt, "ssssi", $companyName, $postalcode, $housenumber, $phonenumber, $kvk);
+                                                    mysqli_stmt_bind_param($stmt, "sssssi", $companyName, $email, $postalcode, $housenumber, $phonenumber, $kvk);
                                                     mysqli_stmt_execute($stmt) or die(mysqli_error($db));
                                                     mysqli_stmt_store_result($stmt) or die(mysqli_error($db));
                                                     mysqli_stmt_close($stmt);
 
                                                     // added user
                                                     $companyStmt = mysqli_prepare($db, "
-                                                        SELECT id
+                                                        SELECT company_id
                                                         FROM company
                                                         WHERE name = ?
                                                     ") or die(mysqli_error($db));
@@ -110,7 +114,6 @@ if (isset($_POST['register'])) {
                                                             email_adres,
                                                             hash_password,
                                                             status
-
                                                         )
                                                         VALUES 
                                                         (
