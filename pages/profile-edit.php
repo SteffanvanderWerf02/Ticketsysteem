@@ -76,7 +76,7 @@ if(isset($_POST['submit'])){
                if(isset($_POST['street']) && $_POST['street'] = filter_input(INPUT_POST, "street", FILTER_SANITIZE_SPECIAL_CHARS)){
                  if(isset($_POST['housenumber']) && $_POST['housenumber'] = filter_input(INPUT_POST, "housenumber", FILTER_SANITIZE_SPECIAL_CHARS)){
                     if(isset($_POST['phonenumber']) && $_POST['phonenumber'] = filter_input(INPUT_POST, "phonenumber", FILTER_SANITIZE_SPECIAL_CHARS)){
-                        if(isset($_POST['email']) && $_POST['email'] = filter_input(INPUT_POST, "email", FILTER_SANITIZE_SPECIAL_CHARS)){
+                        if(isset($_POST['email']) && $_POST['email'] = filter_input(INPUT_POST, "email", FILTER_VALIDATE_EMAIL)){
                                 $stmt = mysqli_prepare($db, "
                                 UPDATE  user
                                 SET     name = ?,
