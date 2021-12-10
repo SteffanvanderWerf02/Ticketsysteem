@@ -2,13 +2,13 @@
     color: grey;
 }
 
-table {
+.t_detail_table {
     margin-top: 10px;
     margin-left: 10px;
     margin-right: 20px;
 }
 
-tbody {
+.t_detail_tbody {
     font-size: 25px;
     color: grey;
 }
