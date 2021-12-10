@@ -73,12 +73,6 @@ include_once("../connection.php");
                                 <input type="file" title="Kies uw profielfoto" class="custom-file-input" id="customFile">
                                 <label class="custom-file-label" for="customFile">Kies Bestand</label>
                             </div>
-                            <script>
-                                $(".custom-file-input").on("change", function() {
-                                    var fileName = $(this).val().split("\\").pop();
-                                    $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
-                                });
-                            </script>
                         </div>
                     </div>
                     <div class="row mb-3">
