@@ -552,14 +552,22 @@ a.fill-div {
   border-top: 1px solid #cecece;
   text-align: left;
 }
+
+
 .input-rounded {
   border: auto;
   margin: 0 auto;
   border: 1px var(--border-color);
   border-radius: 24px;
 }
-.table tr:nth-child(even) td { 
-  background-color: #cecece;
+.table tr:nth-child(even) { 
+  background-color: #dcdcdc;
+}
+.table tr:hover{
+    background-color: #cecece;
+}
+.table tr[data-href] {
+cursor: pointer;
 }
 /* Footer */
 
