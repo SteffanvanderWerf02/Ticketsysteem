@@ -560,13 +560,13 @@ a.fill-div {
   border: 1px var(--border-color);
   border-radius: 24px;
 }
-.table tr:nth-child(even) { 
+.table tbody tr:nth-child(even) { 
   background-color: #dcdcdc;
 }
-.table tr:hover{
+.table tbody tr:hover{
     background-color: #cecece;
 }
-.table tr[data-href] {
+.table tbody tr[data-href] {
 cursor: pointer;
 }
 
