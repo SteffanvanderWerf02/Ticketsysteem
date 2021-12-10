@@ -1,5 +1,8 @@
+<?php
+include_once ("../connection.php")
+?>
 <!DOCTYPE html>
-<html lang="en" class="h-100">
+<html lang="nl" class="h-100">
 <head>
     <?php include_once("../components/head.html")?>
     <title>Bottom up - Overzicht</title>
@@ -7,27 +10,22 @@
 <body class="h-100">
     <!--Header include -->
     <?php include_once("../components/header.html")?>
-    <div class="container h-100">
+    <div id="overviewContent" class="container h-100">
         <div class="row h-100">
-            <div class="col-lg-3 my-auto">
+            <div class="col-lg-4 my-auto">
                 <div class="card square mx-auto justify-content-center">
-                    <a href="#" class="fill-div">mijn account</a>
+                    <a href="#" class="fill-div">Ticket aanmaken</a>
                 </div>
             </div>
-            <div class="col-lg-3 my-auto">
+            <div class="col-lg-4 my-auto">
                 <div class="card square mx-auto justify-content-center">
-                    <a href="#" class="fill-div">ticket toevoegen</a>
+                    <a href="#" class="fill-div">Dienst / Service aanvragen</a>
                 </div>
             </div>
-            <div class="col-lg-3 my-auto">
+            <div class="col-lg-4 my-auto">
                 <div class="card square mx-auto justify-content-center">
-                    <a href="#" class="fill-div">Service / diensten aanvragen</a>
+                    <a href="#" class="fill-div">Product aanvraag</a>
                 </div>
-            </div>
-            <div class="col-lg-3 my-auto">
-                <div class="card square mx-auto justify-content-center">
-                   <a href="#" class="fill-div">mijn account</a>
-                </div> 
             </div>
         </div>
     </div>

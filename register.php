@@ -70,6 +70,8 @@ if (isset($_POST['register'])) {
                                                         (
                                                             name,
                                                             email_adres,
+                                                            city,
+                                                            streetname,
                                                             postalcode,
                                                             house_number,
                                                             phone_number,
@@ -83,11 +85,13 @@ if (isset($_POST['register'])) {
                                                             ?,
                                                             ?,
                                                             ?,
+                                                            ?,
+                                                            ?,
                                                             0,
                                                             ?
                                                         )
                                                     ") or die(mysqli_error($db));
-                                                    mysqli_stmt_bind_param($stmt, "sssssi", $companyName, $email, $postalcode, $housenumber, $phonenumber, $kvk);
+                                                    mysqli_stmt_bind_param($stmt, "sssssssi", $companyName, $email,$city, $streetname, $postalcode, $housenumber, $phonenumber, $kvk);
                                                     mysqli_stmt_execute($stmt) or die(mysqli_error($db));
                                                     mysqli_stmt_store_result($stmt) or die(mysqli_error($db));
                                                     mysqli_stmt_close($stmt);
@@ -107,7 +111,10 @@ if (isset($_POST['register'])) {
                                                         INSERT
                                                         INTO user (
                                                             company_id,
+                                                            auth_id,
                                                             name,
+                                                            city,
+                                                            streetname,
                                                             postalcode,
                                                             house_number,
                                                             phone_number,
@@ -118,6 +125,9 @@ if (isset($_POST['register'])) {
                                                         VALUES 
                                                         (
                                                             ?,
+                                                            1,
+                                                            ?,
+                                                            ?,
                                                             ?,
                                                             ?,
                                                             ?,
@@ -127,7 +137,7 @@ if (isset($_POST['register'])) {
                                                             0
                                                         )
                                                     ") or die(mysqli_error($db));
-                                                    mysqli_stmt_bind_param($stmt, "issssss", $companyId, $companyName, $postalcode, $housenumber, $phonenumber, $email, $hash_password);
+                                                    mysqli_stmt_bind_param($stmt, "issssssss", $companyId, $companyName, $city, $streetname, $postalcode, $housenumber, $phonenumber, $email, $hash_password);
                                                     mysqli_stmt_execute($stmt) or die(mysqli_error($db));
                                                     mysqli_stmt_close($stmt);
                                                     
@@ -141,7 +151,10 @@ if (isset($_POST['register'])) {
                                                     INSERT
                                                     INTO user (
                                                         company_id,
+                                                        auth_id,
                                                         name,
+                                                        city,
+                                                        streetname,
                                                         postalcode,
                                                         house_number,
                                                         phone_number,
@@ -153,6 +166,7 @@ if (isset($_POST['register'])) {
                                                     VALUES 
                                                     (
                                                         NULL,
+                                                        1,
                                                         ?,
                                                         ?,
                                                         ?,
@@ -162,7 +176,7 @@ if (isset($_POST['register'])) {
                                                         1
                                                     )
                                                 ") or die(mysqli_error($db));
-                                                mysqli_stmt_bind_param($stmt, "ssssss", $username, $postalcode, $housenumber, $phonenumber, $email, $hash_password);
+                                                mysqli_stmt_bind_param($stmt, "ssssssss", $username, $city, $streetname, $postalcode, $housenumber, $phonenumber, $email, $hash_password);
                                                 mysqli_stmt_execute($stmt) or die(mysqli_error($db));
                                                 mysqli_stmt_close($stmt);
 
@@ -328,7 +342,7 @@ if (isset($_POST['register'])) {
                                     </div>
                                     <div class="col-lg-6">
                                         <label for="housenumber">
-                                            Huisnummer + toevoeging
+                                            Huisnummer
                                         </label>
                                         <input class="form-control" type="text" name="housenumber" id="housenumber">
                                     </div>

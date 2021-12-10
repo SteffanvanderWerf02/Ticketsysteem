@@ -202,12 +202,14 @@ require_once("../components/functions.php");
                 <h1>Bedrijf aanvragen</h1>
             </div>
             <div class="col-lg-12">
-                <table class="table">
+                <table cellspacing="0" cellpadding="0" class="table">
                     <thead>
                         <tr>
                             <th>Bedrijfsnaam</th>
                             <th>Kvk nummer</th>
+                            <th>Woonplaats</th>
                             <th>Postcode</th>
+                            <th>Straatnaam + huisnummer</th>
                             <th class="text-center"><span class="material-icons align-middle red">clear</span></th>
                             <th class="text-center"><span class="material-icons align-middle green">done</span></th>
                         </tr>
@@ -218,20 +220,25 @@ require_once("../components/functions.php");
                             SELECT  company_id,
                                     name,
                                     kvk,
-                                    postalcode                                    
+                                    postalcode,
+                                    streetname,
+                                    city,
+                                    house_number                                    
                             FROM    company
                             WHERE   status = 0
                         ") or die(mysqli_error($db));
                         mysqli_stmt_execute($stmt) or die(mysqli_error($db));
                         mysqli_stmt_store_result($stmt) or die(mysqli_error($db));
-                        mysqli_stmt_bind_result($stmt, $id, $name, $kvk, $postalcode);
+                        mysqli_stmt_bind_result($stmt, $id, $name, $kvk, $postalcode, $streetname, $city, $housenumber);
                         if (mysqli_stmt_num_rows($stmt) > 0) {
                             while (mysqli_stmt_fetch($stmt)) {
                         ?>
                                 <tr>
                                     <td><?= $name ?></td>
                                     <td><?= $kvk ?></td>
+                                    <td><?= $city ?></td>
                                     <td><?= $postalcode ?></td>
+                                    <td><?= $streetname . " " . $housenumber ?></td>
                                     <td class="text-center">
                                         <form action="<?= $_SERVER["PHP_SELF"] ?>" method="POST">
                                             <button class="btn btn-denied" onclick="return confirm('Weet u zeker of dat u dit bedrijf wil afkeuren')" name="denied" value="<?= $id ?>" type="submit">Afkeuren</button>
