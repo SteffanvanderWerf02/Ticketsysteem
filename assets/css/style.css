@@ -560,25 +560,20 @@ a.fill-div {
   text-align: left;
 }
 
-
 .input-rounded {
   border: auto;
   margin: 0 auto;
   border: 1px var(--border-color);
   border-radius: 24px;
 }
-<<<<<<< HEAD
-.table tr:nth-child(even) td {
-  background-color: #cecece;
-=======
-.table tbody tr:nth-child(even) { 
+.table tbody tr:nth-child(even) {
   background-color: #dcdcdc;
 }
-.table tbody tr:hover{
-    background-color: #cecece;
+.table tbody tr:hover {
+  background-color: #cecece;
 }
 .table tbody tr[data-href] {
-cursor: pointer;
+  cursor: pointer;
 }
 
 /* Ticket create page */
@@ -587,7 +582,7 @@ cursor: pointer;
   display: block;
   width: 50%;
   margin: 10px 0px 10px 0px;
-  padding: .375rem .75rem;
+  padding: 0.375rem 0.75rem;
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
@@ -601,7 +596,7 @@ cursor: pointer;
   display: block;
   width: 50%;
   margin: 10px 0px 10px 0px;
-  padding: .375rem .75rem;
+  padding: 0.375rem 0.75rem;
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
@@ -615,7 +610,7 @@ cursor: pointer;
   display: block;
   width: 50%;
   margin: 10px 0px 10px 0px;
-  padding: .375rem .75rem;
+  padding: 0.375rem 0.75rem;
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
@@ -659,7 +654,6 @@ cursor: pointer;
   border-radius: 10px;
   padding: 20px;
   padding-left: 10px;
->>>>>>> 2ea12eb8315d5c9e0fcd9419787bd72855acd556
 }
 
 .td-right {

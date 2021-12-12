@@ -181,6 +181,7 @@ if (isset($_POST['register'])) {
                                                 mysqli_stmt_close($stmt);
 
                                                 echo "<div class='alert alert-success'>U heeft een particulier account aangemaakt. U kunt inloggen.</div>";
+                                                header('Location: pages/home.php');
                                             }
                                         } else {
                                             echo "<div class='alert alert-danger'>Dit email adres bestaat al.</div>";
