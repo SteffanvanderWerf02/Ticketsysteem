@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Gegenereerd op: 09 dec 2021 om 20:27
+-- Gegenereerd op: 10 dec 2021 om 13:35
 -- Serverversie: 10.4.22-MariaDB
 -- PHP-versie: 8.0.13
 
@@ -70,18 +70,25 @@ INSERT INTO `company` (`company_id`, `name`, `email_adres`, `city`, `streetname`
 CREATE TABLE `issue` (
   `issue_id` int(11) NOT NULL,
   `company_id` int(11) DEFAULT NULL,
-  `priority` varchar(50) NOT NULL,
+  `priority` int(3) NOT NULL,
   `category` varchar(255) NOT NULL,
   `sub_category` varchar(255) NOT NULL,
   `title` varchar(255) NOT NULL,
   `description` varchar(255) NOT NULL,
   `created at` date NOT NULL,
-  `closed at` datetime NOT NULL,
+  `closed at` date DEFAULT NULL,
   `frequency` varchar(50) NOT NULL,
   `appendex_url` varchar(128) DEFAULT NULL,
   `status_timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `status` varchar(50) NOT NULL
+  `status` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Gegevens worden geëxporteerd voor tabel `issue`
+--
+
+INSERT INTO `issue` (`issue_id`, `company_id`, `priority`, `category`, `sub_category`, `title`, `description`, `created at`, `closed at`, `frequency`, `appendex_url`, `status_timestamp`, `status`) VALUES
+(1, 1, 0, 'Diensten', 'Voiliere', 'Voiliere maken', 'Ik wil volgens', '2021-12-10', '2021-12-10', 'Weekly', NULL, '2021-12-10 11:48:33', 1);
 
 -- --------------------------------------------------------
 
@@ -227,7 +234,7 @@ ALTER TABLE `company`
 -- AUTO_INCREMENT voor een tabel `issue`
 --
 ALTER TABLE `issue`
-  MODIFY `issue_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `issue_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT voor een tabel `issue_message`
@@ -256,6 +263,12 @@ ALTER TABLE `user_issue`
 --
 -- Beperkingen voor geëxporteerde tabellen
 --
+
+--
+-- Beperkingen voor tabel `issue`
+--
+ALTER TABLE `issue`
+  ADD CONSTRAINT `CompanyRelaties` FOREIGN KEY (`company_id`) REFERENCES `company` (`company_id`);
 
 --
 -- Beperkingen voor tabel `issue_message`

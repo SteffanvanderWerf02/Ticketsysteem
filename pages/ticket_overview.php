@@ -59,9 +59,9 @@
                 </div>
             </div>
             <div class="col-lg-10">
-                <table cellspacing="0" cellpadding="0"  class="table">
+                <table cellspacing="0" cellpadding="0" class="table">
                     <thead>
-                        <tr>
+                        <tr data-href="ticket_detail.php?id=1">
                             <th>id</th>
                             <th>Aanmaak datum</th>
                             <th>Titel</th>
@@ -73,7 +73,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
+                        <tr class="action" data-href="ticket_detail.php?id=1">
                             <td>1</td>
                             <td>25/02/2021</td>
                             <td>Lorem ipsum</td>
@@ -83,7 +83,7 @@
                             <td>ticket</td>
                             <td>Vragen</td>
                         </tr>
-                        <tr>
+                        <tr class="action" data-href="ticket_detail.php?id=1">
                             <td>2</td>
                             <td>24/10/2021</td>
                             <td>Lorem ipsum</td>
@@ -93,7 +93,7 @@
                             <td>ticket</td>
                             <td>Klacht</td>
                         </tr>
-                        <tr>
+                        <tr class="action" data-href="ticket_detail.php?id=3">
                             <td>3</td>
                             <td>21/11/2021</td>
                             <td>Lorem ipsum</td>
@@ -105,6 +105,13 @@
                         </tr>
                     </tbody>
                 </table>
+                <script>
+                    $(document).ready(function($) {
+                        $(".action").click(function() {
+                            window.location = $(this).data("href");
+                        });
+                    });
+                </script>
             </div>
         </div>
     </div>
