@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Gegenereerd op: 06 dec 2021 om 16:09
--- Serverversie: 10.4.22-MariaDB
--- PHP-versie: 8.0.13
+-- Gegenereerd op: 13 dec 2021 om 11:41
+-- Serverversie: 10.4.20-MariaDB
+-- PHP-versie: 8.0.9
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -33,6 +33,15 @@ CREATE TABLE `authentication` (
   `description` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Gegevens worden geëxporteerd voor tabel `authentication`
+--
+
+INSERT INTO `authentication` (`auth_id`, `name`, `description`) VALUES
+(1, 'particulier', 'de particulieren klant'),
+(2, 'zakelijk account', 'de zakelijke klant/medewerker'),
+(3, 'Beheerder', 'De beheerder van het systeem');
+
 -- --------------------------------------------------------
 
 --
@@ -53,9 +62,9 @@ CREATE TABLE `company` (
 -- Gegevens worden geëxporteerd voor tabel `company`
 --
 
-INSERT INTO `company` (`company_id`, `name`, `postalcode`, `house_number`, `phone_number`, `kvk`, `status`) VALUES
-(1, 'Bottom up', '3421TH', 3, '496040', 37112677, 1),
-(2, 'Mac Donalds', '9531pg', 1, '324435', 2147483647, 0);
+INSERT INTO `company` (`company_id`, `name`, `postalcode`, `house_number`, `phone_number`, `status`, `kvk`) VALUES
+(1, 'Bottom up', '3421TH', 3, '496040', 1, 37112677),
+(2, 'Mac Donalds', '9531pg', 1, '324435', 0, 2147483647);
 
 -- --------------------------------------------------------
 
@@ -65,16 +74,18 @@ INSERT INTO `company` (`company_id`, `name`, `postalcode`, `house_number`, `phon
 
 CREATE TABLE `issue` (
   `issue_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `company_id` int(11) NOT NULL,
   `priority` int(11) NOT NULL,
-  `category` int(11) NOT NULL,
-  `sub_category` int(11) NOT NULL,
-  `title` int(11) NOT NULL,
-  `description` int(11) NOT NULL,
-  `created at` int(11) NOT NULL,
-  `closed at` int(11) NOT NULL,
-  `frequency` int(11) NOT NULL,
-  `status_timestamp` int(11) NOT NULL,
+  `category` varchar(30) NOT NULL,
+  `sub_category` varchar(100) NOT NULL,
+  `title` varchar(50) NOT NULL,
+  `description` varchar(200) NOT NULL,
+  `result` varchar(100) NOT NULL,
+  `created at` timestamp NULL DEFAULT NULL,
+  `closed at` timestamp NULL DEFAULT NULL,
+  `frequency` varchar(30) NOT NULL,
+  `status_timestamp` timestamp NULL DEFAULT NULL,
   `status` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -133,19 +144,6 @@ INSERT INTO `user` (`user_id`, `company_id`, `auth_id`, `name`, `postalcode`, `h
 (1, 1, 1, 'admin', '4953PG', 23, '394394', 'steffanhenrybart@gmail.com', '$2y$10$MKpK1vS1fX6tAro.zljOpOYSkRkODuqh9pPs56baie.vc5PM.QLxa', 1, '758265bfe56538eca2e93c0212ef5a30', '2021-12-07 01:12:53'),
 (2, 2, 1, 'Mac Donalds', '9531pg', 1, '324435', 'Donald@gmail.com', '$2y$10$LXSLDp3sCREnc3Al1zoHxucFokLTwFTyLEKhUpHl3IE3OkhDBgXba', 0, NULL, NULL);
 
--- --------------------------------------------------------
-
---
--- Tabelstructuur voor tabel `user_issue`
---
-
-CREATE TABLE `user_issue` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `issue_id` int(11) NOT NULL,
-  `date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
 --
 -- Indexen voor geëxporteerde tabellen
 --
@@ -161,6 +159,14 @@ ALTER TABLE `authentication`
 --
 ALTER TABLE `company`
   ADD PRIMARY KEY (`company_id`);
+
+--
+-- Indexen voor tabel `issue`
+--
+ALTER TABLE `issue`
+  ADD PRIMARY KEY (`issue_id`),
+  ADD KEY `userIsuess` (`user_id`),
+  ADD KEY `CompanyRelation` (`company_id`);
 
 --
 -- Indexen voor tabel `issue_message`
@@ -184,14 +190,6 @@ ALTER TABLE `user`
   ADD KEY `company_id` (`company_id`);
 
 --
--- Indexen voor tabel `user_issue`
---
-ALTER TABLE `user_issue`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`),
-  ADD KEY `issue_id` (`issue_id`);
-
---
 -- AUTO_INCREMENT voor geëxporteerde tabellen
 --
 
@@ -199,13 +197,19 @@ ALTER TABLE `user_issue`
 -- AUTO_INCREMENT voor een tabel `authentication`
 --
 ALTER TABLE `authentication`
-  MODIFY `auth_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `auth_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT voor een tabel `company`
 --
 ALTER TABLE `company`
   MODIFY `company_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT voor een tabel `issue`
+--
+ALTER TABLE `issue`
+  MODIFY `issue_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT voor een tabel `issue_message`
@@ -226,10 +230,15 @@ ALTER TABLE `user`
   MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT voor een tabel `user_issue`
+-- Beperkingen voor geëxporteerde tabellen
 --
-ALTER TABLE `user_issue`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- Beperkingen voor tabel `issue`
+--
+ALTER TABLE `issue`
+  ADD CONSTRAINT `CompanyRelation` FOREIGN KEY (`company_id`) REFERENCES `company` (`company_id`),
+  ADD CONSTRAINT `userIsuess` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
