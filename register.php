@@ -125,7 +125,7 @@ if (isset($_POST['register'])) {
                                                         VALUES 
                                                         (
                                                             ?,
-                                                            1,
+                                                            2,
                                                             ?,
                                                             ?,
                                                             ?,

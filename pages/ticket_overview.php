@@ -1,9 +1,12 @@
+<?php include_once("../config.php");?>
+<?php include_once("../connection.php");?>
 <!DOCTYPE html>
 <html lang="nl">
-
 <head>
     <title>Bottom up - Overzicht</title>
-    <?php include_once("../components/head.html") ?>
+    <?php include_once("../components/head.html") ;
+    var_dump($_SESSION);
+    ?>
 </head>
 
 <body>
