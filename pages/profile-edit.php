@@ -60,7 +60,7 @@ include_once("../connection.php");
                     mysqli_stmt_fetch($stmt);
                     mysqli_stmt_close($stmt);
                 } else {
-                    echo "Er zijn geen gebruikers gegevens beschikbaar";
+                    echo "<div class='alert alert-danger'>Er zijn geen gebruikers gegevens beschikbaar</div>";
                 }
 
 

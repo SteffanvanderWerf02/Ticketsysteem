@@ -58,19 +58,19 @@
                                 mysqli_stmt_execute($stmt) or die(mysqli_error($db));
                                 mysqli_stmt_close($stmt);
                             } else {
-                                echo "de keuze bij de herhaalbaarheid valt niet onder de gegeven opties";
+                                echo "<div class='alert alert-danger'>De keuze bij de herhaalbaarheid valt niet onder de gegeven opties</div>";
                             }
                         } else {
-                            echo "het gewenste resultaat is niet ingevuld";
+                            echo "<div class='alert alert-danger'>Het gewenste resultaat is niet ingevuld</div>";
                         }
                     } else {
-                        echo "de omschrijving van de ticket is niet ingevuld";
+                        echo "<div class='alert alert-danger'>De omschrijving van de ticket is niet ingevuld</div>";
                     }
                 } else {
-                    echo "de category is niet ingevuld";
+                    echo "<div class='alert alert-danger'>De category is niet ingevuld</div>";
                 }
             } else {
-                echo "de titel van de ticket is niet ingevuld";
+                echo "<div class='alert alert-danger'>De titel van de ticket is niet ingevuld</div>";
             }
         }
     }

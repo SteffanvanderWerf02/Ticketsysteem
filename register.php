@@ -140,9 +140,8 @@ if (isset($_POST['register'])) {
                                                     mysqli_stmt_bind_param($stmt, "issssssss", $companyId, $companyName, $city, $streetname, $postalcode, $housenumber, $phonenumber, $email, $hash_password);
                                                     mysqli_stmt_execute($stmt) or die(mysqli_error($db));
                                                     mysqli_stmt_close($stmt);
-                                                    
-                                                    
-                                                    echo "<div class='alert alert-success'>U heeft een Zakelijk account aangemaakt, deze word gecontroleerd.</div>";
+                                                                              
+                                                    header("Location: accountCreated.php");
                                                 } else {
                                                     echo "<div class='alert alert-danger'>Dit bedrijf bestaat al</div>";
                                                 }
@@ -180,8 +179,7 @@ if (isset($_POST['register'])) {
                                                 mysqli_stmt_execute($stmt) or die(mysqli_error($db));
                                                 mysqli_stmt_close($stmt);
 
-                                                echo "<div class='alert alert-success'>U heeft een particulier account aangemaakt. U kunt inloggen.</div>";
-                                                header('Location: pages/home.php');
+                                                header("Location: pages/ticket_overview.php");
                                             }
                                         } else {
                                             echo "<div class='alert alert-danger'>Dit email adres bestaat al.</div>";
