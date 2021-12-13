@@ -22,10 +22,27 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
     mysqli_stmt_bind_result($stmt, $issue_id, $priority, $category, $title, $description, $created_at, $frequency, $status);
     mysqli_stmt_fetch($stmt);
 
+            mysqli_stmt_execute($stmt) or die(mysqli_error($db));
+            mysqli_stmt_bind_result($stmt, $issue_id, $priority, $category, $title, $description, $created_at, $frequency, $status);
+            mysqli_stmt_fetch($stmt);
+            mysqli_stmt_close($stmt);
+    
+    $sql = "SELECT  `name`
+            FROM    user
+            WHERE   `user_id` = ?
+           ";
 
-    function priorityCheck($priorityValue)
-    {
-        $priorityStat = [0 => "laag", 1 => "middelmatig", 2 => "hoog"];
+            $stmt = mysqli_prepare($db, $sql) or die(mysqli_error($db));
+            
+            mysqli_stmt_bind_param($stmt, "i", $_SESSION['userId']);  
+            mysqli_stmt_execute($stmt) or die(mysqli_error($db));
+            mysqli_stmt_bind_result($stmt, $name);
+            mysqli_stmt_fetch($stmt);
+            mysqli_stmt_close($stmt);
+
+
+    function priorityCheck($priorityValue) {
+        $priorityStat = [0=>"laag",1=>"Gemiddeld",2=>"hoog"]; 
         return $priorityStat[$priorityValue];
     }
 
@@ -75,7 +92,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                                     </tr>
                                     <tr>
                                         <td class="text-left td-left">Aangemaakt door:</td>
-                                        <td class="td-right text-right">Klaas van Tuigen</td>
+                                        <td class="td-right text-right"><?php echo $name; ?></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -119,8 +136,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
         <!-- Footer include -->
 
     <?php
-}
-mysqli_stmt_close($stmt); ?>
+} ?>
 <?php include_once("../components/footer.php") ?>
 </body>
 </html>

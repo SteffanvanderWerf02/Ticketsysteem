@@ -83,6 +83,7 @@ CREATE TABLE `issue` (
   `priority` int(3) NOT NULL,
   `category` varchar(255) NOT NULL,
   `sub_category` varchar(255) NOT NULL,
+  `result` varchar(100) NOT NULL,
   `title` varchar(255) NOT NULL,
   `description` varchar(255) NOT NULL,
   `created at` date NOT NULL,
@@ -180,8 +181,8 @@ ALTER TABLE `company`
 --
 ALTER TABLE `issue`
   ADD PRIMARY KEY (`issue_id`),
-  ADD KEY `company_id` (`company_id`),
-  ADD KEY `user_id` (`user_id`);
+  ADD KEY `userIsuess` (`user_id`),
+  ADD KEY `CompanyRelation` (`company_id`);
 
 --
 -- Indexen voor tabel `issue_message`
@@ -227,6 +228,12 @@ ALTER TABLE `issue`
   MODIFY `issue_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT voor een tabel `issue`
+--
+ALTER TABLE `issue`
+  MODIFY `issue_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT voor een tabel `issue_message`
 --
 ALTER TABLE `issue_message`
@@ -252,20 +259,8 @@ ALTER TABLE `user`
 -- Beperkingen voor tabel `issue`
 --
 ALTER TABLE `issue`
-  ADD CONSTRAINT `CompanyRelaties` FOREIGN KEY (`company_id`) REFERENCES `company` (`company_id`);
-
---
--- Beperkingen voor tabel `issue_message`
---
-ALTER TABLE `issue_message`
-  ADD CONSTRAINT `issuesRelatie` FOREIGN KEY (`issue_id`) REFERENCES `issue` (`issue_id`),
-  ADD CONSTRAINT `messageRelatie` FOREIGN KEY (`message_id`) REFERENCES `message` (`message_id`);
-
---
--- Beperkingen voor tabel `user`
---
-ALTER TABLE `user`
-  ADD CONSTRAINT `CompanyRelatie` FOREIGN KEY (`company_id`) REFERENCES `company` (`company_id`);
+  ADD CONSTRAINT `CompanyRelation` FOREIGN KEY (`company_id`) REFERENCES `company` (`company_id`),
+  ADD CONSTRAINT `userIsuess` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
