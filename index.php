@@ -19,6 +19,7 @@ if (isset($_POST['login'])) {
             $stmt = mysqli_prepare($db, "
                 SELECT  user_id,
                         name,
+                        auth_id,
                         company_id,
                         hash_password,
                         status
@@ -28,7 +29,7 @@ if (isset($_POST['login'])) {
             mysqli_stmt_bind_param($stmt, "s", $username);
             mysqli_stmt_execute($stmt) or die(mysqli_error($db));
             mysqli_stmt_store_result($stmt) or die(mysqli_error($db));
-            mysqli_stmt_bind_result($stmt, $userId, $username, $companyId, $hash_password, $status);
+            mysqli_stmt_bind_result($stmt, $userId, $username, $authId, $companyId, $hash_password, $status);
             mysqli_stmt_fetch($stmt);
             if (mysqli_stmt_num_rows($stmt) > 0) {
                 mysqli_stmt_close($stmt);
@@ -36,7 +37,7 @@ if (isset($_POST['login'])) {
                     if ($companyId == NULL) {
                         $_SESSION["loggedIn"] = true;
                         $_SESSION["userId"] = $userId;
-                        $_SESSION["accountType"] = 0; // 0 = Particulier account                        
+                        $_SESSION["accountType"] = $authId; // 0 = Particulier account                        
                     } else if ($companyId == 1) {
                         $stmt = mysqli_prepare($db, "
                             SELECT  user.status
@@ -53,7 +54,7 @@ if (isset($_POST['login'])) {
                                 mysqli_stmt_close($stmt);
                                 $_SESSION["loggedIn"] = true;
                                 $_SESSION["userId"] = $userId;
-                                $_SESSION["accountType"] = 2; // 2 = Bottom up user
+                                $_SESSION["accountType"] = $authId; // 2 = Bottom up user
                                 $_SESSION["companyId"] = $companyId;
 
                                 header("Location: ./pages/ticket_overview.php");
@@ -80,7 +81,7 @@ if (isset($_POST['login'])) {
                                 mysqli_stmt_close($stmt);
                                 $_SESSION["loggedIn"] = true;
                                 $_SESSION["userId"] = $userId;
-                                $_SESSION["accountType"] = 1; // 1 = Zakelijk account type
+                                $_SESSION["accountType"] = $authId; // 1 = Zakelijk account type
                                 $_SESSION["companyId"] = $companyId;
 
                                 header("Location: ./pages/home.php");

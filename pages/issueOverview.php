@@ -1,5 +1,6 @@
 <?php
-include_once ("../connection.php")
+include_once ("../config.php");
+include_once ("../connection.php");
 ?>
 <!DOCTYPE html>
 <html lang="nl" class="h-100">
@@ -14,17 +15,17 @@ include_once ("../connection.php")
         <div class="row h-100">
             <div class="col-lg-4 my-auto">
                 <div class="card square mx-auto justify-content-center">
-                    <a href="#" class="fill-div">Ticket aanmaken</a>
+                    <a href="./createIssue.php?issueType=ticket" class="fill-div">Ticket aanmaken</a>
                 </div>
             </div>
             <div class="col-lg-4 my-auto">
                 <div class="card square mx-auto justify-content-center">
-                    <a href="#" class="fill-div">Dienst / Service aanvragen</a>
+                    <a href="./createIssue.php?issueType=dienst/service" class="fill-div">Dienst / Service aanvragen</a>
                 </div>
             </div>
             <div class="col-lg-4 my-auto">
                 <div class="card square mx-auto justify-content-center">
-                    <a href="#" class="fill-div">Product aanvraag</a>
+                    <a href="./createIssue.php?issueType=aanvraag" class="fill-div">Product aanvraag</a>
                 </div>
             </div>
         </div>
