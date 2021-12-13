@@ -7,8 +7,8 @@ if (isset($_POST['logout'])) {
     session_destroy();
     ?>
     <div class="alert alert-success">
-            U bent succesvol uitgelogt.
-        </div>
+            U bent succesvol uitgelogd.
+    </div>
     <?php
 }
 
@@ -58,7 +58,7 @@ if (isset($_POST['login'])) {
 
                                 header("Location: ./pages/ticket_overview.php");
                             } else {
-                                echo "De gebruikers naam of wachtwoord zijn niet correct of u account is nog niet actief";
+                                echo "<div class='alert alert-danger'>De gebruikers naam of wachtwoord zijn niet correct of uw account is nog niet actief</div>";
                             }
                         }
                     } else {
@@ -85,23 +85,23 @@ if (isset($_POST['login'])) {
 
                                 header("Location: ./pages/home.php");
                             } else {
-                                echo "De gebruikers naam of wachtwoord zijn niet correct of u account is nog niet actief";
+                                echo "<div class='alert alert-danger'>De gebruikers naam of wachtwoord zijn niet correct of u account is nog niet actief</div>";
                             }
                         } else {
-                            echo "De gebruikers naam of wachtwoord zijn niet correct of u account is nog niet actief";
+                            echo "<div class='alert alert-danger'>De gebruikers naam of wachtwoord zijn niet correct of u account is nog niet actief</div>";
                         }
                     }
                 } else {
-                    echo "De gebruikers naam of wachtwoord zijn niet correct of u account is nog niet actief";
+                    echo "<div class='alert alert-danger'>De gebruikers naam of wachtwoord zijn niet correct of u account is nog niet actief</div>";
                 }
             } else {
-                echo "De gebruikers naam of wachtwoord zijn niet correct of u account is nog niet actief";
+                echo "<div class='alert alert-danger'>De gebruikers naam of wachtwoord zijn niet correct of u account is nog niet actief</div>";
             }
         } else {
-            echo "Uw wachtwoord is niet ingevuld";
+            echo "<div class='alert alert-danger'>Uw wachtwoord is niet ingevuld</div>";
         }
     } else {
-        echo "Uw gebruikersnaam is niet ingevuld";
+        echo "<div class='alert alert-danger'>Uw gebruikersnaam is niet ingevuld</div>";
     }
 }
 ?>

@@ -89,6 +89,13 @@ CREATE TABLE `issue` (
   `status` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Gegevens worden geëxporteerd voor tabel `issue`
+--
+
+INSERT INTO `issue` (`issue_id`, `company_id`, `priority`, `category`, `sub_category`, `title`, `description`, `created at`, `closed at`, `frequency`, `appendex_url`, `status_timestamp`, `status`) VALUES
+(1, 1, 0, 'Diensten', 'Voiliere', 'Voiliere maken', 'Ik wil volgens', '2021-12-10', '2021-12-10', 'Weekly', NULL, '2021-12-10 11:48:33', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -208,7 +215,7 @@ ALTER TABLE `company`
 -- AUTO_INCREMENT voor een tabel `issue`
 --
 ALTER TABLE `issue`
-  MODIFY `issue_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `issue_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT voor een tabel `issue_message`
@@ -237,6 +244,7 @@ ALTER TABLE `user`
 --
 ALTER TABLE `issue`
   ADD CONSTRAINT `userIsuess` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`);
+  ADD CONSTRAINT `CompanyRelaties` FOREIGN KEY (`company_id`) REFERENCES `company` (`company_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
