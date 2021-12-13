@@ -566,6 +566,9 @@ a.fill-div {
   border: 1px var(--border-color);
   border-radius: 24px;
 }
+.table tr:nth-child(even) td {
+  background-color: #cecece;
+}
 .table tbody tr:nth-child(even) {
   background-color: #dcdcdc;
 }
