@@ -112,6 +112,27 @@ if(isset($_POST['submit'])){
     }    
 } 
 
+$stmt = mysqli_prepare($db, "
+                    SELECT  name, 
+                            city,
+		                    postalcode,
+                            streetname,
+                            house_number,
+                            phone_number,
+                            email_adres,
+                            kvk
+                    FROM 	company
+                    WHERE 	company_id = ?
+                    ") or die mysqli_error($db));
+                    mysqli_stmt_bind_param($stmt, "i", $_SESSION["companyId"]);
+                    mysqli_stmt_execute($stmt) or die(mysqli_error($db));
+                    mysqli_stmt_bind_result($stmt, $name, $city, $postalcode, $streetname, $houseNumber, $phoneNumber, $email, $kvk);
+
+
+
+
+
+
 
                 ?>
                 <form method="POST">
