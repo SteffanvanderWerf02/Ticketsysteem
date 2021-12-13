@@ -1,3 +1,8 @@
+<?php 
+    include_once("../config.php");
+    include_once("../connection.php");
+?>
+
 <!DOCTYPE html>
 <html lang="nl">
 
@@ -68,7 +73,7 @@
                             <th>Bedrijf</th>
                             <th>Prioriteit</th>
                             <th>Status</th>
-                            <th>Hooftcategorie</th>
+                            <th>Hoofdcategorie</th>
                             <th>Categorie</th>
                         </tr>
                     </thead>
