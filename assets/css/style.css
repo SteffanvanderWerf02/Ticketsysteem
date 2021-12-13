@@ -560,7 +560,6 @@ a.fill-div {
   text-align: left;
 }
 
-
 .input-rounded {
   border: auto;
   margin: 0 auto;
@@ -570,14 +569,14 @@ a.fill-div {
 .table tr:nth-child(even) td {
   background-color: #cecece;
 }
-.table tbody tr:nth-child(even) { 
+.table tbody tr:nth-child(even) {
   background-color: #dcdcdc;
 }
-.table tbody tr:hover{
-    background-color: #cecece;
+.table tbody tr:hover {
+  background-color: #cecece;
 }
 .table tbody tr[data-href] {
-cursor: pointer;
+  cursor: pointer;
 }
 
 /* Ticket create page */
@@ -586,7 +585,7 @@ cursor: pointer;
   display: block;
   width: 50%;
   margin: 10px 0px 10px 0px;
-  padding: .375rem .75rem;
+  padding: 0.375rem 0.75rem;
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
@@ -600,7 +599,7 @@ cursor: pointer;
   display: block;
   width: 50%;
   margin: 10px 0px 10px 0px;
-  padding: .375rem .75rem;
+  padding: 0.375rem 0.75rem;
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
@@ -614,7 +613,7 @@ cursor: pointer;
   display: block;
   width: 50%;
   margin: 10px 0px 10px 0px;
-  padding: .375rem .75rem;
+  padding: 0.375rem 0.75rem;
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;

@@ -37,25 +37,25 @@ if (isset($_POST['passwordConfirm'])) {
                                 mysqli_stmt_bind_param($stmt, "ss", $hashPassword, $token) or mysqli_error($db);
                                 mysqli_stmt_execute($stmt) or mysqli_error($db);
                             } else {
-                                echo "U wachtwoorden komen niet overeen";
+                                echo "<div class='alert alert-danger'>U wachtwoorden komen niet overeen</div>";
                             }
                         } else {
-                            echo "Uw token is niet correct of is verlopen.";
+                            echo "<div class='alert alert-danger'>Uw token is niet correct of is verlopen</div>";
                         }
                     } else {
-                        echo "Uw token is niet correct of is verlopen.";
+                        echo "<div class='alert alert-danger'>Uw token is niet correct of is verlopen</div>";
                     }
                 } else {
-                    echo "Uw token is niet correct of is verlopen.";
+                    echo "<div class='alert alert-danger'>Uw token is niet correct of is verlopen</div>";
                 }
             } else {
-                echo "U heeft het veld herhaal wachtwoord niet correct ingevuld";
+                echo "<div class='alert alert-danger'>U heeft het veld herhaal wachtwoord niet correct ingevuld</div>";
             }
         } else {
-            echo "U heeft het veld wachtwoord niet correct ingevuld";
+            echo "<div class='alert alert-danger'>U heeft het veld wachtwoord niet correct ingevuld</div>";
         }
     } else {
-        echo "U heeft het veld email adres niet correct ingevuld";
+        echo "<div class='alert alert-danger'>U heeft het veld email adres niet correct ingevuld</div>";
     }
 }
 
@@ -111,10 +111,10 @@ if (isset($_POST['generateToken'])) {
                 MAIL_HEADERS
             );
         } else {
-            echo "Deze gebruiker niet bekent.";
+            echo "<div class='alert alert-danger'>Deze gebruiker is niet bekend</div>";
         }
     } else {
-        echo "U heeft het veld email adres niet ingevuld";
+        echo "<div class='alert alert-danger'>U heeft het veld email adres niet ingevuld</div>";
     }
 }
 ?>
@@ -145,7 +145,7 @@ if (isset($_POST['generateToken'])) {
                                     <div class="row">
                                         <div class="col-lg-12 mb-1">
                                             <label for="login-email">
-                                                Vul hier u gekoppelde email adres in
+                                                Vul hier uw gekoppelde email adres in
                                             </label>
                                         </div>
                                         <div class="col-lg-12 mb-1">

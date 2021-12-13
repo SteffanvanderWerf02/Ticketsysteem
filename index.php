@@ -86,17 +86,17 @@ if (isset($_POST['login'])) {
 
                                 header("Location: ./pages/home.php");
                             } else {
-                                echo "<div class='alert alert-danger'>De gebruikers naam of wachtwoord zijn niet correct of u account is nog niet actief</div>";
+                                echo "<div class='alert alert-danger'>De gebruikers naam of wachtwoord zijn niet correct of uw account is nog niet actief</div>";
                             }
                         } else {
-                            echo "<div class='alert alert-danger'>De gebruikers naam of wachtwoord zijn niet correct of u account is nog niet actief</div>";
+                            echo "<div class='alert alert-danger'>De gebruikers naam of wachtwoord zijn niet correct of uw account is nog niet actief</div>";
                         }
                     }
                 } else {
-                    echo "<div class='alert alert-danger'>De gebruikers naam of wachtwoord zijn niet correct of u account is nog niet actief</div>";
+                    echo "<div class='alert alert-danger'>De gebruikers naam of wachtwoord zijn niet correct of uw account is nog niet actief</div>";
                 }
             } else {
-                echo "<div class='alert alert-danger'>De gebruikers naam of wachtwoord zijn niet correct of u account is nog niet actief</div>";
+                echo "<div class='alert alert-danger'>De gebruikers naam of wachtwoord zijn niet correct of uw account is nog niet actief</div>";
             }
         } else {
             echo "<div class='alert alert-danger'>Uw wachtwoord is niet ingevuld</div>";

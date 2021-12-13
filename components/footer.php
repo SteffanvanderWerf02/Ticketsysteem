@@ -15,6 +15,6 @@
     </div>
 </footer>
 <div class="grey_stroke">
-    <p>&copy; Bottum Up 2021</p>
+    <p>&copy; Bottom Up 2021</p>
 </div>
 <script src="../assets/js/script.js"></script>
