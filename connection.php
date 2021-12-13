@@ -1,5 +1,4 @@
 <?php
-include_once("config.php");
 session_start();
 mysqli_report(MYSQLI_REPORT_STRICT);
 
