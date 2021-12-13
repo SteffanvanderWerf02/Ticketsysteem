@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Gegenereerd op: 10 dec 2021 om 13:35
+-- Gegenereerd op: 13 dec 2021 om 11:50
 -- Serverversie: 10.4.22-MariaDB
 -- PHP-versie: 8.0.13
 
@@ -32,6 +32,15 @@ CREATE TABLE `authentication` (
   `name` varchar(50) NOT NULL,
   `description` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Gegevens worden geëxporteerd voor tabel `authentication`
+--
+
+INSERT INTO `authentication` (`auth_id`, `name`, `description`) VALUES
+(1, 'particulier', 'de particulieren klant'),
+(2, 'zakelijk account', 'de zakelijke klant/medewerker'),
+(3, 'Beheerder', 'De beheerder van het systeem');
 
 -- --------------------------------------------------------
 
@@ -69,6 +78,7 @@ INSERT INTO `company` (`company_id`, `name`, `email_adres`, `city`, `streetname`
 
 CREATE TABLE `issue` (
   `issue_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `company_id` int(11) DEFAULT NULL,
   `priority` int(3) NOT NULL,
   `category` varchar(255) NOT NULL,
@@ -87,8 +97,8 @@ CREATE TABLE `issue` (
 -- Gegevens worden geëxporteerd voor tabel `issue`
 --
 
-INSERT INTO `issue` (`issue_id`, `company_id`, `priority`, `category`, `sub_category`, `title`, `description`, `created at`, `closed at`, `frequency`, `appendex_url`, `status_timestamp`, `status`) VALUES
-(1, 1, 0, 'Diensten', 'Voiliere', 'Voiliere maken', 'Ik wil volgens', '2021-12-10', '2021-12-10', 'Weekly', NULL, '2021-12-10 11:48:33', 1);
+INSERT INTO `issue` (`issue_id`, `user_id`, `company_id`, `priority`, `category`, `sub_category`, `title`, `description`, `created at`, `closed at`, `frequency`, `appendex_url`, `status_timestamp`, `status`) VALUES
+(1, 0, 1, 0, 'Diensten', 'Voiliere', 'Voiliere maken', 'Ik wil volgens', '2021-12-10', '2021-12-10', 'Weekly', NULL, '2021-12-10 11:48:33', 1);
 
 -- --------------------------------------------------------
 
@@ -149,19 +159,6 @@ INSERT INTO `user` (`user_id`, `company_id`, `auth_id`, `name`, `postalcode`, `c
 (2, 2, 1, 'Mac Donalds', '9531pg', 'Borger', 'Deksteen', 1, '324435', 'Donald@gmail.com', '$2y$10$LXSLDp3sCREnc3Al1zoHxucFokLTwFTyLEKhUpHl3IE3OkhDBgXba', 0, NULL, NULL),
 (5, 3, 1, 'fia', '3939PG', 'London', 'Kingstreet', 343, '934939', 'Fia@gmail.com', '$2y$10$7vrIGvKXUS.YbKFUgFP6HOjJlBq4RANJblBbZ9gRXGG2R6yX/K3Ui', 0, NULL, NULL);
 
--- --------------------------------------------------------
-
---
--- Tabelstructuur voor tabel `user_issue`
---
-
-CREATE TABLE `user_issue` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `issue_id` int(11) NOT NULL,
-  `date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
 --
 -- Indexen voor geëxporteerde tabellen
 --
@@ -183,7 +180,8 @@ ALTER TABLE `company`
 --
 ALTER TABLE `issue`
   ADD PRIMARY KEY (`issue_id`),
-  ADD KEY `company_id` (`company_id`);
+  ADD KEY `company_id` (`company_id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexen voor tabel `issue_message`
@@ -207,14 +205,6 @@ ALTER TABLE `user`
   ADD KEY `company_id` (`company_id`);
 
 --
--- Indexen voor tabel `user_issue`
---
-ALTER TABLE `user_issue`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`),
-  ADD KEY `issue_id` (`issue_id`);
-
---
 -- AUTO_INCREMENT voor geëxporteerde tabellen
 --
 
@@ -222,7 +212,7 @@ ALTER TABLE `user_issue`
 -- AUTO_INCREMENT voor een tabel `authentication`
 --
 ALTER TABLE `authentication`
-  MODIFY `auth_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `auth_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT voor een tabel `company`
@@ -255,12 +245,6 @@ ALTER TABLE `user`
   MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT voor een tabel `user_issue`
---
-ALTER TABLE `user_issue`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- Beperkingen voor geëxporteerde tabellen
 --
 
@@ -282,13 +266,6 @@ ALTER TABLE `issue_message`
 --
 ALTER TABLE `user`
   ADD CONSTRAINT `CompanyRelatie` FOREIGN KEY (`company_id`) REFERENCES `company` (`company_id`);
-
---
--- Beperkingen voor tabel `user_issue`
---
-ALTER TABLE `user_issue`
-  ADD CONSTRAINT `issueRelatie` FOREIGN KEY (`issue_id`) REFERENCES `issue` (`issue_id`),
-  ADD CONSTRAINT `userRelatie` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
