@@ -1,11 +1,13 @@
 <?php
+define('ROOT_PATH', dirname(__DIR__) . '/');
+define("MAIL_HEADERS", "MIME-Version: 1.0" . "\r\n"."Content-type:text/html;charset=UTF-8" . "\r\n");
 session_start();
 mysqli_report(MYSQLI_REPORT_STRICT);
 
-$connection = "localhost";
-$database = "bottomup";
-$username = "root";
-$password = "root";
+$connection = CONNECTION;
+$database = DATABASE;
+$username = USERNAME;
+$password = PASSWORD;
 
 try {
     // Create connection
