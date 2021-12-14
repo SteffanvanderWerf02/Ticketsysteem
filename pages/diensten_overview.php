@@ -74,36 +74,33 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="action" data-href="ticket_detail.php?id=1">
-                            <td>1</td>
-                            <td>25/02/2021</td>
-                            <td>Lorem ipsum</td>
-                            <td>Schoen - Renner</td>
-                            <td>Laag</td>
-                            <td>Gesloten</td>
-                            <td>ticket</td>
-                            <td>Vragen</td>
-                        </tr>
-                        <tr class="action" data-href="ticket_detail.php?id=1">
-                            <td>2</td>
-                            <td>24/10/2021</td>
-                            <td>Lorem ipsum</td>
-                            <td>Hansen - Hettinger</td>
-                            <td>Hoog</td>
-                            <td>Open</td>
-                            <td>ticket</td>
-                            <td>Klacht</td>
-                        </tr>
-                        <tr class="action" data-href="ticket_detail.php?id=3">
-                            <td>3</td>
-                            <td>21/11/2021</td>
-                            <td>Lorem ipsum</td>
-                            <td>Wehner LLC</td>
-                            <td>Gemiddeld</td>
-                            <td>In Behandeling</td>
-                            <td>ticket</td>
-                            <td>Vraag</td>
-                        </tr>
+                        <?php 
+                            $stmt = mysqli_prepare($db, 
+                                    "SELECT issue_id, `created at`, title, company.name, priority, issue.`status`, category, sub_category 
+                                     FROM issue
+                                     JOIN company ON issue.company_id = company.company_id
+                                     WHERE category = 'diensten/service'");
+                            mysqli_stmt_execute($stmt) OR DIE(mysqli_error($db));
+                            mysqli_stmt_store_result($stmt) OR DIE(mysqli_error($db));
+                            mysqli_stmt_bind_result($stmt, $issueID, $createdAt, $title, $companyName, $priority, $status, $category, $subCategory);
+                        ?>
+                        <?php 
+                        if(mysqli_stmt_num_rows($stmt) > 0) {
+                            while(mysqli_stmt_fetch($stmt)) {
+                                echo
+                                "<tr class='action' data-href='ticket_detail.php?id={$issueID}'>
+                                    <td>{$issueID}</td>
+                                    <td>{$createdAt}</td>
+                                    <td>{$title}</td>
+                                    <td>{$companyName}</td>
+                                    <td>{$priority}</td>
+                                    <td>{$status}</td>
+                                    <td>{$category}</td>
+                                    <td>{$subCategory}</td>
+                                </tr>";
+                            }
+                        } 
+                        ?>                   
                     </tbody>
                 </table>
                 <script>
