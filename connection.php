@@ -2,10 +2,10 @@
 session_start();
 mysqli_report(MYSQLI_REPORT_STRICT);
 
-$connection = CONNECTION;
-$database = DATABASE;
-$username = USERNAME;
-$password = PASSWORD;
+$connection = "localhost";
+$database = "bottomup";
+$username = "root";
+$password = "root";
 
 try {
     // Create connection
