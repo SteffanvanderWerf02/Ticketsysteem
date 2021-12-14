@@ -25,25 +25,53 @@ if (isset($_POST['userSubmit'])) {
                                 mysqli_stmt_bind_param($stmt, "ssssissi", $username, $city, $postal, $street, $housenumber, $phonenumber, $email, $_SESSION["userId"]);
                                 mysqli_stmt_execute($stmt) or mysqli_error($db);
                             } else {
-                                echo "Voer een geldig e-mail adres in";
+                                echo "<div class='alert alert-danger>Voer een geldig e-mail adres in</div>";
                             }
                         } else {
-                            echo "Voer uw telefoonnummer in";
+                            echo "<div class='alert alert-danger>Voer uw telefoonnummer in</div>";
                         }
                     } else {
-                        echo "Voer uw huisnummer in";
+                        echo "<div class='alert alert-danger>Voer uw huisnummer in</div>";
                     }
                 } else {
-                    echo "Voer uw sraatnaam in";
+                    echo "<div class='alert alert-danger>Voer uw sraatnaam in</div>";
                 }
             } else {
-                echo "Voer uw postcode in";
+                echo "<div class='alert alert-danger>Voer uw postcode in</div>";
             }
         } else {
-            echo "Voer uw woonplaats in";
+            echo "<div class='alert alert-danger>Voer uw woonplaats in</div>";
         }
     } else {
-        echo "Voer uw gebruikersnaam in";
+        echo "<div class='alert alert-danger>Voer uw gebruikersnaam in</div>";
+    }
+
+    if(isset($_POST['password']) && $password = filter_input(INPUT_POST, "password", FILTER_SANITIZE_SPECIAL_CHARS)) 
+    {
+        $stmt = mysqli_prepare($db, "
+        SELECT hash_password
+        FROM user
+        WHERE user_id = ?") OR DIE(mysqli_error($db));
+        mysqli_stmt_bind_param($stmt, 'i', $_SESSION["userId"]);
+        mysqli_stmt_execute($stmt) or die(mysqli_error($db));
+        mysqli_stmt_store_result($stmt) or die(mysqli_error($db));
+        mysqli_stmt_bind_result($stmt, $hashPassword);
+        mysqli_stmt_fetch($stmt);
+        mysqli_stmt_close($stmt);
+        
+        if(password_verify($password, $hashPassword) == false) {
+            $stmt = mysqli_prepare($db, "
+            UPDATE user
+            SET hash_password = ?
+            WHERE user_id = ?") OR DIE(mysqli_erro($db));
+            $newPassword = password_hash($password,PASSWORD_DEFAULT);
+            mysqli_stmt_bind_param($stmt, 'si', $newPassword, $_SESSION['userId']);
+            mysqli_stmt_execute($stmt) OR DIE(mysqli_error($db));
+            mysqli_stmt_close($stmt);
+            echo "<div class='alert alert-success'>Wachtwoord succesvol aangepast</div>"
+        } else {
+            echo "<div class='alert alert-danger'>Het nieuw ingevoerde wachtwoord kan niet gelijk zijn aan het oude wachtwoord</div>";
+        }
     }
 }
 
@@ -68,22 +96,22 @@ if (isset($_POST['companySubmit'])) {
                             mysqli_stmt_bind_param($stmt, "sssissi", $city, $postal, $street, $housenumber, $phonenumber, $email, $_SESSION["companyId"]);
                             mysqli_stmt_execute($stmt) or mysqli_error($db);
                         } else {
-                            echo "Voer een geldig e-mail adres in";
+                            echo "<div class='alert alert-danger'>Voer een geldig e-mail adres in</div>";
                         }
                     } else {
-                        echo "Voer uw telefoonnummer in";
+                        echo "<div class='alert alert-danger'>Voer uw telefoonnummer in</div>";
                     }
                 } else {
-                    echo "Voer uw huisnummer in";
+                    echo "<div class='alert alert-danger'>Voer uw huisnummer in</div>";
                 }
             } else {
-                echo "Voer uw straatnaam in";
+                echo "<div class='alert alert-danger'>Voer uw straatnaam in</div>";
             }
         } else {
-            echo "Voer uw postcode in";
+            echo "<div class='alert alert-danger'>Voer uw postcode in</div>";
         }
     } else {
-        echo "Voer uw woonplaats in";
+        echo "<div class='alert alert-danger'>Voer uw woonplaats in</div>";
     }
 }
 
@@ -248,7 +276,7 @@ if (isset($_POST['companySubmit'])) {
                     mysqli_stmt_fetch($stmt);
                     mysqli_stmt_close($stmt);
                 } else {
-                    echo "Er zijn geen gebruikers gegevens beschikbaar";
+                    echo "<div class='alert alert-danger'>Er zijn geen gebruikers gegevens beschikbaar</div>";
                 }
 
 
