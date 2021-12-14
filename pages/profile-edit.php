@@ -20,8 +20,7 @@ include_once("../connection.php");
                 <h1>Gebruikers Informatie</h1>
             </div>
             <div class="col-lg-12 mb-3">
-                <a class="d-block mb-1" href=""><span class="material-icons align-middle">add</span>Nieuwe zakelijke gebruiker aanmaken</a>
-                <a class="d-block mb-1" href="./pages/addInternUser.php"><span class="material-icons align-middle">add</span>Nieuwe interne gebruiker aanmaken</a>
+                <a class="d-block mb-1" href="./addInternUser.php"><span class="material-icons align-middle">add</span>Nieuwe gebruiker aanmaken</a>
                 <?php
                 $stmt = mysqli_prepare($db, "
                     SELECT  count(company_id) as amount
