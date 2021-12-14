@@ -4,9 +4,7 @@
 <html lang="nl">
 <head>
     <title>Bottom up - Overzicht</title>
-    <?php include_once("../components/head.html") ;
-    var_dump($_SESSION);
-    ?>
+    <?php include_once("../components/head.html");?>
 </head>
 
 <body>
