@@ -63,12 +63,12 @@ if (isset($_POST['userSubmit'])) {
             $stmt = mysqli_prepare($db, "
             UPDATE user
             SET hash_password = ?
-            WHERE user_id = ?") OR DIE(mysqli_erro($db));
+            WHERE user_id = ?") OR DIE(mysqli_error($db));
             $newPassword = password_hash($password,PASSWORD_DEFAULT);
             mysqli_stmt_bind_param($stmt, 'si', $newPassword, $_SESSION['userId']);
             mysqli_stmt_execute($stmt) OR DIE(mysqli_error($db));
             mysqli_stmt_close($stmt);
-            echo "<div class='alert alert-success'>Wachtwoord succesvol aangepast</div>"
+            echo "<div class='alert alert-success'>Wachtwoord succesvol aangepast</div>";
         } else {
             echo "<div class='alert alert-danger'>Het nieuw ingevoerde wachtwoord kan niet gelijk zijn aan het oude wachtwoord</div>";
         }
