@@ -1,10 +1,11 @@
-<?php include_once("../config.php");?>
-<?php include_once("../connection.php");?>
+<?php include_once("../config.php"); ?>
+<?php include_once("../connection.php"); ?>
 <!DOCTYPE html>
 <html lang="nl">
+
 <head>
     <title>Bottom up - Overzicht</title>
-    <?php include_once("../components/head.html");?>
+    <?php include_once("../components/head.html"); ?>
 </head>
 
 <body>
@@ -74,19 +75,21 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php 
-                            $stmt = mysqli_prepare($db, 
-                                    "SELECT issue_id, `created at`, title, company.name, priority, issue.`status`, category, sub_category 
+                        <?php
+                        $stmt = mysqli_prepare(
+                            $db,
+                            "SELECT issue_id, `created at`, title, company.name, priority, issue.`status`, category, sub_category 
                                      FROM issue
                                      JOIN company ON issue.company_id = company.company_id
-                                     WHERE category = 'dienst/service'");
-                            mysqli_stmt_execute($stmt) OR DIE(mysqli_error($db));
-                            mysqli_stmt_store_result($stmt) OR DIE(mysqli_error($db));
-                            mysqli_stmt_bind_result($stmt, $issueID, $createdAt, $title, $companyName, $priority, $status, $category, $subCategory);
+                                     WHERE category = 'ticket'"
+                        );
+                        mysqli_stmt_execute($stmt) or die(mysqli_error($db));
+                        mysqli_stmt_store_result($stmt) or die(mysqli_error($db));
+                        mysqli_stmt_bind_result($stmt, $issueID, $createdAt, $title, $companyName, $priority, $status, $category, $subCategory);
                         ?>
-                        <?php 
-                        if(mysqli_stmt_num_rows($stmt) > 0) {
-                            while(mysqli_stmt_fetch($stmt)) {
+                        <?php
+                        if (mysqli_stmt_num_rows($stmt) > 0) {
+                            while (mysqli_stmt_fetch($stmt)) {
                                 echo
                                 "<tr class='action' data-href='ticket_detail.php?id={$issueID}'>
                                     <td>{$issueID}</td>
@@ -100,9 +103,9 @@
                                 </tr>";
                             }
                         } else {
-                            echo"<td colspan='8'>U heeft momenteel geen nieuwe dienst/service aanvragen.</td>";
+                            echo "<td colspan='8'>U heeft momenteel geen nieuwe tickets.</td>";
                         }
-                        ?>                   
+                        ?>
                     </tbody>
                 </table>
                 <script>
