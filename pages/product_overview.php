@@ -28,11 +28,11 @@ if (isset($_GET['submit'])) {
     <!-- Header include -->
     <?php include_once("../components/header.html") ?>
     <div id="content" class="container">
-        <h1>Dienst/Service overzicht</h1>
+        <h1>Product aanvraag overzicht</h1>
         <div class="row mb-3">
             <div class="col-lg-12">
                 <form action="<?= $_SERVER["PHP_SELF"] ?>" method="GET">
-                    <label>Dienst/Service id
+                    <label>Product aanvraag id
                         <input type="text" name="ticket_id" class="rounded form-control w-25 d-inline">
                     </label>
                     <label class="ml-2">Titel
@@ -84,7 +84,7 @@ if (isset($_GET['submit'])) {
                 </div>
             </div>
             <div class="col-lg-10">
-                <?php echo getIssueOverview($db, $_SESSION['companyId'], $_SESSION['userId'], "dienst/service", $filter, $ticket_id, $ticket_title); ?>
+                <?php echo getIssueOverview($db, $_SESSION['companyId'], $_SESSION['userId'], "product", $filter, $ticket_id, $ticket_title); ?>
                 <script>
                     $(document).ready(function($) {
                         $(".action").click(function() {

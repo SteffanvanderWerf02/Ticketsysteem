@@ -1,19 +1,27 @@
 <?php
-function printArray($array)
+function debugData($data, $type = "print_r")
 {
     echo '<pre>';
-    print_r($array);
+    switch ($type) {
+        case "var_dump":
+            var_dump($data);
+            break;
+        default:
+            print_r($data);
+            break;
+    }
     echo '</pre>';
 }
 
-function getIssueOverview($db, $companyId, $userId, $issueType, $filterStatus, $searchId, $searchTitle) {
+function getIssueOverview($db, $companyId, $userId, $issueType, $filterStatus, $searchId, $searchTitle)
+{
     $type = "s";
     $params = array($issueType);
 
     $return = '
         <table cellspacing="0" cellpadding="0" class="table">
         <thead>
-            <tr data-href="ticket_detail.php?id=1">
+            <tr>
                 <th>id</th>
                 <th>Aanmaak datum</th>
                 <th>Titel</th>
@@ -29,7 +37,7 @@ function getIssueOverview($db, $companyId, $userId, $issueType, $filterStatus, $
         </thead>
     <tbody>
     ';
-    $query= "
+    $query = "
         SELECT  issue.issue_id,
                 issue.created_at,
                 issue.title,
@@ -47,28 +55,30 @@ function getIssueOverview($db, $companyId, $userId, $issueType, $filterStatus, $
     // ($companyId == NULL) ? $query.=" AND issue.user_id = ? " : $query.=" AND issue.company_id = ?";  
     switch ($companyId) {
         case NULL:
-            $query.=" AND issue.user_id = ? ";
+            $query .= " AND issue.user_id = ?";
             $type .= "i";
             array_push($params, $userId);
             break;
-        default: 
-            $query.=" AND issue.company_id = ?";
+        default:
+            $query .= " AND issue.company_id = ?";
             $type .= "i";
             array_push($params, $companyId);
     }
 
     switch ($filterStatus) {
         case '1':
-            $query.= " AND issue.status = 1";
+            $query .= " AND issue.status = 1";
             break;
         case '2':
-            $query.= " AND issue.status = 2";
+            $query .= " AND issue.status = 2";
             break;
         case '3':
-            $query.= " AND issue.status = 3";
+            $query .= " AND issue.status = 3";
             break;
         case '4':
-            $query.= " AND issue.status = 4";
+            $query .= " AND issue.status = 4";
+            break;
+        default:
             break;
     }
 
@@ -77,54 +87,52 @@ function getIssueOverview($db, $companyId, $userId, $issueType, $filterStatus, $
         $type .= "i";
         array_push($params, $searchId);
     } elseif (!empty($searchTitle) && empty($searchId)) {
-        $query .= " AND issue.title LIKE '?%'";
+        $query .= " AND issue.title LIKE CONCAT(?, '%')";
         $type .= "s";
         array_push($params, $searchTitle);
-       
-    } else {
-        //return "you can't filter on both at the same time";
-        $query .= " AND issue.title LIKE '?%'";
+    } elseif (!empty($searchTitle) && !empty($searchId)) {
+        $query .= " AND issue.title LIKE CONCAT(?, '%')";
         $query .= " AND issue.issue_id = ?";
         $type .= "si";
         array_push($params, $searchTitle, $searchId);
     }
+    $stmt = mysqli_prepare($db, $query);
+    // return debugData($params,"");
+    call_user_func_array(array($stmt, "bind_param"), makeValuesReferenced(array_merge(array($type), $params)));
+    mysqli_stmt_execute($stmt) or die(mysqli_error($db));
+    mysqli_stmt_store_result($stmt) or die(mysqli_error($db));
+    mysqli_stmt_bind_result($stmt, $issueId, $createdAt, $title, $priority, $status, $category, $frequency, $subCategory, $companyName);
+    if (mysqli_stmt_num_rows($stmt) > 0) {
+        while (mysqli_stmt_fetch($stmt)) {
 
-     $stmt = mysqli_prepare($db,$query);
-        // return var_dump($params) . $query;
-        // return $query;
-        call_user_func_array(array($stmt, "bind_param"), makeValuesReferenced(array_merge(array($type), $params)));
-        mysqli_stmt_execute($stmt) OR DIE(mysqli_error($db));
-        mysqli_stmt_store_result($stmt) OR DIE(mysqli_error($db));
-        mysqli_stmt_bind_result($stmt, $issueID, $createdAt, $title, $priority, $status, $category, $frequency, $subCategory, $companyName);
-        if(mysqli_stmt_num_rows($stmt) > 0) {
-            while(mysqli_stmt_fetch($stmt)) {
-                    
-                $return .= "<tr class='action' data-href='ticket_detail.php?id={$issueID}'>
-                    <td>{$issueID}</td>
+            $return .= "<tr class='action' data-href='ticket_detail.php?id={$issueId}'>
+                    <td>{$issueId}</td>
                     <td>{$createdAt}</td>
                     <td>{$title}</td>";
-                    ($companyId == NULL) ? ""  : $return .= "<td>{$companyName}</td> <td>{$frequency}</td> ";
-                    
-                $return .= "
+            ($companyId == NULL) ? ""  : $return .= "<td>{$companyName}</td> <td>{$frequency}</td> ";
+
+            $return .= "
                     <td>{$priority}</td>
                     <td>{$status}</td>
                     <td>{$category}</td>
                     <td>{$subCategory}</td>
                 </tr>";
-            }
-        } else {
-            $return .= "<td colspan='8'>U heeft momenteel geen nieuwe dienst/service aanvragen.</td>";
-        }                  
-        $return .= "</tbody></table>";
-        
-        return $return;
+        }
+    } else {
+        if (!empty($searchTitle)|| !empty($searchId)) {
+            $return .= "<td colspan='9'>U heeft momenteel geen nieuwe {$issueType} aanvragen of u filter heeft geen resultaten opgeleverd</td>";
+        }else {
+            $return .= "<td colspan='9'>U heeft momenteel geen nieuwe {$issueType} aanvragen.</td>";
+        }
     }
-    //this function makes from merged to seperate and individual values for the bind param function
-    function makeValuesReferenced($arr){
-        $refs = array();
-        foreach($arr as $key => $value)
-            $refs[$key] = &$arr[$key];
-        return $refs;
-    
-    }
-?>
+    $return .= "</tbody></table>";
+
+    return $return;
+}
+//this function makes from merged to seperate and individual values for the bind param function
+function makeValuesReferenced($arr) {
+    $refs = array();
+    foreach ($arr as $key => $value)
+        $refs[$key] = &$arr[$key];
+    return $refs;
+}
