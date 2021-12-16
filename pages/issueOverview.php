@@ -25,7 +25,7 @@ include_once ("../connection.php");
             </div>
             <div class="col-lg-4 my-auto">
                 <div class="card square mx-auto justify-content-center">
-                    <a href="./createIssue.php?issueType=aanvraag" class="fill-div">Product aanvraag</a>
+                    <a href="./createIssue.php?issueType=product" class="fill-div">Product aanvraag</a>
                 </div>
             </div>
         </div>

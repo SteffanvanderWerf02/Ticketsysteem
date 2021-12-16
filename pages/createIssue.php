@@ -1,6 +1,6 @@
 <?php
-    include_once("../config.php");
-    include_once("../connection.php");
+include_once("../config.php");
+include_once("../connection.php");
 
 $issueType = filter_input(INPUT_GET, 'issueType', FILTER_SANITIZE_SPECIAL_CHARS);
 
@@ -12,7 +12,7 @@ if (isset($_POST['sendNewTicket'])) {
         $result = filter_input(INPUT_POST, 'createIssueResult', FILTER_SANITIZE_SPECIAL_CHARS);
 
         if ($_SESSION['accountType'] == 0) {
-            $frequency = "unknown";
+            $frequency = "N.V.T";
         } else {
             $frequency = filter_input(INPUT_POST, 'createIssueFrequency', FILTER_SANITIZE_SPECIAL_CHARS);
         }
@@ -24,38 +24,42 @@ if (isset($_POST['sendNewTicket'])) {
             if (isset($category)) {
                 if (isset($description)) {
                     if (isset($result)) {
-                        if (isset($frequency) && $frequency == "unknown" || $frequency == "none" || $frequency == "day" || $frequency == "week" || $frequency == "month" || $frequency == "year") {
-                            $sql = "INSERT INTO issue
-                                            (
-                                                `user_id`,
-                                                company_id,
-                                                priority,
-                                                category,
-                                                sub_category,
-                                                title,
-                                                `description`,
-                                                result,
-                                                `created at`,
-                                                `closed at`,
-                                                frequency,
-                                                status_timestamp,
-                                                `status`    
-                                            ) VALUES (
-                                                ?,
-                                                ?,
-                                                ?,
-                                                ?,
-                                                ?,
-                                                ?,
-                                                ?,
-                                                ?,
-                                                NOW(),
-                                                NULL,
-                                                ?,
-                                                NOW(),
-                                                ?
-                                            )
-                                            ";
+                        if (isset($frequency) && $frequency == "N.V.T" || $frequency == "Dagelijks" || $frequency == "Weekelijks" || $frequency == "Maandelijks" || $frequency == "Jaarlijks") {
+                            $sql = "
+                                INSERT 
+                                INTO issue
+                                (
+                                    `user_id`,
+                                    company_id,
+                                    priority,
+                                    category,
+                                    sub_category,
+                                    title,
+                                    `description`,
+                                    result,
+                                    `created_at`,
+                                    `closed_at`,
+                                    frequency,
+                                    status_timestamp,
+                                    `status`    
+                                ) 
+                                VALUES
+                                (
+                                    ?,
+                                    ?,
+                                    ?,
+                                    ?,
+                                    ?,
+                                    ?,
+                                    ?,
+                                    ?,
+                                    NOW(),
+                                    NULL,
+                                    ?,
+                                    NOW(),
+                                    ?
+                                )
+                            ";
 
                             $stmt = mysqli_prepare($db, $sql) or die(mysqli_error($db));
                             mysqli_stmt_bind_param($stmt, 'iiissssssi', $_SESSION['userId'], $_SESSION['companyId'], $priority, $issueType, $subCategory, $title, $description, $result, $frequency, $status);
@@ -84,7 +88,7 @@ if (isset($_POST['sendNewTicket'])) {
 
 <head>
     <?php include_once("../components/head.html"); ?>
-    <title>Bottom up - ticket toevoegen</title>
+    <title>Bottom up - Issue toevoegen</title>
 </head>
 
 <body>
@@ -105,7 +109,7 @@ if (isset($_POST['sendNewTicket'])) {
                         ?>
                                     <div class="col-lg-12">
                                         <label for="createIssueTitle">Titel</label>
-                                        <input type="text" id="createIssueTitle" class="form-control-issue-page" name="createIssueTitle" placeholder="text" />
+                                        <input type="text" id="createIssueTitle" class="form-control-issue-page" name="createIssueTitle" />
                                     </div>
                                     <div class="col-lg-12">
                                         <label for="createIssueCategory">sub-category</label>
@@ -134,11 +138,11 @@ if (isset($_POST['sendNewTicket'])) {
                                         <div class="col-lg-12">
                                             <label for="createIssueFrequency">Ticket herhalen</label>
                                             <select id="createIssueFrequency" class="createIssueFrequency" name="createIssueFrequency">
-                                                <option value="none">geen</option>
-                                                <option value="day">dagelijks</option>
-                                                <option value="week">weekelijks</option>
-                                                <option value="month">maandelijks</option>
-                                                <option value="year">jaarlijks</option>
+                                                <option value="none">N.V.T</option>
+                                                <option value="Dagelijks">Dagelijks</option>
+                                                <option value="Weekelijks">Weekelijks</option>
+                                                <option value="Maandelijks">Maandelijks</option>
+                                                <option value="Jaarlijks">Jaarlijks</option>
                                             </select>
                                         </div>
                                     <?php
@@ -149,12 +153,12 @@ if (isset($_POST['sendNewTicket'])) {
                                     </div>
                                 <?php
                                 }
-                            } elseif ($issueType == "aanvraag") {
+                            } elseif ($issueType == "product") {
                                 if (isset($_SESSION['accountType'])) {
                                 ?>
                                     <div class="col-lg-12">
                                         <label for="createIssueTitle">Titel</label>
-                                        <input type="text" id="createIssueTitle" class="form-control-issue-page" name="createIssueTitle" placeholder="text" />
+                                        <input type="text" id="createIssueTitle" class="form-control-issue-page" name="createIssueTitle" />
                                     </div>
                                     <div class="col-lg-12">
                                         <label for="createIssueCategory">sub-category</label>
@@ -187,11 +191,11 @@ if (isset($_POST['sendNewTicket'])) {
                                         <div class="col-lg-12">
                                             <label for="createIssueFrequency">Ticket herhalen</label>
                                             <select id="createIssueFrequency" class="createIssueFrequency" name="createIssueFrequency">
-                                                <option value="none">geen</option>
-                                                <option value="day">dagelijks</option>
-                                                <option value="week">weekelijks</option>
-                                                <option value="month">maandelijks</option>
-                                                <option value="year">jaarlijks</option>
+                                                <option value="none">N.V.T</option>
+                                                <option value="Dagelijks">Dagelijks</option>
+                                                <option value="Weekelijks">Weekelijks</option>
+                                                <option value="Maandelijks">Maandelijks</option>
+                                                <option value="Jaarlijks">Jaarlijks</option>
                                             </select>
                                         </div>
                                     <?php
@@ -207,7 +211,7 @@ if (isset($_POST['sendNewTicket'])) {
                                 ?>
                                     <div class="col-lg-12">
                                         <label for="createIssueTitle">Titel</label>
-                                        <input type="text" id="createIssueTitle" class="form-control-issue-page" name="createIssueTitle" placeholder="text" />
+                                        <input type="text" id="createIssueTitle" class="form-control-issue-page" name="createIssueTitle" />
                                     </div>
                                     <div class="col-lg-12">
                                         <label for="createIssueCategory">sub-category</label>
@@ -254,11 +258,21 @@ if (isset($_POST['sendNewTicket'])) {
                                     </div>
                         <?php
                                 }
-                            } elseif ($issueType != "dienst/service" || $issueType != "aanvraag" || $issueType != "ticket") {
-                                die("the given issue type doesn't exist, return to previous page");
+                            } elseif ($issueType != "dienst/service" || $issueType != "product" || $issueType != "ticket") {
+                                die("<div class='col-lg-12'>
+                                        <div class='alert alert-danger'>
+                                            Het gegeven issue type is nog niet gespeciviseerd, ga terug naar de vorige pagina
+                                        </div>
+                                    </div>
+                                ");
                             }
                         } else {
-                            die("the given issue type hasn't been specified yet, return to previous page");
+                            die("<div class='col-lg-12'>
+                                        <div class='alert alert-danger'>
+                                            Het gegeven issue type is nog niet gespeciviseerd, ga terug naar de vorige pagina
+                                        </div>
+                                    </div>
+                                ");
                         }
                         ?>
                     </div>
