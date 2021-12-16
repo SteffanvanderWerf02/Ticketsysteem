@@ -9,7 +9,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
             category,
             title,
             `description`,
-            `created at`,
+            `created_at`,
             frequency,
             `status` 
     FROM    issue

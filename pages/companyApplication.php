@@ -240,12 +240,12 @@ require_once("../components/functions.php");
                                     <td><?= $postalcode ?></td>
                                     <td><?= $streetname . " " . $housenumber ?></td>
                                     <td class="text-center">
-                                        <form action="<?= $_SERVER["PHP_SELF"] ?>" method="POST">
+                                        <form action="<?=htmlspecialchars($_SERVER['PHP_SELF'])?>" method="POST">
                                             <button class="btn btn-denied" onclick="return confirm('Weet u zeker of dat u dit bedrijf wil afkeuren')" name="denied" value="<?= $id ?>" type="submit">Afkeuren</button>
                                         </form>
                                     </td>
                                     <td class="text-center">
-                                        <form action="<?= $_SERVER["PHP_SELF"] ?>" method="POST">
+                                        <form action="<?=htmlspecialchars($_SERVER['PHP_SELF'])?>" method="POST">
                                             <button class="btn btn-primary" onclick="return confirm('Weet u zeker of dat u dit bedrijf wil goedkeuren')" name="approve" value="<?= $id ?>" type="submit">Goedkeuren</button>
                                         </form>
                                     </td>

@@ -188,7 +188,7 @@ if (isset($_POST['companySubmit'])) {
 
 
                 ?>
-                <form method="POST">
+                <form action="<?=htmlspecialchars($_SERVER['PHP_SELF'])?>" method="POST" enctype="multipart/form-data">
                     <div class="row mb-3">
                         <div class="col-lg-12">
                             <label for="customFile" class="pointer">Profiel foto</label>
@@ -287,7 +287,7 @@ if (isset($_POST['companySubmit'])) {
                         <h1>Bedrijfsinformatie</h1>
                     </div>
                 </div>
-                <form method="POST">
+                <form action="<?=htmlspecialchars($_SERVER['PHP_SELF'])?>" method="POST">
                     <div class="row mb-3">
                         <div class="col-lg-12">
                             <label for="username">Bedrijfsnaam</label>

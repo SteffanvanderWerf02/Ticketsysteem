@@ -136,7 +136,7 @@ if (isset($_POST['login'])) {
                 <div class="login-container mx-auto">
                     <div class="card">
                         <div class="card-body">
-                            <form action="<?= $_SERVER['PHP_SELF'] ?>" method="POST">
+                            <form action="<?=htmlspecialchars($_SERVER['PHP_SELF'])?>" method="POST">
                                 <div class="col-lg-12 text-center mt-3 mb-3 ">
                                     <img src="./assets/img/logo/newLogo.svg" style="height:150px;" alt="logo">
                                 </div>

@@ -111,7 +111,7 @@ if (isset($_POST['submit'])) {
             <div class="col-lg-12">
                 <?php
                 ?>
-                <form method="POST">
+                <form action="<?=htmlspecialchars($_SERVER['PHP_SELF'])?>" method="POST">
                     <div class="row mb-3">
                         <div class="col-lg-12">
                             <label for="customFile" class="pointer">Profiel foto</label>
