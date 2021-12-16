@@ -1,30 +1,31 @@
 <?php
 include_once("../config.php");
 include_once("../connection.php");
+include_once("../components/functions.php");
 
 $issueType = filter_input(INPUT_GET, 'issueType', FILTER_SANITIZE_SPECIAL_CHARS);
 
-if (isset($_POST['sendNewTicket'])) {
+if (isset($_POST['sendNewIssue'])) {
     if (isset($_SESSION['accountType'])) {
         $title = filter_input(INPUT_POST, 'createIssueTitle', FILTER_SANITIZE_SPECIAL_CHARS);
         $subCategory = filter_input(INPUT_POST, 'createIssueCategory', FILTER_SANITIZE_SPECIAL_CHARS);
         $description = filter_input(INPUT_POST, 'createIssueDescription', FILTER_SANITIZE_SPECIAL_CHARS);
         $result = filter_input(INPUT_POST, 'createIssueResult', FILTER_SANITIZE_SPECIAL_CHARS);
 
-        if ($_SESSION['accountType'] == 0) {
+        if ($_SESSION['accountType'] == 0 || $issueType == "ticket" ||  $issueType == "product") {
             $frequency = "N.V.T";
         } else {
             $frequency = filter_input(INPUT_POST, 'createIssueFrequency', FILTER_SANITIZE_SPECIAL_CHARS);
         }
 
-        $priority = 0;
+        $priority = 1;
         $status = 1;
 
         if (isset($title)) {
-            if (isset($category)) {
+            if (isset($issueType)) {
                 if (isset($description)) {
                     if (isset($result)) {
-                        if (isset($frequency) && $frequency == "N.V.T" || $frequency == "Dagelijks" || $frequency == "Weekelijks" || $frequency == "Maandelijks" || $frequency == "Jaarlijks") {
+                        if ($frequency == "N.V.T" || $frequency == "Dagelijks" || $frequency == "Weekelijks" || $frequency == "Maandelijks" || $frequency == "Jaarlijks") {
                             $sql = "
                                 INSERT 
                                 INTO issue
@@ -101,180 +102,107 @@ if (isset($_POST['sendNewTicket'])) {
             <div class="col-lg-12">
                 <form method="post" action="" enctype="multipart/form-data">
                     <div class="row">
-                        <?php
-                        if (isset($issueType)) {
-                            if ($issueType == "ticket") {
-                                //if the account type in the session is set
-                                if (isset($_SESSION['accountType'])) {
-                        ?>
-                                    <div class="col-lg-12">
-                                        <label for="createIssueTitle">Titel</label>
-                                        <input type="text" id="createIssueTitle" class="form-control-issue-page" name="createIssueTitle" />
-                                    </div>
-                                    <div class="col-lg-12">
+                        <div class="col-lg-12">
+                            <?php
+                            if (isset($issueType) && isset($_SESSION['accountType'])) {
+                            ?>
+                                <div class="row mb-3">
+                                     <div class="col-lg-6">
+                                    <label for="createIssueTitle">Titel</label>
+                                    <input type="text" id="createIssueTitle" class="form-control" name="createIssueTitle" />
+                                </div>
+                                </div>
+                                <div class="row mb-3">
+                                     <div class="col-lg-6">
+                                    <?php
+                                    if ($issueType == "ticket") {
+                                    ?>
                                         <label for="createIssueCategory">sub-category</label>
-                                        <select id="createIssueCategory" name="createIssueCategory" class="createIssueCategory">
+                                        <select id="createIssueCategory" name="createIssueCategory" class="form-control">
                                             <option value="klacht">klacht</option>
                                             <option value="feedback">feedback</option>
                                         </select>
-                                    </div>
-                                    <div class="col-lg-12">
-                                        <label for="createIssueDescription">Omschrijving</label>
-                                        <textarea id="createIssueDescription" class="createDescriptionArea" name="createIssueDescription"></textarea>
-                                    </div>
-                                    <div class="col-lg-12">
-                                        <label for="createIssueResult">Gewenst resultaat</label>
-                                        <textarea id="createIssueResult" class="createDescriptionArea" name="createIssueResult"></textarea>
-                                    </div>
-                                    <div class="col-lg-12">
-                                        <label for="createIssueFile">Bestand</label>
-                                        <input type="file" id="createIssueFile" class="form-control-issue-page" name="createIssueFile" />
-                                    </div>
                                     <?php
-                                    //if the authentication type is set to bussiness then show 
-                                    //the html below and if it is not set to bussiness then don't show
-                                    if ($_SESSION['accountType'] >= 1) {
+                                    } else if ($issueType == "dienst/service") {
                                     ?>
-                                        <div class="col-lg-12">
-                                            <label for="createIssueFrequency">Ticket herhalen</label>
-                                            <select id="createIssueFrequency" class="createIssueFrequency" name="createIssueFrequency">
-                                                <option value="none">N.V.T</option>
-                                                <option value="Dagelijks">Dagelijks</option>
-                                                <option value="Weekelijks">Weekelijks</option>
-                                                <option value="Maandelijks">Maandelijks</option>
-                                                <option value="Jaarlijks">Jaarlijks</option>
-                                            </select>
-                                        </div>
-                                    <?php
-                                    }
-                                    ?>
-                                    <div class="col-lg-12">
-                                        <input type="submit" name="sendNewIssue" value="versturen" class="sendNewIssue" />
-                                    </div>
-                                <?php
-                                }
-                            } elseif ($issueType == "product") {
-                                if (isset($_SESSION['accountType'])) {
-                                ?>
-                                    <div class="col-lg-12">
-                                        <label for="createIssueTitle">Titel</label>
-                                        <input type="text" id="createIssueTitle" class="form-control-issue-page" name="createIssueTitle" />
-                                    </div>
-                                    <div class="col-lg-12">
                                         <label for="createIssueCategory">sub-category</label>
-                                        <select id="createIssueCategory" name="createIssueCategory" class="createIssueCategory">
-                                            <option value="schop">schop</option>
-                                            <option value="gereedschapskist">gereedschapskist</option>
-                                            <option value="graafmachine">graafmachine</option>
-                                            <option value="tracker">tracker</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-lg-12">
-                                        <label for="createIssueDescription">Omschrijving</label>
-                                        <textarea id="createIssueDescription" class="createDescriptionArea" name="createIssueDescription"></textarea>
-                                    </div>
-                                    <div class="col-lg-12">
-                                        <label for="createIssueResult">Gewenst resultaat</label>
-                                        <textarea id="createIssueResult" class="createDescriptionArea" name="createIssueResult"></textarea>
-                                    </div>
-                                    <div class="col-lg-12">
-                                        <label for="createIssueFile">Bestand</label>
-                                        <input type="file" id="createIssueFile" class="form-control-issue-page" name="createIssueFile" />
-                                    </div>
-
-                                    <?php
-                                    //if the authentication type is set to bussiness then show 
-                                    //the html below and if it is not set to bussiness then don't show
-                                    if ($_SESSION['accountType'] >= 1) {
-                                    ?>
-
-                                        <div class="col-lg-12">
-                                            <label for="createIssueFrequency">Ticket herhalen</label>
-                                            <select id="createIssueFrequency" class="createIssueFrequency" name="createIssueFrequency">
-                                                <option value="none">N.V.T</option>
-                                                <option value="Dagelijks">Dagelijks</option>
-                                                <option value="Weekelijks">Weekelijks</option>
-                                                <option value="Maandelijks">Maandelijks</option>
-                                                <option value="Jaarlijks">Jaarlijks</option>
-                                            </select>
-                                        </div>
-                                    <?php
-                                    }
-                                    ?>
-                                    <div class="col-lg-12">
-                                        <input type="submit" name="sendNewIssue" value="versturen" class="sendNewIssue" />
-                                    </div>
-                                <?php
-                                }
-                            } elseif ($issueType == "dienst/service") {
-                                if (isset($_SESSION['accountType'])) {
-                                ?>
-                                    <div class="col-lg-12">
-                                        <label for="createIssueTitle">Titel</label>
-                                        <input type="text" id="createIssueTitle" class="form-control-issue-page" name="createIssueTitle" />
-                                    </div>
-                                    <div class="col-lg-12">
-                                        <label for="createIssueCategory">sub-category</label>
-                                        <select id="createIssueCategory" name="createIssueCategory" class="createIssueCategory">
+                                        <select id="createIssueCategory" name="createIssueCategory" class="form-control">
                                             <option value="watervoliere">watervoliere</option>
                                             <option value="vogelhuis">vogelhuis</option>
                                             <option value="grasmaaien">grasmaaien</option>
                                             <option value="schuuronderhoud">schuuronderhoud</option>
                                             <option value="tuinonderhoud">tuinonderhoud</option>
                                         </select>
-                                    </div>
-                                    <div class="col-lg-12">
-                                        <label for="createIssueDescription">Omschrijving</label>
-                                        <textarea id="createIssueDescription" class="createDescriptionArea" name="createIssueDescription"></textarea>
-                                    </div>
-                                    <div class="col-lg-12">
-                                        <label for="createIssueResult">Gewenst resultaat</label>
-                                        <textarea id="createIssueResult" class="createDescriptionArea" name="createIssueResult"></textarea>
-                                    </div>
-                                    <div class="col-lg-12">
-                                        <label for="createIssueFile">Bestand</label>
-                                        <input type="file" id="createIssueFile" class="form-control-issue-page" name="createIssueFile" />
-                                    </div>
                                     <?php
-                                    //if the authentication type is set to bussiness then show 
-                                    //the html below and if it is not set to bussiness then don't show
-                                    if ($_SESSION['accountType'] >= 1) {
+                                    } else {
                                     ?>
-                                        <div class="col-lg-12">
-                                            <label for="createIssueFrequency">Ticket herhalen</label>
-                                            <select id="createIssueFrequency" class="createIssueFrequency" name="createIssueFrequency">
-                                                <option value="none">geen</option>
-                                                <option value="day">dagelijks</option>
-                                                <option value="week">weekelijks</option>
-                                                <option value="month">maandelijks</option>
-                                                <option value="year">jaarlijks</option>
-                                            </select>
-                                        </div>
+                                        <label for="createIssueCategory">sub-category</label>
+                                        <select id="createIssueCategory" name="createIssueCategory" class="form-control">
+                                            <option value="schop">schop</option>
+                                            <option value="gereedschapskist">gereedschapskist</option>
+                                            <option value="graafmachine">graafmachine</option>
+                                            <option value="tracker">tracker</option>
+                                        </select>
                                     <?php
                                     }
                                     ?>
-                                    <div class="col-lg-12">
-                                        <input type="submit" name="sendNewIssue" value="versturen" class="sendNewIssue" />
+                                </div>
+                                </div>
+                                <div class="row mb-3">
+                                     <div class="col-lg-6">
+                                    <label for="createIssueDescription">Omschrijving</label>
+                                    <textarea id="createIssueDescription" class="form-control" name="createIssueDescription"></textarea>
+                                </div>
+                                </div>
+                                <div class="row mb-3">
+                                     <div class="col-lg-6">
+                                    <label for="createIssueResult">Gewenst resultaat</label>
+                                    <textarea id="createIssueResult" class="form-control" name="createIssueResult"></textarea>
+                                </div>
+                                </div>
+                                <?php
+                                if ($_SESSION['accountType'] >= 1 && $issueType == "dienst/service") {
+                                ?>
+                                    <div class="row mb-3">
+                                         <div class="col-lg-6">
+                                        <label for="createIssueFrequency">Ticket herhalen</label>
+                                        <select id="createIssueFrequency" class="form-control" name="createIssueFrequency">
+                                            <option value="none">N.V.T</option>
+                                            <option value="Dagelijks">Dagelijks</option>
+                                            <option value="Weekelijks">Weekelijks</option>
+                                            <option value="Maandelijks">Maandelijks</option>
+                                            <option value="Jaarlijks">Jaarlijks</option>
+                                        </select>
                                     </div>
-                        <?php
+                                    </div>
+                                <?php
                                 }
+                                ?>
+                                <div class="row mb-3">
+                                     <div class="col-lg-6">
+                                    <label for="createIssueFile" class="pointer">Bijlagen</label>
+                                    <div class="custom-file">
+                                        <input type="file" title="Kies uw bijlagen" name="createIssueFile" class="custom-file-input" id="createIssueFile">
+                                        <label class="custom-file-label" for="createIssueFile">Kies Bestand</label>
+                                    </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                     <div class="col-lg-6">
+                                    <input type="submit" name="sendNewIssue" value="Versturen" class="sendNewIssue" />
+                                </div>
+                                </div>
+                            <?php
                             } elseif ($issueType != "dienst/service" || $issueType != "product" || $issueType != "ticket") {
                                 die("<div class='col-lg-12'>
                                         <div class='alert alert-danger'>
-                                            Het gegeven issue type is nog niet gespeciviseerd, ga terug naar de vorige pagina
+                                            Het gegeven issue type is nog niet gespecigiseerd, ga terug naar de vorige pagina
                                         </div>
                                     </div>
                                 ");
                             }
-                        } else {
-                            die("<div class='col-lg-12'>
-                                        <div class='alert alert-danger'>
-                                            Het gegeven issue type is nog niet gespeciviseerd, ga terug naar de vorige pagina
-                                        </div>
-                                    </div>
-                                ");
-                        }
-                        ?>
+                            ?>
+                        </div>
                     </div>
                 </form>
             </div>

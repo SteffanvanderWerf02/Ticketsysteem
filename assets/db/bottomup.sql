@@ -97,7 +97,7 @@ CREATE TABLE `issue` (
 -- Gegevens worden geëxporteerd voor tabel `issue`
 --
 
-INSERT INTO `issue` (`issue_id`, `user_id`, `company_id`, `priority`, `category`, `sub_category`, `title`, `description`, `created_at`, `closed_at`, `frequency`, `appendex_url`, `status_timestamp`, `status`) VALUES
+INSERT INTO `issue` (`issue_id`, `user_id`, `company_id`, `priority`, `category`, `sub_category`, `title`, `description`, `result`, `created_at`, `closed_at`, `frequency`, `appendex_url`, `status_timestamp`, `status`) VALUES
 (1, 1, 1, 0, 'dienst/service', 'Voiliere', 'Voiliere maken', 'Ik wil volgens', '2021-12-10', '2021-12-10', 'Weekly', NULL, '2021-12-14 15:23:25', 1),
 (2, 1, 3, 2, 'ticket', 'Klacht', 'Slechte service', 'er was ruzie tussen mij en werknemers.', '2021-12-14', NULL, '', NULL, '2021-12-14 15:27:33', 1),
 (3, 2, 2, 1, 'Product', 'Schop', 'Schop kopen', 'Ik wil graag een schop 2000 kopen hebben jullie hier een voorbeeld van', '2021-12-14', NULL, NULL, NULL, '2021-12-14 15:29:31', 1);

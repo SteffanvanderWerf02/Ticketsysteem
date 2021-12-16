@@ -361,7 +361,9 @@ input[type="radio"]:checked::after {
   min-height: 1px;
   padding: 1.25rem;
 }
-
+textarea.form-control{
+  height: 100px;
+}
 .form-control {
   display: block;
   width: 100%;
