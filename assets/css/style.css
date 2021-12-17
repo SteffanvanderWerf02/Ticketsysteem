@@ -650,8 +650,11 @@ a.fill-div {
   background-color: #1c9941;
   border-style: none;
   border-radius: 25px;
+  cursor:pointer;
 }
-
+select.form-control,label {
+  cursor: pointer;
+}
 /* Ticket detail page */
 
 .ticket_date {
