@@ -254,7 +254,7 @@ input[type="radio"]:checked::after {
 }
 
 .mb-0 {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0rem;
 }
 
 .mb-1 {
