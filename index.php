@@ -59,7 +59,7 @@ if (isset($_POST['login'])) {
                                 $_SESSION["accountType"] = $authId; // 2 = Bottom up user
                                 $_SESSION["companyId"] = $companyId;
 
-                                
+                                header("Location: ./pages/ticket_overview.php");  
                                 
                             } else {
                                 echo "<div class='alert alert-danger'>De gebruikers naam of wachtwoord zijn niet correct of uw account is nog niet actief</div>";
@@ -87,7 +87,7 @@ if (isset($_POST['login'])) {
                                 $_SESSION["accountType"] = $authId; // 1 = Zakelijk account type
                                 $_SESSION["companyId"] = $companyId;
 
-                                header("Location: ./pages/home.php");
+                                header("Location: ./pages/ticket_overview.php");
                             } else {
                                 echo "<div class='alert alert-danger'>De gebruikers naam of wachtwoord zijn niet correct of uw account is nog niet actief</div>";
                             }
