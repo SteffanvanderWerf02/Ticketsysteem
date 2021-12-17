@@ -37,7 +37,9 @@ if (isset($_POST['login'])) {
                     if ($companyId == NULL) {
                         $_SESSION["loggedIn"] = true;
                         $_SESSION["userId"] = $userId;
-                        $_SESSION["accountType"] = $authId; // 0 = Particulier account                        
+                        $_SESSION["accountType"] = $authId; // 0 = Particulier account  
+                        $_SESSION["companyId"] = NULL;
+                        header("Location: ./pages/ticket_overview.php");                     
                     } else if ($companyId == 1) {
                         $stmt = mysqli_prepare($db, "
                             SELECT  user.status
