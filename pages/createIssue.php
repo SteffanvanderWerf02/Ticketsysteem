@@ -65,6 +65,8 @@ if (isset($_POST['sendNewIssue'])) {
                             mysqli_stmt_bind_param($stmt, 'iiissssssi', $_SESSION['userId'], $_SESSION['companyId'], $priority, $issueType, $subCategory, $title, $description, $result, $frequency, $status);
                             mysqli_stmt_execute($stmt) or die(mysqli_error($db));
                             mysqli_stmt_close($stmt);
+
+                            echo "<div class='alert alert-success'>Uw issue is verzonden</div>";
                         } else {
                             echo "<div class='alert alert-danger'>De keuze bij de herhaalbaarheid valt niet onder de gegeven opties</div>";
                         }
@@ -166,7 +168,7 @@ if (isset($_POST['sendNewIssue'])) {
                                          <div class="col-lg-6">
                                         <label for="createIssueFrequency">Ticket herhalen</label>
                                         <select id="createIssueFrequency" class="form-control" name="createIssueFrequency">
-                                            <option value="none">N.V.T</option>
+                                            <option value="N.V.T">N.V.T</option>
                                             <option value="Dagelijks">Dagelijks</option>
                                             <option value="Weekelijks">Weekelijks</option>
                                             <option value="Maandelijks">Maandelijks</option>
