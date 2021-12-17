@@ -85,6 +85,7 @@ CREATE TABLE `issue` (
   `sub_category` varchar(255) NOT NULL,
   `title` varchar(255) NOT NULL,
   `description` varchar(255) NOT NULL,
+  `result` varchar(255) NOT NULL,
   `created_at` date NOT NULL,
   `closed_at` date DEFAULT NULL,
   `frequency` varchar(50) DEFAULT NULL,
@@ -98,9 +99,9 @@ CREATE TABLE `issue` (
 --
 
 INSERT INTO `issue` (`issue_id`, `user_id`, `company_id`, `priority`, `category`, `sub_category`, `title`, `description`, `result`, `created_at`, `closed_at`, `frequency`, `appendex_url`, `status_timestamp`, `status`) VALUES
-(1, 1, 1, 0, 'dienst/service', 'Voiliere', 'Voiliere maken', 'Ik wil volgens', '2021-12-10', '2021-12-10', 'Weekly', NULL, '2021-12-14 15:23:25', 1),
-(2, 1, 3, 2, 'ticket', 'Klacht', 'Slechte service', 'er was ruzie tussen mij en werknemers.', '2021-12-14', NULL, '', NULL, '2021-12-14 15:27:33', 1),
-(3, 2, 2, 1, 'Product', 'Schop', 'Schop kopen', 'Ik wil graag een schop 2000 kopen hebben jullie hier een voorbeeld van', '2021-12-14', NULL, NULL, NULL, '2021-12-14 15:29:31', 1);
+(1, 1, 1, 0, 'dienst/service', 'Voiliere', 'Voiliere maken', 'Ik wil volgens','ja', '2021-12-10', '2021-12-10', 'Weekly', NULL, '2021-12-14 15:23:25', 1),
+(2, 1, 3, 2, 'ticket', 'Klacht', 'Slechte service', 'er was ruzie tussen mij en werknemers.','Nee dat mag niet', '2021-12-14', NULL, '', NULL, '2021-12-14 15:27:33', 1),
+(3, 2, 2, 1, 'Product', 'Schop', 'Schop kopen', 'Ik wil graag een schop 2000 kopen hebben jullie hier een voorbeeld van','WHO LET THE DOGS OUT', '2021-12-14', NULL, NULL, NULL, '2021-12-14 15:29:31', 1);
 
 -- --------------------------------------------------------
 
@@ -251,25 +252,6 @@ ALTER TABLE `user`
 -- Beperkingen voor geëxporteerde tabellen
 --
 
---
--- Beperkingen voor tabel `issue`
---
-ALTER TABLE `issue`
-  ADD CONSTRAINT `CompanyRelaties` FOREIGN KEY (`company_id`) REFERENCES `company` (`company_id`),
-  ADD CONSTRAINT `UserissueRelatie` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`);
-
---
--- Beperkingen voor tabel `issue_message`
---
-ALTER TABLE `issue_message`
-  ADD CONSTRAINT `issuesRelatie` FOREIGN KEY (`issue_id`) REFERENCES `issue` (`issue_id`),
-  ADD CONSTRAINT `messageRelatie` FOREIGN KEY (`message_id`) REFERENCES `message` (`message_id`);
-
---
--- Beperkingen voor tabel `user`
---
-ALTER TABLE `user`
-  ADD CONSTRAINT `CompanyRelatie` FOREIGN KEY (`company_id`) REFERENCES `company` (`company_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -51,6 +51,7 @@ if (isset($_POST['register'])) {
                                         if (mysqli_stmt_num_rows($stmt) == 0) {
                                             mysqli_stmt_close($stmt);
                                             if ($acountType == 1) {
+                                                
                                                 $stmt = mysqli_prepare($db, "
                                                     SELECT 1
                                                     FROM company
@@ -141,16 +142,18 @@ if (isset($_POST['register'])) {
                                                     mysqli_stmt_execute($stmt) or die(mysqli_error($db));
                                                     mysqli_stmt_close($stmt);
                                                                               
-                                                    header("Location: accountCreated.php");
+                                                    header("Location: ./accountCreated.php");
                                                 } else {
                                                     echo "<div class='alert alert-danger'>Dit bedrijf bestaat al</div>";
                                                 }
                                             } else {
+                                                
                                                 $stmt = mysqli_prepare($db, "
                                                     INSERT
                                                     INTO user (
                                                         company_id,
                                                         auth_id,
+                                                        profilepicture,
                                                         name,
                                                         city,
                                                         streetname,
@@ -160,12 +163,14 @@ if (isset($_POST['register'])) {
                                                         email_adres,
                                                         hash_password,
                                                         status
-            
                                                     )
                                                     VALUES 
                                                     (
                                                         NULL,
-                                                        1,
+                                                        0,
+                                                        NULL,
+                                                        ?,
+                                                        ?,
                                                         ?,
                                                         ?,
                                                         ?,
@@ -178,8 +183,8 @@ if (isset($_POST['register'])) {
                                                 mysqli_stmt_bind_param($stmt, "ssssssss", $username, $city, $streetname, $postalcode, $housenumber, $phonenumber, $email, $hash_password);
                                                 mysqli_stmt_execute($stmt) or die(mysqli_error($db));
                                                 mysqli_stmt_close($stmt);
-
-                                                header("Location: pages/ticket_overview.php");
+                                                
+                                                header("Location: ./index.php");
                                             }
                                         } else {
                                             echo "<div class='alert alert-danger'>Dit email adres bestaat al.</div>";

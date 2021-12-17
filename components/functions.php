@@ -59,6 +59,9 @@ function getIssueOverview($db, $companyId, $userId, $issueType, $filterStatus, $
             $type .= "i";
             array_push($params, $userId);
             break;
+        case 1 :
+            $query .= "";
+            break;
         default:
             $query .= " AND issue.company_id = ?";
             $type .= "i";
@@ -97,7 +100,6 @@ function getIssueOverview($db, $companyId, $userId, $issueType, $filterStatus, $
         array_push($params, $searchTitle, $searchId);
     }
     $stmt = mysqli_prepare($db, $query);
-    // return debugData($params,"");
     call_user_func_array(array($stmt, "bind_param"), makeValuesReferenced(array_merge(array($type), $params)));
     mysqli_stmt_execute($stmt) or die(mysqli_error($db));
     mysqli_stmt_store_result($stmt) or die(mysqli_error($db));
@@ -112,9 +114,9 @@ function getIssueOverview($db, $companyId, $userId, $issueType, $filterStatus, $
             ($companyId == NULL) ? ""  : $return .= "<td>{$companyName}</td> <td>{$frequency}</td> ";
 
             $return .= "
-                    <td>{$priority}</td>
-                    <td>{$status}</td>
-                    <td>{$category}</td>
+                    <td>".priorityCheck($status)."</td>
+                    <td>".statuscheck($status)."</td>
+                    <td>".ucFirst($category)."</td>
                     <td>{$subCategory}</td>
                 </tr>";
         }
@@ -135,4 +137,15 @@ function makeValuesReferenced($arr) {
     foreach ($arr as $key => $value)
         $refs[$key] = &$arr[$key];
     return $refs;
+}
+
+function priorityCheck($priorityValue) {
+    $priorityStat = [1=>"Laag",2=>"Gemiddeld",3=>"Hoog"]; 
+    return $priorityStat[$priorityValue];
+}
+
+function statusCheck($statusValue)
+{
+    $statusStat = [1 => "Nieuw", 2 => "In behandeling", 3=> "On hold", 4 => "Gesloten"];
+    return $statusStat[$statusValue];
 }
