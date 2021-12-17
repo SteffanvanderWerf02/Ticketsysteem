@@ -14,8 +14,8 @@ if (isset($_POST['logout'])) {
 
 if (isset($_POST['login'])) {
 
-    if (isset($_POST['username']) && $username = filter_input(INPUT_POST, "username", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
-        if (isset($_POST['password']) && $password = filter_input(INPUT_POST, "password", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
+    if (isset($_POST['username']) && $username = filter_input(INPUT_POST, "username", FILTER_DEFAULT)) {
+        if (isset($_POST['password']) && $password = filter_input(INPUT_POST, "password", FILTER_DEFAULT)) {
             $stmt = mysqli_prepare($db, "
                 SELECT  user_id,
                         name,
@@ -59,7 +59,8 @@ if (isset($_POST['login'])) {
                                 $_SESSION["accountType"] = $authId; // 2 = Bottom up user
                                 $_SESSION["companyId"] = $companyId;
 
-                                header("Location: ./pages/ticket_overview.php");
+                                
+                                
                             } else {
                                 echo "<div class='alert alert-danger'>De gebruikers naam of wachtwoord zijn niet correct of uw account is nog niet actief</div>";
                             }

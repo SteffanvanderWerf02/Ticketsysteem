@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Gegenereerd op: 14 dec 2021 om 16:30
+-- Gegenereerd op: 17 dec 2021 om 12:11
 -- Serverversie: 10.4.22-MariaDB
 -- PHP-versie: 8.0.13
 
@@ -85,6 +85,7 @@ CREATE TABLE `issue` (
   `sub_category` varchar(255) NOT NULL,
   `title` varchar(255) NOT NULL,
   `description` varchar(255) NOT NULL,
+  `result` varchar(255) NOT NULL,
   `created_at` date NOT NULL,
   `closed_at` date DEFAULT NULL,
   `frequency` varchar(50) DEFAULT NULL,
@@ -98,9 +99,16 @@ CREATE TABLE `issue` (
 --
 
 INSERT INTO `issue` (`issue_id`, `user_id`, `company_id`, `priority`, `category`, `sub_category`, `title`, `description`, `result`, `created_at`, `closed_at`, `frequency`, `appendex_url`, `status_timestamp`, `status`) VALUES
-(1, 1, 1, 0, 'dienst/service', 'Voiliere', 'Voiliere maken', 'Ik wil volgens', '2021-12-10', '2021-12-10', 'Weekly', NULL, '2021-12-14 15:23:25', 1),
-(2, 1, 3, 2, 'ticket', 'Klacht', 'Slechte service', 'er was ruzie tussen mij en werknemers.', '2021-12-14', NULL, '', NULL, '2021-12-14 15:27:33', 1),
-(3, 2, 2, 1, 'Product', 'Schop', 'Schop kopen', 'Ik wil graag een schop 2000 kopen hebben jullie hier een voorbeeld van', '2021-12-14', NULL, NULL, NULL, '2021-12-14 15:29:31', 1);
+(1, 1, 1, 0, 'dienst/service', 'Voiliere', 'Voiliere maken', 'Ik wil volgens', '', '2021-12-10', '2021-12-10', 'Weekly', NULL, '2021-12-14 15:23:25', 1),
+(2, 1, 1, 2, 'ticket', 'Klacht', 'Slechte service', 'er was ruzie tussen mij en werknemers.', '', '2021-12-14', NULL, '', NULL, '2021-12-16 13:43:16', 1),
+(3, 2, 1, 1, 'Product', 'Schop', 'Schop kopen', 'Ik wil graag een schop 2000 kopen hebben jullie hier een voorbeeld van', '', '2021-12-14', NULL, NULL, NULL, '2021-12-16 13:43:21', 1),
+(4, 1, 1, 2, 'Dienst/service', 'Grasmaaien', 'Gras is groen', 'Gras is te lang', '', '2021-12-16', NULL, NULL, NULL, '2021-12-16 12:13:57', 1),
+(5, 1, 1, 0, 'dienst/service', 'tuinonderhoud', 'Tuinman inhuren', 'ik wil tuinman', 'nette tuin', '2021-12-16', NULL, 'Maandelijks', NULL, '2021-12-16 15:57:46', 1),
+(6, 1, 1, 1, 'ticket', 'klacht', 'Test Ticket', 'dit si test', 'werkende ticket', '2021-12-16', NULL, 'N.V.T', NULL, '2021-12-16 16:05:32', 1),
+(7, 1, 1, 1, 'product', 'tracker', 'Emmer 2000', 'Ik wil een emmer', 'emmer zonder gaten', '2021-12-16', NULL, 'N.V.T', NULL, '2021-12-16 16:06:30', 1),
+(8, 1, 1, 1, 'dienst/service', 'tuinonderhoud', 'Parkeerplaats aanleggen', 'ik wil graag mijn parkeerplaats vernieuwen met bomen en straatwerk', 'mooie parkeerplaats', '2021-12-16', NULL, 'Weekelijks', NULL, '2021-12-16 16:07:35', 1),
+(9, 1, 1, 1, 'dienst/service', 'tuinonderhoud', 'Tuinman inhuren', 'ik wil tuinman', 'nette tuin', '2021-12-16', NULL, 'Maandelijks', NULL, '2021-12-16 16:10:03', 1),
+(10, 8, NULL, 1, 'dienst/service', 'grasmaaien', 'Tuinman inhuren', 'Test', 'ik wil pizza', '2021-12-17', NULL, 'N.V.T', NULL, '2021-12-17 11:09:21', 1);
 
 -- --------------------------------------------------------
 
@@ -160,7 +168,8 @@ CREATE TABLE `user` (
 INSERT INTO `user` (`user_id`, `company_id`, `auth_id`, `profilepicture`, `name`, `postalcode`, `city`, `streetname`, `house_number`, `phone_number`, `email_adres`, `hash_password`, `status`, `passwordForget_token`, `token_expireDate`) VALUES
 (1, 1, 2, NULL, 'admin', '4953PG', 'Emmen', 'Steenstraat', 23, '394394', 'steffanhenrybart@gmail.com', '$2y$10$TvYzf.Zi96CKrO2wt1FyUO42lx8TH0SkBU.ga039chPuZNYuTgCI.', 1, NULL, NULL),
 (2, 2, 1, NULL, 'Mac Donalds', '9531pg', 'Borger', 'Deksteen', 1, '324435', 'Donald@gmail.com', '$2y$10$LXSLDp3sCREnc3Al1zoHxucFokLTwFTyLEKhUpHl3IE3OkhDBgXba', 0, NULL, NULL),
-(3, 3, 2, NULL, 'fia', '3939PG', 'London', 'Kingstreet', 343, '934939', 'Fia@gmail.com', '$2y$10$7vrIGvKXUS.YbKFUgFP6HOjJlBq4RANJblBbZ9gRXGG2R6yX/K3Ui', 0, NULL, NULL);
+(5, 3, 2, NULL, 'fia', '3939PG', 'London', 'Kingstreet', 343, '934939', 'Fia@gmail.com', '$2y$10$7vrIGvKXUS.YbKFUgFP6HOjJlBq4RANJblBbZ9gRXGG2R6yX/K3Ui', 0, NULL, NULL),
+(8, NULL, 0, NULL, 'Andr&eacute;', '9531PG', 'Borger', 'Deksteen', 1, '0611775675', 'Test@gmail.com', '$2y$10$kZHavAjnf.OkwwSUlGMYfuHZVYXWmfcLkWERo2NUtQgPdat3A/Oo2', 1, NULL, NULL);
 
 --
 -- Indexen voor geëxporteerde tabellen
@@ -227,7 +236,7 @@ ALTER TABLE `company`
 -- AUTO_INCREMENT voor een tabel `issue`
 --
 ALTER TABLE `issue`
-  MODIFY `issue_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `issue_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT voor een tabel `issue_message`
@@ -245,7 +254,7 @@ ALTER TABLE `message`
 -- AUTO_INCREMENT voor een tabel `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- Beperkingen voor geëxporteerde tabellen
