@@ -1,16 +1,19 @@
 <?php
+
 function debugData($data, $type = "print_r")
 {
-    echo '<pre>';
+    $return = '<pre>';
     switch ($type) {
         case "var_dump":
-            var_dump($data);
+            $return .= var_dump($data);
             break;
         default:
-            print_r($data);
+            $return .= print_r($data);
             break;
     }
-    echo '</pre>';
+    $return .= '</pre>';
+
+    return $return;
 }
 
 function getIssueOverview($db, $companyId, $userId, $issueType, $filterStatus, $searchId, $searchTitle)
@@ -23,6 +26,7 @@ function getIssueOverview($db, $companyId, $userId, $issueType, $filterStatus, $
         <thead>
             <tr>
                 <th>id</th>
+                <th>Naam</th>
                 <th>Aanmaak datum</th>
                 <th>Titel</th>
                 ';
@@ -46,20 +50,23 @@ function getIssueOverview($db, $companyId, $userId, $issueType, $filterStatus, $
                 issue.category,
                 issue.frequency,
                 issue.sub_category, 
+                user.name,
                 company.name
         FROM    issue
         LEFT JOIN company 
         ON issue.company_id = company.company_id
+        INNER JOIN user
+        ON issue.user_id = user.user_id
         WHERE issue.category = ?
     ";
-    // ($companyId == NULL) ? $query.=" AND issue.user_id = ? " : $query.=" AND issue.company_id = ?";  
+
     switch ($companyId) {
         case NULL:
             $query .= " AND issue.user_id = ?";
             $type .= "i";
             array_push($params, $userId);
             break;
-        case 1 :
+        case 1:
             $query .= "";
             break;
         default:
@@ -67,7 +74,6 @@ function getIssueOverview($db, $companyId, $userId, $issueType, $filterStatus, $
             $type .= "i";
             array_push($params, $companyId);
     }
-
     switch ($filterStatus) {
         case '1':
             $query .= " AND issue.status = 1";
@@ -82,6 +88,7 @@ function getIssueOverview($db, $companyId, $userId, $issueType, $filterStatus, $
             $query .= " AND issue.status = 4";
             break;
         default:
+
             break;
     }
 
@@ -103,28 +110,29 @@ function getIssueOverview($db, $companyId, $userId, $issueType, $filterStatus, $
     call_user_func_array(array($stmt, "bind_param"), makeValuesReferenced(array_merge(array($type), $params)));
     mysqli_stmt_execute($stmt) or die(mysqli_error($db));
     mysqli_stmt_store_result($stmt) or die(mysqli_error($db));
-    mysqli_stmt_bind_result($stmt, $issueId, $createdAt, $title, $priority, $status, $category, $frequency, $subCategory, $companyName);
+    mysqli_stmt_bind_result($stmt, $issueId, $createdAt, $title, $priority, $status, $category, $frequency, $subCategory, $userName, $companyName);
     if (mysqli_stmt_num_rows($stmt) > 0) {
         while (mysqli_stmt_fetch($stmt)) {
 
             $return .= "<tr class='action' data-href='ticket_detail.php?id={$issueId}'>
                     <td>{$issueId}</td>
+                    <td>{$userName}</td>
                     <td>{$createdAt}</td>
                     <td>{$title}</td>";
             ($companyId == NULL) ? ""  : $return .= "<td>{$companyName}</td> <td>{$frequency}</td> ";
 
             $return .= "
-                    <td>".priorityCheck($status)."</td>
-                    <td>".statuscheck($status)."</td>
-                    <td>".ucFirst($category)."</td>
-                    <td>{$subCategory}</td>
+                    <td>" . priorityCheck($status) . "</td>
+                    <td>" . statuscheck($status) . "</td>
+                    <td>" . ucFirst($category) . "</td>
+                    <td>" . ucFirst($subCategory) . "</td>
                 </tr>";
         }
     } else {
-        if (!empty($searchTitle)|| !empty($searchId)) {
-            $return .= "<td colspan='9'>U heeft momenteel geen nieuwe {$issueType} aanvragen of u filter heeft geen resultaten opgeleverd</td>";
-        }else {
-            $return .= "<td colspan='9'>U heeft momenteel geen nieuwe {$issueType} aanvragen.</td>";
+        if (!empty($searchTitle) || !empty($searchId)) {
+            $return .= "<td colspan='10'>U heeft momenteel geen nieuwe {$issueType} aanvragen of u filter heeft geen resultaten opgeleverd</td>";
+        } else {
+            $return .= "<td colspan='10'>U heeft momenteel geen nieuwe {$issueType} aanvragen.</td>";
         }
     }
     $return .= "</tbody></table>";
@@ -132,20 +140,22 @@ function getIssueOverview($db, $companyId, $userId, $issueType, $filterStatus, $
     return $return;
 }
 //this function makes from merged to seperate and individual values for the bind param function
-function makeValuesReferenced($arr) {
+function makeValuesReferenced($arr)
+{
     $refs = array();
     foreach ($arr as $key => $value)
         $refs[$key] = &$arr[$key];
     return $refs;
 }
 
-function priorityCheck($priorityValue) {
-    $priorityStat = [1=>"Laag",2=>"Gemiddeld",3=>"Hoog"]; 
+function priorityCheck($priorityValue)
+{
+    $priorityStat = [1 => "Laag", 2 => "Gemiddeld", 3 => "Hoog"];
     return $priorityStat[$priorityValue];
 }
 
 function statusCheck($statusValue)
 {
-    $statusStat = [1 => "Nieuw", 2 => "In behandeling", 3=> "On hold", 4 => "Gesloten"];
+    $statusStat = [1 => "Nieuw", 2 => "In behandeling", 3 => "On hold", 4 => "Gesloten"];
     return $statusStat[$statusValue];
 }

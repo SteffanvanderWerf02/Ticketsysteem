@@ -388,7 +388,10 @@ textarea.form-control{
   cursor: pointer;
   text-decoration: none;
 }
-
+.btn-small {
+  font-size: 80%;
+  padding: 0.275rem 0.65rem;
+}
 .btn-clear {
   background-color: transparent;
   color: var(--white-color);

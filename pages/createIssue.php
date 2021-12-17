@@ -4,7 +4,6 @@ include_once("../connection.php");
 include_once("../components/functions.php");
 
 $issueType = filter_input(INPUT_GET, 'issueType', FILTER_SANITIZE_SPECIAL_CHARS);
-echo debugData($_SESSION);
 if (isset($_POST['sendNewIssue'])) {
     if (isset($_SESSION['accountType'])) {
         $title = filter_input(INPUT_POST, 'createIssueTitle', FILTER_SANITIZE_SPECIAL_CHARS);

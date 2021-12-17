@@ -147,13 +147,11 @@ if (isset($_POST['register'])) {
                                                     echo "<div class='alert alert-danger'>Dit bedrijf bestaat al</div>";
                                                 }
                                             } else {
-                                                
                                                 $stmt = mysqli_prepare($db, "
                                                     INSERT
                                                     INTO user (
                                                         company_id,
                                                         auth_id,
-                                                        profilepicture,
                                                         name,
                                                         city,
                                                         streetname,
