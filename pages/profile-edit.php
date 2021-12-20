@@ -74,12 +74,15 @@ if (isset($_POST['userSubmit'])) {
             echo "<div class='alert alert-danger'>Het nieuw ingevoerde wachtwoord kan niet gelijk zijn aan het oude wachtwoord</div>";
         }
     }
-    if (is_uploaded_file($_FILES["pfp"]["tmp_name"])) {
+    if (checkIfFile("pfp")) {
         if (checkFileSize("pfp")) {
             if (checkFileType("pfp", $acceptedFileTypesPP)) {
                 if (makeUserFolder($_SESSION["userId"])) {
                     if (!checkFileExist("../assets/img/pfpic/" . $_SESSION["userId"] . "/", $_FILES["pfp"]["name"])) {
-                        if (uploadFile("pfp", "user", $_SESSION["userId"], "../assets/img/pfpic/" . $_SESSION["userId"] . "/")) {
+                        if (deleteFile("../assets/img/pfpic/" . $_SESSION["userId"] . "/")) {
+                            if (uploadFile($db, "pfp", "user", "profilepicture", "user_id", $_SESSION["userId"], "../assets/img/pfpic/" . $_SESSION["userId"] . "/")) {
+                            echo uploadFile($db, "pfp", "user", "profilepicture", "user_id", $_SESSION["userId"], "../assets/img/pfpic/" . $_SESSION["userId"] . "/");
+                            }
                         }
                     } else {
                         echo "Uw profielfoto bestaat al";

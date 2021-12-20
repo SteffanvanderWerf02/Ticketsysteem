@@ -160,6 +160,11 @@ function statusCheck($statusValue)
     return $statusStat[$statusValue];
 }
 
+function checkIfFile($file)
+{
+    return is_uploaded_file($_FILES[$file]["tmp_name"]);
+}
+
 function checkFileSize($fileName)
 {
     if ($_FILES[$fileName]["size"] <= 5000000) {
@@ -197,27 +202,61 @@ function checkFileExist($directory, $fileName)
     return file_exists($directory . $fileName);
 }
 
-function uploadFile($db, $file, $tableName, $valueRow, $relationId, $userId, $directory)
+function deleteFile($directory)
 {
+    $files = glob($directory.'*'); // get all file names
+    foreach ($files as $file) { // iterate files
+        if (is_file($file)) {
+            unlink($file); // delete file
+        }
+    }
+    return true;
+}
+
+function uploadFile($db, $file, $tableName, $recordName, $relationId, $userId, $directory)
+{
+    $type = "";
+    $params = array();
+
     $query = "UPDATE ";
     switch ($tableName) {
         case 'user':
-            $query.= "user" ;
+            $query .= "user ";
             break;
-        
+
         default:
             # code...
             break;
     }
-    switch ($valueRow) {
-        case 'value':
-            # code...
+
+    switch ($recordName) {
+        case 'profilepicture':
+            $query .= "SET profilepicture = ? ";
+            $type .= "s";
+            array_push($params,  $directory . $_FILES[$file]["name"]);
             break;
-        
+
         default:
             # code...
             break;
     }
+
+    switch ($relationId) {
+        case 'user_id':
+            $query .= "WHERE user_id = ?";
+            $type .= "i";
+            array_push($params, $userId);
+            break;
+
+        default:
+            # code...
+            break;
+    }
+
     $stmt = mysqli_prepare($db, $query) or die(mysqli_error($db));
-    mysqli_stmt_bind_param($stmt, "si", $ , $userId) or die(mysqli_error($db));
+    call_user_func_array(array($stmt, "bind_param"), makeValuesReferenced(array_merge(array($type), $params)));
+    if (move_uploaded_file($_FILES[$file]["tmp_name"], realpath(dirname(getcwd())) . $directory . $_FILES[$file]["name"]) && mysqli_stmt_execute($stmt)) {
+        mysqli_stmt_close($stmt);
+        return true;
+    }
 }
