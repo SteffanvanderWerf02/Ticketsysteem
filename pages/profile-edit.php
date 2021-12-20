@@ -99,14 +99,14 @@ if (isset($_POST['userSubmit'])) {
                             }
                         }
                     } else {
-                        echo "Uw profielfoto bestaat al";
+                        echo "<div class='alert alert-danger'>Uw profielfoto bestaat al</div>";
                     }
                 }
             } else {
-                echo "Uw geüploadde bestand type wordt niet geaccepteerd. Er worden alleen jpg's, jpeg's, png's, en gif's geaccepteerd";
+                echo "<div class='alert alert-danger'>Uw geüploadde bestand type wordt niet geaccepteerd. Er worden alleen jpg's, jpeg's, png's, en gif's geaccepteerd</div>";
             }
         } else {
-            echo "Uw geüploadde bestand is te groot";
+            echo "<div class='alert alert-danger'>Uw geüploadde bestand is te groot</div>";
         }
     }
 }
