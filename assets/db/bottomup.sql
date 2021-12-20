@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 4.9.0.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Gegenereerd op: 17 dec 2021 om 12:11
--- Serverversie: 10.4.22-MariaDB
--- PHP-versie: 8.0.13
+-- Gegenereerd op: 20 dec 2021 om 17:35
+-- Serverversie: 10.3.16-MariaDB
+-- PHP-versie: 7.3.7
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -91,24 +92,25 @@ CREATE TABLE `issue` (
   `frequency` varchar(50) DEFAULT NULL,
   `appendex_url` varchar(128) DEFAULT NULL,
   `status_timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `status` int(10) NOT NULL
+  `status` int(10) NOT NULL,
+  `issue_action` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Gegevens worden geëxporteerd voor tabel `issue`
 --
 
-INSERT INTO `issue` (`issue_id`, `user_id`, `company_id`, `priority`, `category`, `sub_category`, `title`, `description`, `result`, `created_at`, `closed_at`, `frequency`, `appendex_url`, `status_timestamp`, `status`) VALUES
-(1, 1, 1, 0, 'dienst/service', 'Voiliere', 'Voiliere maken', 'Ik wil volgens', '', '2021-12-10', '2021-12-10', 'Weekly', NULL, '2021-12-14 15:23:25', 1),
-(2, 1, 1, 2, 'ticket', 'Klacht', 'Slechte service', 'er was ruzie tussen mij en werknemers.', '', '2021-12-14', NULL, '', NULL, '2021-12-16 13:43:16', 1),
-(3, 2, 1, 1, 'Product', 'Schop', 'Schop kopen', 'Ik wil graag een schop 2000 kopen hebben jullie hier een voorbeeld van', '', '2021-12-14', NULL, NULL, NULL, '2021-12-16 13:43:21', 1),
-(4, 1, 1, 2, 'Dienst/service', 'Grasmaaien', 'Gras is groen', 'Gras is te lang', '', '2021-12-16', NULL, NULL, NULL, '2021-12-16 12:13:57', 1),
-(5, 1, 1, 0, 'dienst/service', 'tuinonderhoud', 'Tuinman inhuren', 'ik wil tuinman', 'nette tuin', '2021-12-16', NULL, 'Maandelijks', NULL, '2021-12-16 15:57:46', 1),
-(6, 1, 1, 1, 'ticket', 'klacht', 'Test Ticket', 'dit si test', 'werkende ticket', '2021-12-16', NULL, 'N.V.T', NULL, '2021-12-16 16:05:32', 1),
-(7, 1, 1, 1, 'product', 'tracker', 'Emmer 2000', 'Ik wil een emmer', 'emmer zonder gaten', '2021-12-16', NULL, 'N.V.T', NULL, '2021-12-16 16:06:30', 1),
-(8, 1, 1, 1, 'dienst/service', 'tuinonderhoud', 'Parkeerplaats aanleggen', 'ik wil graag mijn parkeerplaats vernieuwen met bomen en straatwerk', 'mooie parkeerplaats', '2021-12-16', NULL, 'Weekelijks', NULL, '2021-12-16 16:07:35', 1),
-(9, 1, 1, 1, 'dienst/service', 'tuinonderhoud', 'Tuinman inhuren', 'ik wil tuinman', 'nette tuin', '2021-12-16', NULL, 'Maandelijks', NULL, '2021-12-16 16:10:03', 1),
-(10, 8, NULL, 1, 'dienst/service', 'grasmaaien', 'Tuinman inhuren', 'Test', 'ik wil pizza', '2021-12-17', NULL, 'N.V.T', NULL, '2021-12-17 11:09:21', 1);
+INSERT INTO `issue` (`issue_id`, `user_id`, `company_id`, `priority`, `category`, `sub_category`, `title`, `description`, `result`, `created_at`, `closed_at`, `frequency`, `appendex_url`, `status_timestamp`, `status`, `issue_action`) VALUES
+(1, 1, 1, 0, 'dienst/service', 'Voiliere', 'Voiliere maken', 'Ik wil volgens', '', '2021-12-10', '2021-12-10', 'Weekly', NULL, '2021-12-14 15:23:25', 1, NULL),
+(2, 1, 1, 2, 'ticket', 'Klacht', 'Slechte service', 'er was ruzie tussen mij en werknemers.', '', '2021-12-14', NULL, '', NULL, '2021-12-16 13:43:16', 1, NULL),
+(3, 2, 1, 1, 'Product', 'Schop', 'Schop kopen', 'Ik wil graag een schop 2000 kopen hebben jullie hier een voorbeeld van', '', '2021-12-14', NULL, NULL, NULL, '2021-12-16 13:43:21', 1, NULL),
+(4, 1, 1, 2, 'Dienst/service', 'Grasmaaien', 'Gras is groen', 'Gras is te lang', '', '2021-12-16', NULL, NULL, NULL, '2021-12-16 12:13:57', 1, NULL),
+(5, 1, 1, 0, 'dienst/service', 'tuinonderhoud', 'Tuinman inhuren', 'ik wil tuinman', 'nette tuin', '2021-12-16', NULL, 'Maandelijks', NULL, '2021-12-20 16:33:55', 1, 1),
+(6, 1, 1, 1, 'ticket', 'klacht', 'Test Ticket', 'dit si test', 'werkende ticket', '2021-12-16', NULL, 'N.V.T', NULL, '2021-12-16 16:05:32', 1, NULL),
+(7, 1, 1, 1, 'product', 'tracker', 'Emmer 2000', 'Ik wil een emmer', 'emmer zonder gaten', '2021-12-16', NULL, 'N.V.T', NULL, '2021-12-16 16:06:30', 1, NULL),
+(8, 1, 1, 1, 'dienst/service', 'tuinonderhoud', 'Parkeerplaats aanleggen', 'ik wil graag mijn parkeerplaats vernieuwen met bomen en straatwerk', 'mooie parkeerplaats', '2021-12-16', NULL, 'Weekelijks', NULL, '2021-12-16 16:07:35', 1, NULL),
+(9, 1, 1, 1, 'dienst/service', 'tuinonderhoud', 'Tuinman inhuren', 'ik wil tuinman', 'nette tuin', '2021-12-16', NULL, 'Maandelijks', NULL, '2021-12-16 16:10:03', 1, NULL),
+(10, 8, NULL, 1, 'dienst/service', 'grasmaaien', 'Tuinman inhuren', 'Test', 'ik wil pizza', '2021-12-17', NULL, 'N.V.T', NULL, '2021-12-17 11:09:21', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -123,6 +125,18 @@ CREATE TABLE `issue_message` (
   `date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Gegevens worden geëxporteerd voor tabel `issue_message`
+--
+
+INSERT INTO `issue_message` (`id`, `issue_id`, `message_id`, `date`) VALUES
+(1, 5, 1, '2021-12-20 11:22:12'),
+(2, 5, 2, '2021-12-20 11:57:18'),
+(3, 5, 3, '2021-12-20 15:52:25'),
+(4, 5, 4, '2021-12-20 15:55:57'),
+(5, 5, 5, '2021-12-20 15:56:18'),
+(6, 5, 6, '2021-12-20 16:33:55');
+
 -- --------------------------------------------------------
 
 --
@@ -136,6 +150,18 @@ CREATE TABLE `message` (
   `message` varchar(100) NOT NULL,
   `appendex_url` varchar(128) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Gegevens worden geëxporteerd voor tabel `message`
+--
+
+INSERT INTO `message` (`message_id`, `user_id`, `date`, `message`, `appendex_url`) VALUES
+(1, 1, '2021-12-20', 'sdfwefwefwewefwefwefwefwefwe', NULL),
+(2, 1, '2021-12-20', 'asdfsdfsdfsdfsdfsdfsddfsdf', NULL),
+(3, 1, '2021-12-20', 'hallo', NULL),
+(4, 1, '2021-12-20', 'halloasdf sdafd', NULL),
+(5, 1, '2021-12-20', 'iwjfoiwejfoiwejowiejfowiejfoiwejfwe', NULL),
+(6, 1, '2021-12-20', 'bij deze een actie van de klant', NULL);
 
 -- --------------------------------------------------------
 
@@ -242,13 +268,13 @@ ALTER TABLE `issue`
 -- AUTO_INCREMENT voor een tabel `issue_message`
 --
 ALTER TABLE `issue_message`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT voor een tabel `message`
 --
 ALTER TABLE `message`
-  MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT voor een tabel `user`

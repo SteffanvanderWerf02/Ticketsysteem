@@ -22,11 +22,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
     mysqli_stmt_execute($stmt) or die(mysqli_error($db));
     mysqli_stmt_bind_result($stmt, $issue_id, $priority, $category, $title, $description, $created_at, $frequency, $status);
     mysqli_stmt_fetch($stmt);
-
-            mysqli_stmt_execute($stmt) or die(mysqli_error($db));
-            mysqli_stmt_bind_result($stmt, $issue_id, $priority, $category, $title, $description, $created_at, $frequency, $status);
-            mysqli_stmt_fetch($stmt);
-            mysqli_stmt_close($stmt);
+    mysqli_stmt_close($stmt);
     
     $sql = "SELECT  `name`
             FROM    user
@@ -41,8 +37,16 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
             mysqli_stmt_fetch($stmt);
             mysqli_stmt_close($stmt);
 
+    if (isset($_POST['upload_message'])) {
+        
+        $issue_message = filter_input(INPUT_POST, 'issue_message', FILTER_SANITIZE_SPECIAL_CHARS);
+        $issue_action = filter_input(INPUT_POST, 'action_point', FILTER_SANITIZE_NUMBER_INT);
 
-    
+        uploadMessage($db, $_SESSION['userId'], $issue_message, $id);
+
+        uploadActionIssue($db, $id, $issue_action);
+
+    }
 
 ?>
     <!DOCTYPE html>
@@ -95,22 +99,15 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                                     <div class="col-lg-12 message-view">
                                         <p class="title-messages">Bericht</p>
                                     </div>
-                                    <div class="col-lg-12 message-view">
-                                        <p>Klaas van Tongen</p>
-                                        <p class="title-messages">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod</p>
-                                    </div>
-                                    <div class="col-lg-12 message-view">
-                                        <p>Klaas van Tongen</p>
-                                        <p class="title-messages">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod</p>
-                                    </div>
+                                    <?php echo getMessage($db, $id); ?>
                                 </div>
                                 <div class="col-lg-12 ticket-form">
                                     <form method="post" action="">
-                                        <input type="radio" id="c_action" name="action_point" value="klant" checked />
-                                        <label for="c_action">Actie klant</label>
-                                        <input type="radio" id="b_action" name="action_point" value="bottom-up" />
-                                        <label for="b_action">Actie Bottom up</label>
-                                        <textarea class="t_area" placeholder="Uw bericht"></textarea>
+                                        <input type='radio' id='c_action' name='action_point' value='2' checked />
+                                        <label for='c_action'>Actie Bottom up</label>
+                                        <input type='radio' id='b_action' name='action_point' value='1' />
+                                        <label for='b_action'>Actie klant</label>
+                                        <textarea class="t_area" name="issue_message" placeholder="Uw bericht"></textarea>
                                         <label for="customFile">Bestand</label>
                                         <div class="custom-file">
                                             <input type="file" name="b_file" title="Kies uw profielfoto" class="custom-file-input" id="customFile">

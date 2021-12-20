@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * @param: $data: returns value thats needs to be debugged
+ * @param: $type: gives type of debugging
+ * @return: Array: $data, Debugtype: $type.
+ */
+
 function debugData($data, $type = "print_r")
 {
     $return = '<pre>';
@@ -14,6 +20,129 @@ function debugData($data, $type = "print_r")
     $return .= '</pre>';
 
     return $return;
+}
+
+/**
+ * @param: $db: return mysqli object
+ * @param: $userId: returns id from user
+ * @param: $message: returns the message that has been typed
+ * @param: $issueId: returns id from the url
+ * @return: Array: $data, Debugtype: $type.
+ */
+
+function uploadMessage($db, $userId, $message, $issueId) {
+
+    $sql = "INSERT
+            INTO    `message`
+            (
+                    `user_id`,
+                    `date`,
+                    `message`
+            ) VALUES (
+                    ?,
+                    NOW(),
+                    ?
+            )
+            ";
+
+    $stmt = mysqli_prepare($db, $sql) or die(mysqli_error($db));
+    mysqli_stmt_bind_param($stmt, "is", $userId, $message) or die(mysqli_error($db));
+    mysqli_stmt_execute($stmt) or die(mysqli_error($db));
+    $lastMessageId = mysqli_insert_id($db);
+    mysqli_stmt_close($stmt); 
+
+    $sql = "INSERT
+            INTO    `issue_message` 
+            (
+                    `issue_id`,
+                    `message_id`,
+                    `date`
+            )
+            VALUES 
+            (
+                    ?,
+                    ?,
+                    NOW()
+            )
+            ";
+
+    $stmt = mysqli_prepare($db, $sql) or die(mysqli_error($db));
+    mysqli_stmt_bind_param($stmt, "ii", $issueId, $lastMessageId) or die(mysqli_error($db));
+    mysqli_stmt_execute($stmt) or die(mysqli_error($db));
+    mysqli_stmt_close($stmt);
+}
+
+function getMessage($db, $issueId) {
+
+    $sql = "
+            SELECT      `message`.`message`,
+                        `user`.name
+            FROM        `message`   
+            INNER JOIN  issue_message 
+            ON          `message`.message_id = issue_message.message_id
+            INNER JOIN  user
+            ON          `message`.user_id = user.user_id
+            WHERE       issue_message.issue_id = ?    
+            ORDER BY    issue_message.date DESC
+           ";
+
+    $stmt = mysqli_prepare($db, $sql) or die(mysqli_error($db));
+    mysqli_stmt_bind_param($stmt, 'i', $issueId) or die(mysqli_error($db));
+    mysqli_stmt_execute($stmt) or die(mysqli_error($db));
+    mysqli_stmt_bind_result($stmt, $message, $name);
+
+    $return = "";
+    while (mysqli_stmt_fetch($stmt)) {
+        $return .= "<div class='col-lg-12 message-view'>";
+        $return .= "<p>{$name}</p>";
+        $return .= "<p class='title-messages'>{$message}</p>";
+        $return .= "</div>";
+    }
+
+    mysqli_stmt_close($stmt);
+
+    return $return;
+}
+
+function getActionIssue($db, $issueId) {
+
+    $sql = "
+            SELECT      issue_action
+            FROM        issue
+            WHERE       issue_id = ?
+           ";
+
+    $stmt = mysqli_prepare($db, $sql) or die(mysqli_error($db));
+    mysqli_stmt_bind_param($stmt, "i", $issueId);
+    mysqli_stmt_execute($stmt) or die(mysqli_error($db));
+    mysqli_stmt_bind_result($stmt, $issueAction);
+    mysqli_stmt_fetch($stmt);
+
+    return $issueAction;
+
+}
+
+function issueActionCheck($actionValue) {
+    $actionStat = [NULL=>"onbekend", 1=>"klant", 2=>"bottomup"];
+    return $actionStat[$actionValue];
+}
+
+/**
+ * @param: $db: returns mysqli object
+ * @param: $issueId: returns the issueId that belongs to the issue in question
+ * @param: $issueAction: returns the action which has been chosen for the customer or admin
+ * @return: Object: $db, Int: $issueId, Int: $issueAction.
+ */
+function uploadActionIssue($db, $issueId, $issueAction) {
+    
+    $sql = "UPDATE  issue 
+            SET     issue_action = ? 
+            WHERE   issue_id = ?";
+
+    $stmt = mysqli_prepare($db, $sql) or die(mysqli_error($db));
+    mysqli_stmt_bind_param($stmt, "ii", $issueAction, $issueId) or die(mysqli_error($db));
+    mysqli_stmt_execute($stmt) or die(mysqli_error($db));
+    mysqli_stmt_close($stmt);
 }
 
 function getIssueOverview($db, $companyId, $userId, $issueType, $filterStatus, $searchId, $searchTitle)
@@ -150,7 +279,7 @@ function makeValuesReferenced($arr)
 
 function priorityCheck($priorityValue)
 {
-    $priorityStat = [1 => "Laag", 2 => "Gemiddeld", 3 => "Hoog"];
+    $priorityStat = [0 => "Laag", 1 => "Gemiddeld", 2 => "Hoog"];
     return $priorityStat[$priorityValue];
 }
 
