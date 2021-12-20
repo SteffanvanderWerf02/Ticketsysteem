@@ -317,6 +317,15 @@ function checkFileType($fileName, $mimeArray)
     }
 }
 
+function makeIssueFolder($issueId)
+{
+    $directory = "../assets/issueFiles/" . $issueId;
+    if (!file_exists($directory)) {
+        mkdir($directory, 0777);
+    }
+    return true;
+}
+
 function makeUserFolder($userId)
 {
     $directory = "../assets/img/pfpic/" . $userId;
@@ -342,7 +351,7 @@ function deleteFile($directory)
     return true;
 }
 
-function uploadFile($db, $file, $tableName, $recordName, $relationId, $userId, $directory)
+function uploadFile($db, $file, $tableName, $recordName, $relationId, $Id, $directory)
 {
     $type = "";
     $params = array();
@@ -351,6 +360,9 @@ function uploadFile($db, $file, $tableName, $recordName, $relationId, $userId, $
     switch ($tableName) {
         case 'user':
             $query .= "user ";
+            break;
+        case 'issue':
+            $query .= "issue ";
             break;
 
         default:
@@ -364,7 +376,11 @@ function uploadFile($db, $file, $tableName, $recordName, $relationId, $userId, $
             $type .= "s";
             array_push($params,  $directory . $_FILES[$file]["name"]);
             break;
-
+        case 'appendex_url':
+            $query .= "SET appendex_url = ? ";
+            $type .= "s";
+            array_push($params,  $directory . $_FILES[$file]["name"]);
+            break;
         default:
             # code...
             break;
@@ -374,9 +390,13 @@ function uploadFile($db, $file, $tableName, $recordName, $relationId, $userId, $
         case 'user_id':
             $query .= "WHERE user_id = ?";
             $type .= "i";
-            array_push($params, $userId);
+            array_push($params, $Id);
             break;
-
+        case 'user_id':
+            $query .= "WHERE issue_id = ?";
+            $type .= "i";
+            array_push($params, $Id);
+            break;
         default:
             # code...
             break;
@@ -388,4 +408,14 @@ function uploadFile($db, $file, $tableName, $recordName, $relationId, $userId, $
         mysqli_stmt_close($stmt);
         return true;
     }
+}
+
+function deleteIssue($db, $id) {
+    $stmt = mysqli_prepare($db,"
+        DELETE 
+        FROM issue 
+        WHERE issue_id = ?
+    ") or die(mysqli_error($db));
+    mysqli_stmt_bind_param($stmt, "i", $id);
+    mysqli_stmt_execute($stmt) or die(mysqli_error($db));
 }
