@@ -102,7 +102,7 @@ if (isset($_POST['submit'])) {
 
 <body>
     <!--Header include -->
-    <?php include_once("../components/header.html") ?>
+    <?php include_once("../components/header.php") ?>
     <div id="content" class="container">
         <div class="row">
             <div class="col-lg-12">

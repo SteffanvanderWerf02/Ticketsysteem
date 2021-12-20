@@ -59,7 +59,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
 
     <body>
         <!-- Header include -->
-        <?php include_once("../components/header.html") ?>
+        <?php include_once("../components/header.php") ?>
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">

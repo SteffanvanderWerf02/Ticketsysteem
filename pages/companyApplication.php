@@ -14,7 +14,7 @@ require_once("../components/functions.php");
 
 <body>
     <!--Header include -->
-    <?php include_once("../components/header.html");
+    <?php include_once("../components/header.php");
     if (isset($_POST['approve']) && $id = filter_input(INPUT_POST, "approve", FILTER_VALIDATE_INT)) {
         $stmt = mysqli_prepare($db, "
             SELECT  email_adres,

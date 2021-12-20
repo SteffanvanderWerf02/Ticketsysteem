@@ -94,7 +94,7 @@ if (isset($_POST['sendNewIssue'])) {
 </head>
 
 <body>
-    <?php include_once("../components/header.html"); ?>
+    <?php include_once("../components/header.php"); ?>
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
