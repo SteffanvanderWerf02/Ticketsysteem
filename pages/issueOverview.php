@@ -11,7 +11,7 @@ include_once ("../connection.php");
 <body class="h-100">
     <!--Header include -->
     <?php include_once("../components/header.php")?>
-    <div id="overviewContent" class="container h-100">
+    <div id="content" class="container h-100">
         <div class="row h-100">
             <div class="col-lg-4 my-auto">
                 <div class="card square mx-auto justify-content-center">
