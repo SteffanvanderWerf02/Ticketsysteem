@@ -95,9 +95,9 @@ if (isset($_POST['userSubmit'])) {
                     if (!checkFileExist("../assets/img/pfpic/" . $_SESSION["userId"] . "/", $_FILES["pfp"]["name"])) {
                         if (deleteFile("../assets/img/pfpic/" . $_SESSION["userId"] . "/")) {
                             if (uploadFile($db, "pfp", "user", "profilepicture", "user_id", $_SESSION["userId"], "../assets/img/pfpic/" . $_SESSION["userId"] . "/")) {
-                                echo "<div class='alert alert-danger'>Uw profielfoto is succesvol geüpload</div>";
+                                echo "<div class='alert alert-success'>Uw profielfoto is succesvol geüpload</div>";
                             } else {
-                                echo "Uw profielfoto is niet toegevoegd, probeer het opnieuw";
+                                echo "<div class='alert alert-danger'>Uw profielfoto is niet toegevoegd, probeer het opnieuw</div>";
                             }
                         }
                     } else {
