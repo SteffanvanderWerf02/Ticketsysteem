@@ -10,7 +10,7 @@ include_once ("../connection.php");
 </head>
 <body class="h-100">
     <!--Header include -->
-    <?php include_once("../components/header.html")?>
+    <?php include_once("../components/header.php")?>
     <div id="overviewContent" class="container h-100">
         <div class="row h-100">
             <div class="col-lg-4 my-auto">

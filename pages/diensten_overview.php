@@ -26,7 +26,7 @@ if (isset($_GET['submit'])) {
 
 <body>
     <!-- Header include -->
-    <?php include_once("../components/header.html") ?>
+    <?php include_once("../components/header.php") ?>
     <div id="content" class="container">
         <h1>Dienst/Service overzicht</h1>
         <div class="row mb-3">
