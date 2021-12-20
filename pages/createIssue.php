@@ -75,20 +75,20 @@ if (isset($_POST['sendNewIssue'])) {
                                                 if (uploadFile($db, "issueFile", "issue", "appendex_url", "issue_id", $lastIssueId, "../assets/issueFiles/" . $lastIssueId . "/")) {
                                                     echo "<div class='alert alert-success'>Uw issue is verzonden</div>";  
                                                 }else{
-                                                    echo "Uw bestand is niet toegevoegd probeer het opnieuw";
+                                                    echo "<div class='alert alert-danger'>Uw bestand is niet toegevoegd probeer het opnieuw</div>";
                                                     deleteIssue($db,$lastIssueId);
                                                 }
                                             } else {
-                                                echo "U heeft deze bijlagen al toegevoegd";
+                                                echo "<div class='alert alert-danger'>U heeft deze bijlagen al toegevoegd</div>";
                                                 deleteIssue($db,$lastIssueId);
                                             }
                                         }
                                     } else {
-                                        echo "Uw geüploadde bestand type wordt niet geaccepteerd. Er worden alleen jpg's, jpeg's, png's, en gif's geaccepteerd";
+                                        echo "<div class='alert alert-danger'>Uw geüploadde bestand type wordt niet geaccepteerd. Er worden alleen pdf's, jpg's, jpeg's, png's, en gif's geaccepteerd</div>";
                                         deleteIssue($db,$lastIssueId);
                                     }
                                 } else {
-                                    echo "Uw geüploadde bestand is te groot";
+                                    echo "<div class='alert alert-danger'>Uw geüploadde bestand is te groot</div>";
                                     deleteIssue($db,$lastIssueId); 
                                 }
                             }else {
