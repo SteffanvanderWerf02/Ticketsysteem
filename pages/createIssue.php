@@ -75,7 +75,7 @@ if (isset($_POST['sendNewIssue'])) {
                                                 if (uploadFile($db, "issueFile", "issue", "appendex_url", "issue_id", $lastIssueId, "../assets/issueFiles/" . $lastIssueId . "/")) {
                                                     echo "<div class='alert alert-success'>Uw issue is verzonden</div>";  
                                                 }else{
-                                                    echo "<div class='alert alert-danger'>Uw bestand is niet toegevoegd probeer het opnieuw</div>";
+                                                    echo "<div class='alert alert-danger'>Uw bestand is niet toegevoegd, probeer het opnieuw</div>";
                                                     deleteIssue($db,$lastIssueId);
                                                 }
                                             } else {
@@ -227,7 +227,7 @@ if (isset($_POST['sendNewIssue'])) {
                             } elseif ($issueType != "dienst/service" || $issueType != "product" || $issueType != "ticket") {
                                 die("<div class='col-lg-12'>
                                         <div class='alert alert-danger'>
-                                            Het gegeven issue type is nog niet gespecigiseerd, ga terug naar de vorige pagina
+                                            Het gegeven issue type is nog niet gespecificeerd, ga terug naar de vorige pagina
                                         </div>
                                     </div>
                                 ");
