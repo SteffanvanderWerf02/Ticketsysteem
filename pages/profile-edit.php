@@ -1,6 +1,8 @@
 <?php
 include_once("../config.php");
 include_once("../connection.php");
+include_once("../components/functions.php");
+$acceptedFileTypesPP = ["image/jpg", "image/jpeg", "image/png", "image/gif"];
 
 // User update
 if (isset($_POST['userSubmit'])) {
@@ -70,6 +72,24 @@ if (isset($_POST['userSubmit'])) {
             echo "<div class='alert alert-success'>Wachtwoord succesvol aangepast</div>";
         } else {
             echo "<div class='alert alert-danger'>Het nieuw ingevoerde wachtwoord kan niet gelijk zijn aan het oude wachtwoord</div>";
+        }
+    }
+    if (is_uploaded_file($_FILES["pfp"]["tmp_name"])) {
+        if (checkFileSize("pfp")) {
+            if (checkFileType("pfp", $acceptedFileTypesPP)) {
+                if (makeUserFolder($_SESSION["userId"])) {
+                    if (!checkFileExist("../assets/img/pfpic/" . $_SESSION["userId"] . "/", $_FILES["pfp"]["name"])) {
+                        if (uploadFile("pfp", "user", $_SESSION["userId"], "../assets/img/pfpic/" . $_SESSION["userId"] . "/")) {
+                        }
+                    } else {
+                        echo "Uw profielfoto bestaat al";
+                    }
+                }
+            } else {
+                echo "Uw geüploadde bestand type wordt niet geaccepteerd. Er worden alleen jpg's, jpeg's, png's, en gif's geaccepteerd";
+            }
+        } else {
+            echo "Uw geüploadde bestand is te groot";
         }
     }
 }
@@ -192,7 +212,7 @@ if (isset($_POST['companySubmit'])) {
                         <div class="col-lg-12">
                             <label for="customFile" class="pointer">Profiel foto</label>
                             <div class="custom-file">
-                                <input type="file" title="Kies uw profielfoto" class="custom-file-input" id="customFile">
+                                <input type="file" title="Kies uw profielfoto" name="pfp" class="custom-file-input" id="customFile">
                                 <label class="custom-file-label" for="customFile">Kies Bestand</label>
                             </div>
                         </div>

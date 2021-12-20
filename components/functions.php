@@ -159,3 +159,65 @@ function statusCheck($statusValue)
     $statusStat = [1 => "Nieuw", 2 => "In behandeling", 3 => "On hold", 4 => "Gesloten"];
     return $statusStat[$statusValue];
 }
+
+function checkFileSize($fileName)
+{
+    if ($_FILES[$fileName]["size"] <= 5000000) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function checkFileType($fileName, $mimeArray)
+{
+    $fileInfo = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $_FILES[$fileName]["tmp_name"]);
+    if (in_array($fileInfo, $mimeArray)) {
+        if (!$_FILES[$fileName]["error"] > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
+}
+
+function makeUserFolder($userId)
+{
+    $directory = "../assets/img/pfpic/" . $userId;
+    if (!file_exists($directory)) {
+        mkdir($directory, 0777);
+    }
+    return true;
+}
+
+function checkFileExist($directory, $fileName)
+{
+    return file_exists($directory . $fileName);
+}
+
+function uploadFile($db, $file, $tableName, $valueRow, $relationId, $userId, $directory)
+{
+    $query = "UPDATE ";
+    switch ($tableName) {
+        case 'user':
+            $query.= "user" ;
+            break;
+        
+        default:
+            # code...
+            break;
+    }
+    switch ($valueRow) {
+        case 'value':
+            # code...
+            break;
+        
+        default:
+            # code...
+            break;
+    }
+    $stmt = mysqli_prepare($db, $query) or die(mysqli_error($db));
+    mysqli_stmt_bind_param($stmt, "si", $ , $userId) or die(mysqli_error($db));
+}
