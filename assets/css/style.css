@@ -685,6 +685,11 @@ a.fill-div {
 
 .form-container {
   border: 1px solid grey;
+  width: 100%;
+}
+
+#issue_choice {
+  text-align: center;
 }
 
 .message-view {
