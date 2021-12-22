@@ -32,7 +32,9 @@ textarea {
     font-family: "Roboto", Arial, Helvetica, sans-serif;
     resize: none;
 }
-
+.text-white {
+    color: var(--white-color);
+}
 .red {
     color: var(--red);
 }
@@ -727,8 +729,14 @@ select.form-control, label {
   width: 100%;
   max-height: 500px;
   overflow: auto;
+  position: relative;
 }
-
+.form-container .message-view:first-child{
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    background: #1c9941;
+}
 .issue_choice {
   text-align: center;
 }
@@ -746,6 +754,7 @@ select.form-control, label {
 
 .title-messages {
     font-size: 20px;
+    word-break: break-all;
 }
 
 .ticket-form {

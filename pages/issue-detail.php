@@ -39,7 +39,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
     mysqli_stmt_close($stmt);
 
     if (isset($_POST['upload_message'])) {
-        if (!empty($_POST['issue_message']) && $issue_message = filter_input(INPUT_POST, 'issue_message', FILTER_SANITIZE_SPECIAL_CHARS)) {
+        if (!empty($_POST['issue_message']) && $issue_message = filter_input(INPUT_POST, 'issue_message', FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
             if (isset($_POST['action_point']) && $action_point = filter_input(INPUT_POST, 'action_point', FILTER_SANITIZE_NUMBER_INT)) {
 
                 if (checkIfFile("b_file")) {
@@ -100,7 +100,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                 <div class="col-lg-12">
                     <div class="row">
                         <div class="col-lg-12">
-                            <h2>Id <?= "#" . $issue_id; ?> | <?= $title; ?> | <?= $created_at; ?> </h2>
+                            <h2>Id  #<?= $issue_id; ?> | <?= $title; ?> | <?= $created_at; ?> </h2>
                             <h4><?= $description; ?></h4>
                             <p class="ticket_date"><?= $created_at; ?></p>
                         </div>
@@ -132,7 +132,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                             <div class="row">
                                 <div class="form-container">
                                     <div class="col-lg-12 message-view">
-                                        <p class="title-messages">Bericht</p>
+                                        <h2 class="header-messages text-white">Bericht</h2>
                                     </div>
                                     <?= getMessage($db, $id); ?>
                                 </div>

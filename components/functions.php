@@ -139,7 +139,7 @@ function getMessage($db, $issueId)
         } else {
             $return .= "<div class='col-lg-12 message-view'>";
             $return .= "<p>{$name}<span class='float-right'>". date("H:i d-m-Y", strtotime($message_date)) ."</span></p>";
-            $return .= "<p class='title-messages'>{$message}</p>";
+            $return .= "<p class='title-messages'>".nl2br($message)."</p>";
             if ($appendex_url != NULL) {
                 $return .= "<p class='title-message'><a target='blank' href='{$appendex_url}'>Bijlage Bekijken.</a></p>";
             }
