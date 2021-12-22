@@ -431,24 +431,3 @@ function deleteIssue($db, $id)
     mysqli_stmt_execute($stmt) or die(mysqli_error($db));
     mysqli_stmt_close($stmt);
 }
-
-function deleteMessage($db, $id) {
-
-    $stmt = mysqli_prepare($db, "
-        DELETE 
-        FROM issue_message 
-        WHERE message_id = ? 
-    ") or die(mysqli_error($db));
-    mysqli_stmt_bind_param($stmt, "i", $id);
-    mysqli_stmt_execute($stmt) or die(mysqli_error($db));
-    mysqli_stmt_close($stmt);
-
-    $stmt = mysqli_prepare($db, "
-        DELETE 
-        FROM `message` 
-        WHERE message_id = ?
-    ") or die(mysqli_error($db));
-    mysqli_stmt_bind_param($stmt, "i", $id);
-    mysqli_stmt_execute($stmt) or die(mysqli_error($db));
-    mysqli_stmt_close($stmt);
-}
