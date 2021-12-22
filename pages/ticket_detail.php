@@ -99,6 +99,10 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                                     <div class="col-lg-12 message-view">
                                         <p class="title-messages">Bericht</p>
                                     </div>
+                                    <?php echo getLastMessage($db, $id); ?>
+                                        <div class='col-lg-12'>
+                                            <h2 id='issue_choice'>De keuze ligt nu aan: <?php echo issueActionCheck(getActionIssue($db, $id)); ?></h2>
+                                        </div>
                                     <?php echo getMessage($db, $id); ?>
                                 </div>
                                 <div class="col-lg-12 ticket-form">

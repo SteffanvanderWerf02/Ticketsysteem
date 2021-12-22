@@ -72,6 +72,35 @@ function uploadMessage($db, $userId, $message, $issueId) {
     mysqli_stmt_close($stmt);
 }
 
+function getLastMessage($db, $issueId) {
+    $sql = "
+            SELECT      `message`.`message`,
+                        `user`.name
+            FROM        `message`   
+            INNER JOIN  issue_message 
+            ON          `message`.message_id = issue_message.message_id
+            INNER JOIN  user
+            ON          `message`.user_id = user.user_id
+            WHERE       issue_message.issue_id = ?
+            ORDER BY    `message`.message_id DESC LIMIT 1
+           ";
+
+    $stmt = mysqli_prepare($db, $sql) or die(mysqli_error($db));
+    mysqli_stmt_bind_param($stmt, 'i', $issueId) or die(mysqli_error($db));
+    mysqli_stmt_execute($stmt) or die(mysqli_error($db));
+    mysqli_stmt_bind_result($stmt, $message, $name);
+    mysqli_stmt_fetch($stmt);
+
+    $return = "<div class='col-lg-12 message-view'>";
+    $return .= "<p>{$name}</p>";
+    $return .= "<p class='title-messages'>{$message}</p>";
+    $return .= "</div>";
+
+    mysqli_stmt_close($stmt);
+
+    return $return;
+}
+
 function getMessage($db, $issueId) {
 
     $sql = "
@@ -82,7 +111,8 @@ function getMessage($db, $issueId) {
             ON          `message`.message_id = issue_message.message_id
             INNER JOIN  user
             ON          `message`.user_id = user.user_id
-            WHERE       issue_message.issue_id = ?    
+            WHERE       issue_message.issue_id = ?  AND
+                        `message`.message_id != (SELECT MAX(`message`.message_id) FROM `message`)    
             ORDER BY    issue_message.date DESC
            ";
 
