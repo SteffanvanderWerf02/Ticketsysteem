@@ -195,7 +195,7 @@ if (isset($_POST['companySubmit'])) {
                         $amount = 0;
                     }
                 ?>
-                    <a class="d-block" href="./companyApplication.php"><span class="badge badge-pill badge-primary"><?= $amount ?></span> Nieuwe Bedrijfsaanvragen</a>
+                    <a class="d-block" href="./company_application.php"><span class="badge badge-pill badge-primary"><?= $amount ?></span> Nieuwe Bedrijfsaanvragen</a>
                 <?php
                 }
                 ?>

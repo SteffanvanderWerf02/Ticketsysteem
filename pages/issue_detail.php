@@ -10,7 +10,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
 
     <head>
         <?php include_once("../components/head.html") ?>
-        <title>ticket detail</title>
+        <title>Bottom Up - Ticket detail</title>
     </head>
 
     <body>

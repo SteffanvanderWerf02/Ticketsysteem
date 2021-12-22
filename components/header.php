@@ -8,7 +8,7 @@
                 <nav>
                     <ul class="nav">
                         <li class="my-auto">
-                            <a href="../pages/issueOverview.php">Nieuw issue</a>
+                            <a href="../pages/issue_overview.php">Nieuw issue</a>
                         </li>
                         <li class="my-auto">
                             <a href="../pages/ticket_overview.php">Ticket overzicht</a>
@@ -25,7 +25,7 @@
                             </form>
                         </li>
                         <li class="my-auto">
-                            <a href="../pages/profile-edit.php">
+                            <a href="../pages/profile_edit.php">
                                 <?php
                                 $stmt = mysqli_prepare($db, "
                                     SELECT  profilepicture

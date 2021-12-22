@@ -15,17 +15,17 @@ include_once ("../connection.php");
         <div class="row h-100">
             <div class="col-lg-4 my-auto">
                 <div class="card square mx-auto justify-content-center">
-                    <a href="./createIssue.php?issueType=Ticket" class="fill-div">Ticket aanmaken</a>
+                    <a href="./create_issue.php?issueType=Ticket" class="fill-div">Ticket aanmaken</a>
                 </div>
             </div>
             <div class="col-lg-4 my-auto">
                 <div class="card square mx-auto justify-content-center">
-                    <a href="./createIssue.php?issueType=Dienst/service" class="fill-div">Dienst / Service aanvragen</a>
+                    <a href="./create_issue.php?issueType=Dienst/service" class="fill-div">Dienst / Service aanvragen</a>
                 </div>
             </div>
             <div class="col-lg-4 my-auto">
                 <div class="card square mx-auto justify-content-center">
-                    <a href="./createIssue.php?issueType=Product" class="fill-div">Product aanvraag</a>
+                    <a href="./create_issue.php?issueType=Product" class="fill-div">Product aanvraag</a>
                 </div>
             </div>
         </div>

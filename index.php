@@ -161,7 +161,7 @@ if (isset($_POST['login'])) {
                                         <input id="login-password" type="password" placeholder="Wachtwoord" name="password" class="form-control">
                                     </div>
                                     <div class="col-lg-12 mb-1">
-                                        <a href="./pages/password-forget.php">Wachtwoord vergeten?</a>
+                                        <a href="./pages/password_forget.php">Wachtwoord vergeten?</a>
                                         <button type="submit" name="login" class="btn btn-primary ml-2 mt-3 float-right">
                                             <span class="material-icons align-middle">lock</span>
                                             Login

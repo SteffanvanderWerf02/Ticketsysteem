@@ -105,7 +105,7 @@ if (isset($_POST['generateToken'])) {
                 "Wachtwoord veranderen",
                 "<h1>Geachte dhr/mevr {$name},</h1>
                 <p>U kunt u wachtwoord veranderen met de volgende link</p>
-                <p>http://localhost/" . PROJECT_PATH . "pages/password-forget.php?token={$token}</p>
+                <p>http://localhost/" . PROJECT_PATH . "pages/password_forget.php?token={$token}</p>
                 <br>
                 <p>Met vriendelijke groet,</p>
                 <p>Bottom up</p>

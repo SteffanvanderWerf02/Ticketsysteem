@@ -64,7 +64,7 @@ if (isset($_GET['submit'])) {
                 <div class="row mb-2">
                     <div class="col-lg-12">
                         <form action="<?= $_SERVER["PHP_SELF"] ?>" method="GET">
-                            <button class="btn btn-small btn-primary" name="filter" value="2" type="submit">In Behandeling</button>
+                            <button class="btn btn-small btn-primary" name="filter" value="2" type="submit">Bezig</button>
                         </form>
                     </div>
                 </div>

@@ -98,7 +98,7 @@ function insertStatus($db, $userId, $issueId, $status)
     if ($status == 1) {
         $message = "De actie ligt bij: De klant";
     } else {
-        $message = "De actie ligt bij: Bottomup";
+        $message = "De actie ligt bij: Bottom Up";
     }
     mysqli_stmt_bind_param($stmt, "is", $userId, $message) or die(mysqli_error($db));
     mysqli_stmt_execute($stmt) or die(mysqli_error($db));
@@ -131,7 +131,7 @@ function getMessage($db, $issueId)
 
     $return = "";
     while (mysqli_stmt_fetch($stmt)) {
-        if ($message == "De actie ligt bij: Bottomup" || $message == "De actie ligt bij: De klant") {
+        if ($message == "De actie ligt bij: Bottom Up" || $message == "De actie ligt bij: De klant") {
             $return .= "<div class='col-lg-12 issue_choice'>";
             $return .= "<p class='action_message'>{$message}</p>";
             $return .= "</div>";
@@ -169,7 +169,7 @@ function getActionIssue($db, $issueId)
 
 function issueActionCheck($actionValue)
 {
-    $actionStat = [NULL => "bottomup", 1 => "klant", 2 => "bottomup"];
+    $actionStat = [NULL => "Bottom Up", 1 => "klant", 2 => "Bottom Up"];
 
     return $actionStat[$actionValue];
 }
@@ -302,7 +302,7 @@ function getIssueOverview($db, $companyId, $userId, $issueType, $filterStatus, $
     if (mysqli_stmt_num_rows($stmt) > 0) {
         while (mysqli_stmt_fetch($stmt)) {
 
-            $return .= "<tr class='action' data-href='issue-detail.php?id={$issueId}'>
+            $return .= "<tr class='action' data-href='issue_detail.php?id={$issueId}'>
                     <td>{$issueId}</td>
                     <td>{$userName}</td>
                     <td>{$createdAt}</td>
