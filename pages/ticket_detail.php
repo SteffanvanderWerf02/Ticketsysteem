@@ -29,22 +29,27 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
             WHERE   `user_id` = ?
            ";
 
-            $stmt = mysqli_prepare($db, $sql) or die(mysqli_error($db));
-            
-            mysqli_stmt_bind_param($stmt, "i", $_SESSION['userId']);  
-            mysqli_stmt_execute($stmt) or die(mysqli_error($db));
-            mysqli_stmt_bind_result($stmt, $name);
-            mysqli_stmt_fetch($stmt);
-            mysqli_stmt_close($stmt);
+    $stmt = mysqli_prepare($db, $sql) or die(mysqli_error($db));
+    
+    mysqli_stmt_bind_param($stmt, "i", $_SESSION['userId']);  
+    mysqli_stmt_execute($stmt) or die(mysqli_error($db));
+    mysqli_stmt_bind_result($stmt, $name);
+    mysqli_stmt_fetch($stmt);
+    mysqli_stmt_close($stmt);
+
+    $count = 0;
 
     if (isset($_POST['upload_message'])) {
         
-        $issue_message = filter_input(INPUT_POST, 'issue_message', FILTER_SANITIZE_SPECIAL_CHARS);
-        $issue_action = filter_input(INPUT_POST, 'action_point', FILTER_SANITIZE_NUMBER_INT);
+        if (!empty($_POST['issue_message']) && $issue_message = filter_input(INPUT_POST, 'issue_message', FILTER_SANITIZE_SPECIAL_CHARS)) {
+            $issue_action = filter_input(INPUT_POST, 'action_point', FILTER_SANITIZE_NUMBER_INT);
 
-        uploadMessage($db, $_SESSION['userId'], $issue_message, $id);
+            uploadMessage($db, $_SESSION['userId'], $issue_message, $id);
 
-        uploadActionIssue($db, $id, $issue_action);
+            uploadActionIssue($db, $id, $issue_action);
+        } else {
+            echo "<div class='alert alert-danger'>Het bericht is niet ingevuld</div>";
+        }
 
     }
 
