@@ -12,9 +12,9 @@ if (isset($_POST["deletepfp"]) && $id = filter_input(INPUT_POST, "deletepfp", FI
     ") or die(mysqli_error($db));
     mysqli_stmt_bind_param($stmt, "i", $id);
     if (mysqli_stmt_execute($stmt) && deleteFile("../assets/img/pfpic/" . $_SESSION["userId"] . "/")) {
-        echo "Uw profielfoto is succesvol verwijderd";
+        echo "<div class='alert alert-success'>Uw profielfoto is succesvol verwijderd</div>";
     } else {
-        echo "Er is iets fout gegaan, probeer het opnieuw";
+        echo "<div class='alert alert-danger'>Er is iets fout gegaan, probeer het opnieuw</div>";
     }
 }
 
