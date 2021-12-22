@@ -31,7 +31,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                             mysqli_stmt_bind_param($stmt, "iissi", $issuePir, $issueStatus, $issueCat, $issueSCat, $id) or die(mysqli_error($db));
                             mysqli_stmt_execute($stmt) or die(mysqli_error($db));
                             mysqli_stmt_close($stmt);
-                            echo "U issue is succesvol aangepast";
+                            echo "<div class='alert alert-success'>Uw issue is succesvol aangepast</div>";
                         } else {
                             echo "<div class='alert alert-danger'>Uw sub-categorie komt niet overeen met de opties</div>";
                         }
@@ -169,7 +169,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                                             ?>
                                                 <select name="issueStatus" class="form-control" form="editForm">
                                                     <option value="1" <?= ($status == 1 ? "selected" : "") ?>>Nieuw</option>
-                                                    <option value="2" <?= ($status == 2 ? "selected" : "") ?>>In behandeling</option>
+                                                    <option value="2" <?= ($status == 2 ? "selected" : "") ?>>Bezig</option>
                                                     <option value="3" <?= ($status == 3 ? "selected" : "") ?>>On hold</option>
                                                     <option value="4" <?= ($status == 4 ? "selected" : "") ?>>Gesloten</option>
                                                 </select>
