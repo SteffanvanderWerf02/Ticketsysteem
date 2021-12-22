@@ -288,3 +288,134 @@ function statusCheck($statusValue)
     $statusStat = [1 => "Nieuw", 2 => "In behandeling", 3 => "On hold", 4 => "Gesloten"];
     return $statusStat[$statusValue];
 }
+
+function checkIfFile($file)
+{
+    return is_uploaded_file($_FILES[$file]["tmp_name"]);
+}
+
+function checkFileSize($fileName)
+{
+    if ($_FILES[$fileName]["size"] <= 5000000) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function checkFileType($fileName, $mimeArray)
+{
+    $fileInfo = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $_FILES[$fileName]["tmp_name"]);
+    if (in_array($fileInfo, $mimeArray)) {
+        if (!$_FILES[$fileName]["error"] > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
+}
+
+function makeIssueFolder($issueId)
+{
+    $directory = "../assets/issueFiles/" . $issueId;
+    if (!file_exists($directory)) {
+        mkdir($directory, 0777);
+    }
+    return true;
+}
+
+function makeUserFolder($userId)
+{
+    $directory = "../assets/img/pfpic/" . $userId;
+    if (!file_exists($directory)) {
+        mkdir($directory, 0777);
+    }
+    return true;
+}
+
+function checkFileExist($directory, $fileName)
+{
+    return file_exists($directory . $fileName);
+}
+
+function deleteFile($directory)
+{
+    $files = glob($directory.'*'); // get all file names
+    foreach ($files as $file) { // iterate files
+        if (is_file($file)) {
+            unlink($file); // delete file
+        }
+    }
+    return true;
+}
+
+function uploadFile($db, $file, $tableName, $recordName, $relationId, $Id, $directory)
+{
+    $type = "";
+    $params = array();
+
+    $query = "UPDATE ";
+    switch ($tableName) {
+        case 'user':
+            $query .= "user ";
+            break;
+        case 'issue':
+            $query .= "issue ";
+            break;
+
+        default:
+            # code...
+            break;
+    }
+
+    switch ($recordName) {
+        case 'profilepicture':
+            $query .= "SET profilepicture = ? ";
+            $type .= "s";
+            array_push($params,  $directory . $_FILES[$file]["name"]);
+            break;
+        case 'appendex_url':
+            $query .= "SET appendex_url = ? ";
+            $type .= "s";
+            array_push($params,  $directory . $_FILES[$file]["name"]);
+            break;
+        default:
+            # code...
+            break;
+    }
+
+    switch ($relationId) {
+        case 'user_id':
+            $query .= "WHERE user_id = ?";
+            $type .= "i";
+            array_push($params, $Id);
+            break;
+        case 'user_id':
+            $query .= "WHERE issue_id = ?";
+            $type .= "i";
+            array_push($params, $Id);
+            break;
+        default:
+            # code...
+            break;
+    }
+
+    $stmt = mysqli_prepare($db, $query) or die(mysqli_error($db));
+    call_user_func_array(array($stmt, "bind_param"), makeValuesReferenced(array_merge(array($type), $params)));
+    if (move_uploaded_file($_FILES[$file]["tmp_name"], realpath(dirname(getcwd())) . $directory . $_FILES[$file]["name"]) && mysqli_stmt_execute($stmt)) {
+        mysqli_stmt_close($stmt);
+        return true;
+    }
+}
+
+function deleteIssue($db, $id) {
+    $stmt = mysqli_prepare($db,"
+        DELETE 
+        FROM issue 
+        WHERE issue_id = ?
+    ") or die(mysqli_error($db));
+    mysqli_stmt_bind_param($stmt, "i", $id);
+    mysqli_stmt_execute($stmt) or die(mysqli_error($db));
+}

@@ -32,7 +32,7 @@
                                 <img src="./assets/img/logo/newLogo.svg" style="height:150px;" alt="logo">
                             </div>
                             <div class="text-center account-created-size">
-                                Uw Zakelijk account is aangemaakt, deze moet eerst nog worden goedgekeurd en is dus nog niet actief tot deze in behandeling is genomen.</br>
+                                Uw Zakelijk account is aangemaakt. Deze moet eerst nog worden goedgekeurd en is dus nog niet actief tot deze in behandeling is genomen.</br>
                                 U krijgt een mailtje wanneer uw account is goedgekeurd.
                             </div>
                             <div class="col-lg-12 mb-1 text-center">

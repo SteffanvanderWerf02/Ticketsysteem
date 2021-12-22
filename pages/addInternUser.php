@@ -60,7 +60,7 @@ if (isset($_POST['submit'])) {
                                             mysqli_stmt_execute($stmt) or die(mysqli_error($db));
                                             mysqli_stmt_close($stmt);
                                         } else {
-                                            echo "<div class='alert alert-danger'>Deze naam of email bestaat al.</div>";
+                                            echo "<div class='alert alert-danger'>Deze naam of dit e-mailadres bestaat al.</div>";
                                         }
                                     } else {
                                         echo "<div class='alert alert-danger'>Uw telefoonnummer bevat speciale tekens die niet zijn toegestaan.</div>";
@@ -84,7 +84,7 @@ if (isset($_POST['submit'])) {
                 echo "<div class='alert alert-danger'>Uw username bevat speciale tekens die niet zijn toegestaan.</div>";
             }
         } else {
-            echo "<div class='alert alert-danger'> Uw emailadres bevat speciale tekens die niet zijn toegestaan.</div>";
+            echo "<div class='alert alert-danger'> Uw e-mailadres bevat speciale tekens die niet zijn toegestaan.</div>";
         }
     } else {
         echo "<div class='alert alert-danger'> U heeft de rechten niet correct ingevuld.</div>";
@@ -102,7 +102,7 @@ if (isset($_POST['submit'])) {
 
 <body>
     <!--Header include -->
-    <?php include_once("../components/header.html") ?>
+    <?php include_once("../components/header.php") ?>
     <div id="content" class="container">
         <div class="row">
             <div class="col-lg-12">

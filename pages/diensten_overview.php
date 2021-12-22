@@ -26,17 +26,17 @@ if (isset($_GET['submit'])) {
 
 <body>
     <!-- Header include -->
-    <?php include_once("../components/header.html") ?>
+    <?php include_once("../components/header.php") ?>
     <div id="content" class="container">
         <h1>Dienst/Service overzicht</h1>
         <div class="row mb-3">
             <div class="col-lg-12">
                 <form action="<?= $_SERVER["PHP_SELF"] ?>" method="GET">
                     <label>Dienst/Service id
-                        <input type="text" name="ticket_id" class="rounded form-control w-25 d-inline">
+                        <input type="text" name="ticket_id" class="rounded form-control w-25 d-inline" value="<?=(isset($_GET['ticket_id'])&& $id = filter_input(INPUT_GET, 'ticket_id', FILTER_SANITIZE_NUMBER_INT))?$id : "" ?>">
                     </label>
                     <label class="ml-2">Titel
-                        <input type="text" name="ticket_title" class="rounded form-control w-25 d-inline">
+                        <input type="text" name="ticket_title" class="rounded form-control w-25 d-inline" value="<?=(isset($_GET['ticket_title'])&& $title = filter_input(INPUT_GET, 'ticket_title', FILTER_SANITIZE_SPECIAL_CHARS))?$title : ""?>">
                     </label>
                     <button class="btn btn-primary" name="submit" type="submit"><span class="material-icons align-middle">search</span> Zoeken</button>
                 </form>

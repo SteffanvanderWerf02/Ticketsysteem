@@ -20,13 +20,35 @@
                             <a href="../pages/product_overview.php">Product aanvraag overzicht</a>
                         </li>
                         <li class="my-auto">
-                            <form method="POST" action="../index.php">
+                            <form class="mb-0" method="POST" action="../index.php">
                                 <button class="btn btn-clear" type="submit" name="logout">Uitloggen</button>
                             </form>
                         </li>
                         <li class="my-auto">
                             <a href="../pages/profile-edit.php">
-                                <span class="material-icons align-middle">person</span>
+                                <?php
+                                $stmt = mysqli_prepare($db, "
+                                    SELECT  profilepicture
+                                    FROM    user
+                                    WHERE   user_id = ?
+                                ") or die(mysqli_error($db));
+                                mysqli_stmt_bind_param($stmt, "i", $_SESSION["userId"]);
+                                mysqli_stmt_execute($stmt) or die(mysqli_error($db));
+                                mysqli_stmt_store_result($stmt) or die(mysqli_error($db));
+                                if (mysqli_stmt_num_rows($stmt) > 0) {
+                                    mysqli_stmt_bind_result($stmt, $profilePicture);
+                                    mysqli_stmt_fetch($stmt);
+                                    mysqli_stmt_close($stmt);
+                                } else {
+                                    echo "geen data";
+                                }
+
+                                if ($profilePicture == NULL) {
+                                    echo "<span class='material-icons align-middle'>person</span>";
+                                } else {
+                                    echo "<div class='profilepic' style='background-image: url($profilePicture);'></div>";
+                                }
+                                ?>
                             </a>
                         </li>
                     </ul>

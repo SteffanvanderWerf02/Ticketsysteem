@@ -64,7 +64,37 @@ if (isset($_POST['sendNewIssue'])) {
                             $stmt = mysqli_prepare($db, $sql) or die(mysqli_error($db));
                             mysqli_stmt_bind_param($stmt, 'iiissssssi', $_SESSION['userId'], $_SESSION['companyId'], $priority, $issueType, $subCategory, $title, $description, $result, $frequency, $status);
                             mysqli_stmt_execute($stmt) or die(mysqli_error($db));
+                            $lastIssueId = mysqli_insert_id($db);
                             mysqli_stmt_close($stmt);
+
+                            if (checkIfFile("issueFile")) {
+                                if (checkFileSize("issueFile")) {
+                                    if (checkFileType("issueFile", $acceptedFileTypes)) {
+                                        if (makeIssueFolder($lastIssueId)) {
+                                            if (!checkFileExist("../assets/issueFiles/" . $lastIssueId . "/", $_FILES["issueFile"]["name"])) {
+                                                if (uploadFile($db, "issueFile", "issue", "appendex_url", "issue_id", $lastIssueId, "../assets/issueFiles/" . $lastIssueId . "/")) {
+                                                    echo "<div class='alert alert-success'>Uw issue is verzonden</div>";  
+                                                }else{
+                                                    echo "<div class='alert alert-danger'>Uw bestand is niet toegevoegd, probeer het opnieuw</div>";
+                                                    deleteIssue($db,$lastIssueId);
+                                                }
+                                            } else {
+                                                echo "<div class='alert alert-danger'>U heeft deze bijlagen al toegevoegd</div>";
+                                                deleteIssue($db,$lastIssueId);
+                                            }
+                                        }
+                                    } else {
+                                        echo "<div class='alert alert-danger'>Uw geüploade bestand type wordt niet geaccepteerd. Er worden alleen pdf's, jpg's, jpeg's, png's, en gif's geaccepteerd</div>";
+                                        deleteIssue($db,$lastIssueId);
+                                    }
+                                } else {
+                                    echo "<div class='alert alert-danger'>Uw geüploade bestand is te groot</div>";
+                                    deleteIssue($db,$lastIssueId); 
+                                }
+                            }else {
+                                echo "<div class='alert alert-success'>Uw issue is verzonden</div>";
+                            }
+                            
                         } else {
                             echo "<div class='alert alert-danger'>De keuze bij de herhaalbaarheid valt niet onder de gegeven opties</div>";
                         }
@@ -81,6 +111,8 @@ if (isset($_POST['sendNewIssue'])) {
             echo "<div class='alert alert-danger'>De titel van de ticket is niet ingevuld</div>";
         }
     }
+
+    
 }
 ?>
 <!DOCTYPE HTML>
@@ -92,8 +124,8 @@ if (isset($_POST['sendNewIssue'])) {
 </head>
 
 <body>
-    <?php include_once("../components/header.html"); ?>
-    <div class="container">
+    <?php include_once("../components/header.php"); ?>
+    <div id="content" class="container">
         <div class="row">
             <div class="col-lg-12">
                 <h1><?php echo ucFirst($issueType) . " "; ?>Toevoegen</h1>
@@ -166,7 +198,7 @@ if (isset($_POST['sendNewIssue'])) {
                                          <div class="col-lg-6">
                                         <label for="createIssueFrequency">Ticket herhalen</label>
                                         <select id="createIssueFrequency" class="form-control" name="createIssueFrequency">
-                                            <option value="none">N.V.T</option>
+                                            <option value="N.V.T">N.V.T</option>
                                             <option value="Dagelijks">Dagelijks</option>
                                             <option value="Weekelijks">Weekelijks</option>
                                             <option value="Maandelijks">Maandelijks</option>
@@ -181,7 +213,7 @@ if (isset($_POST['sendNewIssue'])) {
                                      <div class="col-lg-6">
                                     <label for="createIssueFile" class="pointer">Bijlagen</label>
                                     <div class="custom-file">
-                                        <input type="file" title="Kies uw bijlagen" name="createIssueFile" class="custom-file-input" id="createIssueFile">
+                                        <input type="file" name="issueFile" title="Kies uw bijlagen" name="createIssueFile" class="custom-file-input" id="createIssueFile">
                                         <label class="custom-file-label" for="createIssueFile">Kies Bestand</label>
                                     </div>
                                     </div>
@@ -195,7 +227,7 @@ if (isset($_POST['sendNewIssue'])) {
                             } elseif ($issueType != "dienst/service" || $issueType != "product" || $issueType != "ticket") {
                                 die("<div class='col-lg-12'>
                                         <div class='alert alert-danger'>
-                                            Het gegeven issue type is nog niet gespecigiseerd, ga terug naar de vorige pagina
+                                            Het gegeven issue type is nog niet gespecificeerd, ga terug naar de vorige pagina
                                         </div>
                                     </div>
                                 ");
