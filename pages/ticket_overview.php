@@ -50,35 +50,35 @@ if (isset($_GET['submit'])) {
                     </div>
                     <div class="col-lg-12">
                         <form action="<?= $_SERVER["PHP_SELF"] ?>" method="GET">
-                            <button class="btn btn-small btn-primary" name="filter" value="" type="submit">Alles</button>
+                            <button class="btn btn-standard btn-primary" name="filter" value="" type="submit">Alles</button>
                         </form>
                     </div>
                 </div>
                 <div class="row mb-2">
                     <div class="col-lg-12">
                         <form action="<?= $_SERVER["PHP_SELF"] ?>" method="GET">
-                            <button class="btn btn-small btn-primary" name="filter" value="1" type="submit">Nieuw</button>
+                            <button class="btn btn-standard btn-primary" name="filter" value="1" type="submit">Nieuw</button>
                         </form>
                     </div>
                 </div>
                 <div class="row mb-2">
                     <div class="col-lg-12">
                         <form action="<?= $_SERVER["PHP_SELF"] ?>" method="GET">
-                            <button class="btn btn-small btn-primary" name="filter" value="2" type="submit">In Behandeling</button>
+                            <button class="btn btn-standard btn-primary" name="filter" value="2" type="submit">Bezig</button>
                         </form>
                     </div>
                 </div>
                 <div class="row mb-2">
                     <div class="col-lg-12">
                         <form action="<?= $_SERVER["PHP_SELF"] ?>" method="GET">
-                            <button class="btn btn-small btn-primary" name="filter" value="3" type="submit">On hold</button>
+                            <button class="btn btn-standard btn-primary" name="filter" value="3" type="submit">On hold</button>
                         </form>
                     </div>
                 </div>
                 <div class="row mb-2">
                     <div class="col-lg-12">
                         <form action="<?= $_SERVER["PHP_SELF"] ?>" method="GET">
-                            <button class="btn btn-small btn-primary" name="filter" value="4" type="submit">Gesloten</button>
+                            <button class="btn btn-standard btn-primary" name="filter" value="4" type="submit">Gesloten</button>
                         </form>
                     </div>
                 </div>
