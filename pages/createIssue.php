@@ -24,7 +24,7 @@ if (isset($_POST['sendNewIssue'])) {
             if (isset($issueType)) {
                 if (isset($description)) {
                     if (isset($result)) {
-                        if ($frequency == "N.V.T" || $frequency == "Dagelijks" || $frequency == "Weekelijks" || $frequency == "Maandelijks" || $frequency == "Jaarlijks") {
+                        if ($frequency == "N.V.T" || $frequency == "Dagelijks" || $frequency == "Wekelijks" || $frequency == "Maandelijks" || $frequency == "Jaarlijks") {
                             $sql = "
                                 INSERT 
                                 INTO issue
@@ -200,7 +200,7 @@ if (isset($_POST['sendNewIssue'])) {
                                         <select id="createIssueFrequency" class="form-control" name="createIssueFrequency">
                                             <option value="N.V.T">N.V.T</option>
                                             <option value="Dagelijks">Dagelijks</option>
-                                            <option value="Weekelijks">Weekelijks</option>
+                                            <option value="Wekelijks">Weekelijks</option>
                                             <option value="Maandelijks">Maandelijks</option>
                                             <option value="Jaarlijks">Jaarlijks</option>
                                         </select>
