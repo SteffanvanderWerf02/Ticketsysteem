@@ -36,6 +36,8 @@ if (isset($_POST['passwordConfirm'])) {
                             ") or die(mysqli_error($db));
                                 mysqli_stmt_bind_param($stmt, "ss", $hashPassword, $token) or mysqli_error($db);
                                 mysqli_stmt_execute($stmt) or mysqli_error($db);
+                                mysqli_stmt_close($stmt);
+                                echo "<div class='alert alert-success'>Uw nieuwe wachtwoord is succesvol aangepast</div>";
                             } else {
                                 echo "<div class='alert alert-danger'>Uw wachtwoorden komen niet overeen</div>";
                             }
@@ -110,6 +112,7 @@ if (isset($_POST['generateToken'])) {
                 ",
                 MAIL_HEADERS
             );
+            echo "<div class='alert alert-success'>Uw wachtwoord vergeten token is succesvol naar uw mail verzonden</div>";
         } else {
             echo "<div class='alert alert-danger'>Deze gebruiker is niet bekend</div>";
         }
@@ -202,6 +205,7 @@ if (isset($_POST['generateToken'])) {
                                             </button>
                                         </div>
                                     </div>
+                                
                                 <?php
                                 }
                                 ?>
