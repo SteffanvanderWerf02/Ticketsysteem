@@ -153,7 +153,6 @@ if (isset($_POST['companySubmit'])) {
     }
 }
 
-
 ?>
 
 <!DOCTYPE html>
