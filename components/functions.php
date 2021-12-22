@@ -111,7 +111,6 @@ function insertStatus($db, $userId, $issueId, $status) {
 
 function getMessage($db, $issueId)
 {
-
     $sql = "
             SELECT      `message`.`message`,
                         `user`.name,
@@ -123,7 +122,7 @@ function getMessage($db, $issueId)
             INNER JOIN  user
             ON          `message`.user_id = user.user_id
             WHERE       issue_message.issue_id = ?  
-            ORDER BY    issue_message.date DESC
+            ORDER BY    issue_message.message_id DESC
            ";
 
     $stmt = mysqli_prepare($db, $sql) or die(mysqli_error($db));
@@ -142,12 +141,11 @@ function getMessage($db, $issueId)
             $return .= "<p>{$name}<span class='float-right'>". date("H:i d-m-Y", strtotime($message_date)) ."</span></p>";
             $return .= "<p class='title-messages'>{$message}</p>";
             if ($appendex_url != NULL) {
-                $return .= "<p class='title-message'><a href='{$appendex_url}'>Bijlage Bekijken.</a></p>";
+                $return .= "<p class='title-message'><a target='blank' href='{$appendex_url}'>Bijlage Bekijken.</a></p>";
             }
             $return .= "</div>";
         }
     }
-
     mysqli_stmt_close($stmt);
 
     return $return;
@@ -155,7 +153,6 @@ function getMessage($db, $issueId)
 
 function getActionIssue($db, $issueId)
 {
-
     $sql = "
             SELECT      issue_action
             FROM        issue
@@ -173,6 +170,7 @@ function getActionIssue($db, $issueId)
 
 function issueActionCheck($actionValue) {
     $actionStat = [NULL=>"bottomup", 1=>"klant", 2=>"bottomup"];
+    
     return $actionStat[$actionValue];
 }
 
@@ -184,13 +182,24 @@ function issueActionCheck($actionValue) {
  */
 function uploadActionIssue($db, $issueId, $issueAction)
 {
-
     $sql = "UPDATE  issue 
             SET     issue_action = ? 
             WHERE   issue_id = ?";
 
     $stmt = mysqli_prepare($db, $sql) or die(mysqli_error($db));
     mysqli_stmt_bind_param($stmt, "ii", $issueAction, $issueId) or die(mysqli_error($db));
+    mysqli_stmt_execute($stmt) or die(mysqli_error($db));
+    mysqli_stmt_close($stmt);
+}
+
+function deleteIssue($db, $id)
+{
+    $stmt = mysqli_prepare($db, "
+        DELETE 
+        FROM issue 
+        WHERE issue_id = ?
+    ") or die(mysqli_error($db));
+    mysqli_stmt_bind_param($stmt, "i", $id);
     mysqli_stmt_execute($stmt) or die(mysqli_error($db));
     mysqli_stmt_close($stmt);
 }
@@ -293,7 +302,7 @@ function getIssueOverview($db, $companyId, $userId, $issueType, $filterStatus, $
     if (mysqli_stmt_num_rows($stmt) > 0) {
         while (mysqli_stmt_fetch($stmt)) {
 
-            $return .= "<tr class='action' data-href='ticket_detail.php?id={$issueId}'>
+            $return .= "<tr class='action' data-href='issue-detail.php?id={$issueId}'>
                     <td>{$issueId}</td>
                     <td>{$userName}</td>
                     <td>{$createdAt}</td>
@@ -324,18 +333,21 @@ function makeValuesReferenced($arr)
     $refs = array();
     foreach ($arr as $key => $value)
         $refs[$key] = &$arr[$key];
+
     return $refs;
 }
 
 function priorityCheck($priorityValue)
 {
     $priorityStat = [0 => "Laag", 1 => "Gemiddeld", 2 => "Hoog"];
+    
     return $priorityStat[$priorityValue];
 }
 
 function statusCheck($statusValue)
 {
     $statusStat = [1 => "Nieuw", 2 => "In behandeling", 3 => "On hold", 4 => "Gesloten"];
+    
     return $statusStat[$statusValue];
 }
 
@@ -373,6 +385,7 @@ function makeFolder($issueId, $path)
     if (!file_exists($directory)) {
         mkdir($directory, 0777);
     }
+    
     return true;
 }
 
@@ -391,6 +404,7 @@ function deleteFile($directory)
             unlink($file); // delete file
         }
     }
+    
     return true;
 }
 
@@ -420,14 +434,4 @@ function uploadFile($db, $file, $tableName, $recordName, $relationId, $Id, $dire
     }
 }
 
-function deleteIssue($db, $id)
-{
-    $stmt = mysqli_prepare($db, "
-        DELETE 
-        FROM issue 
-        WHERE issue_id = ?
-    ") or die(mysqli_error($db));
-    mysqli_stmt_bind_param($stmt, "i", $id);
-    mysqli_stmt_execute($stmt) or die(mysqli_error($db));
-    mysqli_stmt_close($stmt);
-}
+
