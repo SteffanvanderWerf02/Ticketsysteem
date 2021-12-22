@@ -49,14 +49,13 @@ function uploadMessage($db, $userId, $message, $issueId)
     $stmt = mysqli_prepare($db, $sql) or die(mysqli_error($db));
     mysqli_stmt_bind_param($stmt, "is", $userId, $message) or die(mysqli_error($db));
     mysqli_stmt_execute($stmt) or die(mysqli_error($db));
-    mysqli_stmt_close($stmt); 
+    mysqli_stmt_close($stmt);
     $lastMessageId = mysqli_insert_id($db);
     getLastId($db, $lastMessageId, $issueId);
-
-    
 }
 
-function getLastId($db, $messageId, $issueId) {
+function getLastId($db, $messageId, $issueId)
+{
     $sql = "INSERT
             INTO    `issue_message` 
             (
@@ -78,7 +77,8 @@ function getLastId($db, $messageId, $issueId) {
     mysqli_stmt_close($stmt);
 }
 
-function insertStatus($db, $userId, $issueId, $status) {
+function insertStatus($db, $userId, $issueId, $status)
+{
 
     $sql = "
             INSERT
@@ -93,7 +93,7 @@ function insertStatus($db, $userId, $issueId, $status) {
                     ?
             )
            ";
-    
+
     $stmt = mysqli_prepare($db, $sql) or die(mysqli_error($db));
     if ($status == 1) {
         $message = "De actie ligt bij: De klant";
@@ -106,7 +106,6 @@ function insertStatus($db, $userId, $issueId, $status) {
 
     $lastMessageId = mysqli_insert_id($db);
     getLastId($db, $lastMessageId, $issueId);
-
 }
 
 function getMessage($db, $issueId)
@@ -138,8 +137,8 @@ function getMessage($db, $issueId)
             $return .= "</div>";
         } else {
             $return .= "<div class='col-lg-12 message-view'>";
-            $return .= "<p>{$name}<span class='float-right'>". date("H:i d-m-Y", strtotime($message_date)) ."</span></p>";
-            $return .= "<p class='title-messages'>".nl2br($message)."</p>";
+            $return .= "<p>{$name}<span class='float-right'>" . date("H:i d-m-Y", strtotime($message_date)) . "</span></p>";
+            $return .= "<p class='title-messages'>" . nl2br($message) . "</p>";
             if ($appendex_url != NULL) {
                 $return .= "<p class='title-message'><a target='blank' href='{$appendex_url}'>Bijlage Bekijken.</a></p>";
             }
@@ -168,9 +167,10 @@ function getActionIssue($db, $issueId)
     return $issueAction;
 }
 
-function issueActionCheck($actionValue) {
-    $actionStat = [NULL=>"bottomup", 1=>"klant", 2=>"bottomup"];
-    
+function issueActionCheck($actionValue)
+{
+    $actionStat = [NULL => "bottomup", 1 => "klant", 2 => "bottomup"];
+
     return $actionStat[$actionValue];
 }
 
@@ -340,14 +340,14 @@ function makeValuesReferenced($arr)
 function priorityCheck($priorityValue)
 {
     $priorityStat = [0 => "Laag", 1 => "Gemiddeld", 2 => "Hoog"];
-    
+
     return $priorityStat[$priorityValue];
 }
 
 function statusCheck($statusValue)
 {
     $statusStat = [1 => "Nieuw", 2 => "In behandeling", 3 => "On hold", 4 => "Gesloten"];
-    
+
     return $statusStat[$statusValue];
 }
 
@@ -385,7 +385,7 @@ function makeFolder($issueId, $path)
     if (!file_exists($directory)) {
         mkdir($directory, 0777);
     }
-    
+
     return true;
 }
 
@@ -404,7 +404,7 @@ function deleteFile($directory)
             unlink($file); // delete file
         }
     }
-    
+
     return true;
 }
 
@@ -434,4 +434,20 @@ function uploadFile($db, $file, $tableName, $recordName, $relationId, $Id, $dire
     }
 }
 
+function getCatOptions($category, $subCat = "")
+{
+    $options = "";
+    if ($category == "Ticket") {
+        $optionsArray = array("Klachten", "Feedback");
+    } else if ($category == "Dienst/service") {
+        $optionsArray = array("Vijvers", "Volière", "Schuuronderhoud", "Tuinonderhoud");
+    } else if ($category == "Product") {
+        $optionsArray = array("Tuingereedschap", "Gereedschap opslag", "Machines", "Planten", "Tuin verzorging");
+    }
+    foreach ($optionsArray as $value) {
+        $checked =  ($subCat == $value ? "selected" : "");
+        $options .= "<option " . $checked . ">" . $value . "</option>";
+    }
 
+    return $options;
+}

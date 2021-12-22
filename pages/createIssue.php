@@ -11,7 +11,7 @@ if (isset($_POST['sendNewIssue'])) {
         $description = filter_input(INPUT_POST, 'createIssueDescription', FILTER_SANITIZE_SPECIAL_CHARS);
         $result = filter_input(INPUT_POST, 'createIssueResult', FILTER_SANITIZE_SPECIAL_CHARS);
 
-        if ($_SESSION['accountType'] == 0 || $issueType == "ticket" ||  $issueType == "product") {
+        if ($_SESSION['accountType'] == 0 || $issueType == "Ticket" ||  $issueType == "Product") {
             $frequency = "N.V.T";
         } else {
             $frequency = filter_input(INPUT_POST, 'createIssueFrequency', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -142,38 +142,10 @@ if (isset($_POST['sendNewIssue'])) {
                                 </div>
                                 <div class="row mb-3">
                                     <div class="col-lg-6">
-                                        <?php
-                                        if ($issueType == "ticket") {
-                                        ?>
-                                            <label for="createIssueCategory">sub-category</label>
-                                            <select id="createIssueCategory" name="createIssueCategory" class="form-control">
-                                                <option value="klacht">klacht</option>
-                                                <option value="feedback">feedback</option>
-                                            </select>
-                                        <?php
-                                        } else if ($issueType == "dienst/service") {
-                                        ?>
-                                            <label for="createIssueCategory">sub-category</label>
-                                            <select id="createIssueCategory" name="createIssueCategory" class="form-control">
-                                                <option value="watervoliere">watervoliere</option>
-                                                <option value="vogelhuis">vogelhuis</option>
-                                                <option value="grasmaaien">grasmaaien</option>
-                                                <option value="schuuronderhoud">schuuronderhoud</option>
-                                                <option value="tuinonderhoud">tuinonderhoud</option>
-                                            </select>
-                                        <?php
-                                        } else {
-                                        ?>
-                                            <label for="createIssueCategory">sub-category</label>
-                                            <select id="createIssueCategory" name="createIssueCategory" class="form-control">
-                                                <option value="schop">schop</option>
-                                                <option value="gereedschapskist">gereedschapskist</option>
-                                                <option value="graafmachine">graafmachine</option>
-                                                <option value="tracker">tracker</option>
-                                            </select>
-                                        <?php
-                                        }
-                                        ?>
+                                    <label for="createIssueCategory">sub-category</label>
+                                    <select id="createIssueCategory" name="createIssueCategory" class="form-control">
+                                    <?= getCatOptions(str_replace(' ', '', $issueType))?>  
+                                    </select>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
@@ -189,7 +161,7 @@ if (isset($_POST['sendNewIssue'])) {
                                     </div>
                                 </div>
                                 <?php
-                                if ($_SESSION['accountType'] >= 1 && $issueType == "dienst/service") {
+                                if ($_SESSION['accountType'] >= 1 && $issueType == "Dienst/service") {
                                 ?>
                                     <div class="row mb-3">
                                         <div class="col-lg-6">
