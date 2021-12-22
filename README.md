@@ -17,7 +17,7 @@
 - SMTP=smtp.gmail.com
 - smtp_port=587
 - sendmail_from = my-gmail-id@gmail.com
-- sendmail_path = C:\xampp\sendmail\sendmailexe\" -t"
+- sendmail_path = C:\xampp\sendmail\sendmail.exe\" -t"
 
 - verander sendmail.ini
 - verander in 
