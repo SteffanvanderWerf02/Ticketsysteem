@@ -37,7 +37,7 @@ if (isset($_POST['passwordConfirm'])) {
                                 mysqli_stmt_bind_param($stmt, "ss", $hashPassword, $token) or mysqli_error($db);
                                 mysqli_stmt_execute($stmt) or mysqli_error($db);
                             } else {
-                                echo "<div class='alert alert-danger'>U wachtwoorden komen niet overeen</div>";
+                                echo "<div class='alert alert-danger'>Uw wachtwoorden komen niet overeen</div>";
                             }
                         } else {
                             echo "<div class='alert alert-danger'>Uw token is niet correct of is verlopen</div>";
@@ -55,7 +55,7 @@ if (isset($_POST['passwordConfirm'])) {
             echo "<div class='alert alert-danger'>U heeft het veld wachtwoord niet correct ingevuld</div>";
         }
     } else {
-        echo "<div class='alert alert-danger'>U heeft het veld email adres niet correct ingevuld</div>";
+        echo "<div class='alert alert-danger'>U heeft het veld e-mailadres niet correct ingevuld</div>";
     }
 }
 
@@ -102,7 +102,7 @@ if (isset($_POST['generateToken'])) {
                 $email,
                 "Wachtwoord veranderen",
                 "<h1>Geachte dhr/mevr {$name},</h1>
-                <p>U kunt u wachtwoord veranderen met de volgende linkje</p>
+                <p>U kunt u wachtwoord veranderen met de volgende link</p>
                 <p>http://localhost/" . PROJECT_PATH . "pages/password-forget.php?token={$token}</p>
                 <br>
                 <p>Met vriendelijke groet,</p>
@@ -114,7 +114,7 @@ if (isset($_POST['generateToken'])) {
             echo "<div class='alert alert-danger'>Deze gebruiker is niet bekend</div>";
         }
     } else {
-        echo "<div class='alert alert-danger'>U heeft het veld email adres niet ingevuld</div>";
+        echo "<div class='alert alert-danger'>U heeft het veld e-mailadres niet ingevuld</div>";
     }
 }
 ?>

@@ -14,7 +14,7 @@ if (isset($_POST["deletepfp"]) && $id = filter_input(INPUT_POST, "deletepfp", FI
     if (mysqli_stmt_execute($stmt) && deleteFile("../assets/img/pfpic/" . $_SESSION["userId"] . "/")) {
         echo "Uw profielfoto is succesvol verwijderd";
     } else {
-        echo "Er is iets fout gegaan probeer het nog een keer";
+        echo "Er is iets fout gegaan, probeer het opnieuw";
     }
 }
 
@@ -41,7 +41,7 @@ if (isset($_POST['userSubmit'])) {
                                 mysqli_stmt_bind_param($stmt, "ssssissi", $username, $city, $postal, $street, $housenumber, $phonenumber, $email, $_SESSION["userId"]);
                                 mysqli_stmt_execute($stmt) or mysqli_error($db);
                             } else {
-                                echo "<div class='alert alert-danger>Voer een geldig e-mail adres in</div>";
+                                echo "<div class='alert alert-danger>Voer een geldig e-mailadres in</div>";
                             }
                         } else {
                             echo "<div class='alert alert-danger>Voer uw telefoonnummer in</div>";
@@ -50,7 +50,7 @@ if (isset($_POST['userSubmit'])) {
                         echo "<div class='alert alert-danger>Voer uw huisnummer in</div>";
                     }
                 } else {
-                    echo "<div class='alert alert-danger>Voer uw sraatnaam in</div>";
+                    echo "<div class='alert alert-danger>Voer uw straatnaam in</div>";
                 }
             } else {
                 echo "<div class='alert alert-danger>Voer uw postcode in</div>";
@@ -85,7 +85,7 @@ if (isset($_POST['userSubmit'])) {
             mysqli_stmt_close($stmt);
             echo "<div class='alert alert-success'>Wachtwoord succesvol aangepast</div>";
         } else {
-            echo "<div class='alert alert-danger'>Het nieuw ingevoerde wachtwoord kan niet gelijk zijn aan het oude wachtwoord</div>";
+            echo "<div class='alert alert-danger'>Het nieuwe ingevoerde wachtwoord kan niet gelijk zijn aan het oude wachtwoord</div>";
         }
     }
     if (checkIfFile("pfp")) {
@@ -134,7 +134,7 @@ if (isset($_POST['companySubmit'])) {
                             mysqli_stmt_bind_param($stmt, "sssissi", $city, $postal, $street, $housenumber, $phonenumber, $email, $_SESSION["companyId"]);
                             mysqli_stmt_execute($stmt) or mysqli_error($db);
                         } else {
-                            echo "<div class='alert alert-danger'>Voer een geldig e-mail adres in</div>";
+                            echo "<div class='alert alert-danger'>Voer een geldig e-mailadres in</div>";
                         }
                     } else {
                         echo "<div class='alert alert-danger'>Voer uw telefoonnummer in</div>";
@@ -196,7 +196,7 @@ if (isset($_POST['companySubmit'])) {
                         $amount = 0;
                     }
                 ?>
-                    <a class="d-block" href="./companyApplication.php"><span class="badge badge-pill badge-primary"><?= $amount ?></span> Nieuwe Bedrijfaanvragen</a>
+                    <a class="d-block" href="./companyApplication.php"><span class="badge badge-pill badge-primary"><?= $amount ?></span> Nieuwe Bedrijfsaanvragen</a>
                 <?php
                 }
                 ?>
@@ -223,7 +223,7 @@ if (isset($_POST['companySubmit'])) {
                     mysqli_stmt_fetch($stmt);
                     mysqli_stmt_close($stmt);
                 } else {
-                    echo "<div class='alert alert-danger'>Er zijn geen gebruikers gegevens beschikbaar</div>";
+                    echo "<div class='alert alert-danger'>Er zijn geen gebruikersgegevens beschikbaar</div>";
                 }
 
 
@@ -247,7 +247,7 @@ if (isset($_POST['companySubmit'])) {
 
                             </div>
                             <div class="col-lg-10 my-auto">
-                                <button type="submit" class="btn btn-primary btn-small" name="deletepfp" onclick="return confirm('Weet u zeker dat u dit wilt verwijderen?')" value="<?= $_SESSION["userId"] ?>">
+                                <button type="submit" class="btn btn-primary btn-small" name="deletepfp" onclick="return confirm('Weet u zeker dat u deze profielfoto wilt verwijderen?')" value="<?= $_SESSION["userId"] ?>">
                                     Verwijderen
                                 </button>
                             </div>
@@ -335,7 +335,7 @@ if (isset($_POST['companySubmit'])) {
                     mysqli_stmt_fetch($stmt);
                     mysqli_stmt_close($stmt);
                 } else {
-                    echo "<div class='alert alert-danger'>Er zijn geen gebruikers gegevens beschikbaar</div>";
+                    echo "<div class='alert alert-danger'>Er zijn geen gebruikersgegevens beschikbaar</div>";
                 }
 
 

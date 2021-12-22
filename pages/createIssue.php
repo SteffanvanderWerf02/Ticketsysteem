@@ -84,11 +84,11 @@ if (isset($_POST['sendNewIssue'])) {
                                             }
                                         }
                                     } else {
-                                        echo "<div class='alert alert-danger'>Uw geüploadde bestand type wordt niet geaccepteerd. Er worden alleen pdf's, jpg's, jpeg's, png's, en gif's geaccepteerd</div>";
+                                        echo "<div class='alert alert-danger'>Uw geüploade bestand type wordt niet geaccepteerd. Er worden alleen pdf's, jpg's, jpeg's, png's, en gif's geaccepteerd</div>";
                                         deleteIssue($db,$lastIssueId);
                                     }
                                 } else {
-                                    echo "<div class='alert alert-danger'>Uw geüploadde bestand is te groot</div>";
+                                    echo "<div class='alert alert-danger'>Uw geüploade bestand is te groot</div>";
                                     deleteIssue($db,$lastIssueId); 
                                 }
                             }else {

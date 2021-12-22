@@ -12,7 +12,7 @@ if (isset($_POST['register'])) {
                     echo "<div class='alert alert-danger'>Uw kvk nummer bevat letters in plaats van cijfers</div>";
                 }
             } else {
-                echo "<div class='alert alert-danger'>De naam van uw bedrijf bevat speciale tekens. Deze zijn niet toegestaan.</div>";
+                echo "<div class='alert alert-danger'>De naam van uw bedrijf bevat speciale tekens die niet zijn toegestaan.</div>";
             }
         }
     }
@@ -183,7 +183,7 @@ if (isset($_POST['register'])) {
                                                 header("Location: ./index.php");
                                             }
                                         } else {
-                                            echo "<div class='alert alert-danger'>Dit email adres bestaat al.</div>";
+                                            echo "<div class='alert alert-danger'>Dit e-mailadres bestaat al.</div>";
                                         }
                                     } else {
                                         echo "<div class='alert alert-danger'>Deze naam bestaat al.</div>";
@@ -207,10 +207,10 @@ if (isset($_POST['register'])) {
                 echo "<div class='alert alert-danger'>Uw wachtwoord bevat speciale tekens die niet zijn toegestaan.</div>";
             }
         } else {
-            echo "<div class='alert alert-danger'>Uw username bevat speciale tekens die niet zijn toegestaan.</div>";
+            echo "<div class='alert alert-danger'>Uw gebruikersnaam bevat speciale tekens die niet zijn toegestaan.</div>";
         }
     } else {
-        echo "<div class='alert alert-danger'> Uw emailadres bevat speciale tekens die niet zijn toegestaan.</div>";
+        echo "<div class='alert alert-danger'> Uw e-mailadres bevat speciale tekens die niet zijn toegestaan.</div>";
     }
 }
 ?>

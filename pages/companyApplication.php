@@ -46,7 +46,7 @@ require_once("../components/functions.php");
                 $email,
                 "Zakelijk bedrijf geactiveerd",
                 "<h1>Geachte dhr/mevr {$name},</h1>
-                <p>Wij willen u melden dat uw zakelijke bedrijfs account is gecontroleerd en goed gekeurd.</p>
+                <p>Wij willen u melden dat uw zakelijke bedrijfsaccount is gecontroleerd en goedgekeurd.</p>
                 <br>
                 <p>Met vriendelijke groet,</p>
                 <p>Bottom up</p>
@@ -136,8 +136,8 @@ require_once("../components/functions.php");
                 <p>Wij willen u melden dat uw zakelijke bedrijfsaccount is gecontroleerd en is afgekeurd.</p>
                 <p>Dit kan komen door de volgende redenen.</p>
                 <ul>
-                    <li>Geen correcte KVK</li>
-                    <li>Geen correcte adres gegevens</li>
+                    <li>Geen correct KVK nummer</li>
+                    <li>Geen correcte adresgegevens</li>
                 </ul>
                 <p>Wij verzoeken u om u opnieuw te registeren.</p>
                 <br>
@@ -179,7 +179,7 @@ require_once("../components/functions.php");
                 "Uw account is niet goedgekeurd",
                 "<h1>Geachte dhr/mevr {$username},</h1>
                 <p>Wij willen u melden dat uw zakelijke account niet is goedgekeurd.</p>
-                <p>Dit is omdat u gegevens van u bedrijf niet kloppen.</p>
+                <p>Dit komt doordat de gegevens van uw bedrijf niet kloppen.</p>
                 <p>Wij verzoeken u om u opnieuw te registeren.</p>
                 <br>
                 <p>Met vriendelijke groet,</p>
@@ -241,12 +241,12 @@ require_once("../components/functions.php");
                                     <td><?= $streetname . " " . $housenumber ?></td>
                                     <td class="text-center">
                                         <form action="<?=htmlspecialchars($_SERVER['PHP_SELF'])?>" method="POST">
-                                            <button class="btn btn-denied" onclick="return confirm('Weet u zeker of dat u dit bedrijf wil afkeuren')" name="denied" value="<?= $id ?>" type="submit">Afkeuren</button>
+                                            <button class="btn btn-denied" onclick="return confirm('Weet u zeker dat u dit bedrijf wilt afkeuren')" name="denied" value="<?= $id ?>" type="submit">Afkeuren</button>
                                         </form>
                                     </td>
                                     <td class="text-center">
                                         <form action="<?=htmlspecialchars($_SERVER['PHP_SELF'])?>" method="POST">
-                                            <button class="btn btn-primary" onclick="return confirm('Weet u zeker of dat u dit bedrijf wil goedkeuren')" name="approve" value="<?= $id ?>" type="submit">Goedkeuren</button>
+                                            <button class="btn btn-primary" onclick="return confirm('Weet u zeker dat u dit bedrijf wilt goedkeuren')" name="approve" value="<?= $id ?>" type="submit">Goedkeuren</button>
                                         </form>
                                     </td>
                                 </tr>
