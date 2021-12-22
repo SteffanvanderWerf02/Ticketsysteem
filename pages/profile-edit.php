@@ -91,7 +91,7 @@ if (isset($_POST['userSubmit'])) {
     if (checkIfFile("pfp")) {
         if (checkFileSize("pfp")) {
             if (checkFileType("pfp", $acceptedFileTypesPP)) {
-                if (makeUserFolder($_SESSION["userId"])) {
+                if (makeFolder($_SESSION["userId"], "../assets/img/pfpic/")) {
                     if (!checkFileExist("../assets/img/pfpic/" . $_SESSION["userId"] . "/", $_FILES["pfp"]["name"])) {
                         if (deleteFile("../assets/img/pfpic/" . $_SESSION["userId"] . "/")) {
                             if (uploadFile($db, "pfp", "user", "profilepicture", "user_id", $_SESSION["userId"], "../assets/img/pfpic/" . $_SESSION["userId"] . "/")) {
@@ -254,114 +254,22 @@ if (isset($_POST['companySubmit'])) {
                     <?php
                     }
                     ?>
-            <div class="row mb-3">
-                <div class="col-lg-12">
-                    <label for="username">Gebruikersnaam</label>
-                    <input type="text" id="username" value="<?= $name ?>" name="username" class="form-control" readonly required>
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-lg-12">
-                    <label for="username">Email</label>
-                    <input type="email" id="email" value="<?= $email ?>" name="email" class="form-control" required>
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-lg-12">
-                    <label for="password">Wijzig Wachtwoord</label>
-                    <input type="password" id="password" name="password" class="form-control">
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-lg-12">
-                    <label for="postal">Postcode</label>
-                    <input type="text" id="postal" value="<?= $postalcode ?>" name="postal" class="form-control" required>
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-lg-12">
-                    <label for="city">Woonplaats</label>
-                    <input type="text" id="city" value="<?= $city ?>" name="city" class="form-control" required>
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-lg-6">
-                    <label for="street">Straatnaam</label>
-                    <input type="text" id="street" value="<?= $streetname ?>" name="street" class="form-control" required>
-                </div>
-                <div class="col-lg-6">
-                    <label for="housenumber">Huisnummer</label>
-                    <input type="number" id="housenumber" value="<?= $houseNumber ?>" name="housenumber" class="form-control" required>
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-lg-12">
-                    <label for="phonenumber">Telefoonnummer</label>
-                    <input type="tel" id="phonenumber" value="<?= $phoneNumber ?>" name="phonenumber" class="form-control" required>
-                </div>
-            </div>
-
-            <div class="row mb-3">
-                <div class="col-lg-12">
-                    <input type="submit" value="Gebruikergegevens opslaan" name="userSubmit" class="btn btn-primary">
-                </div>
-            </div>
-            </form>
-        </div>
-
-        <?php
-        if ($_SESSION['companyId'] != NULL) {
-        ?>
-            <div class="col-lg-12">
-                <?php
-                $stmt = mysqli_prepare($db, "
-                SELECT  name, 
-                        city,
-                        postalcode,
-                        streetname,
-                        house_number,
-                        phone_number,
-                        email_adres,
-                        kvk
-                FROM 	company
-                WHERE 	company_id = ?
-                ") or die(mysqli_error($db));
-                mysqli_stmt_bind_param($stmt, "i", $_SESSION["companyId"]);
-                mysqli_stmt_execute($stmt) or die(mysqli_error($db));
-                mysqli_stmt_store_result($stmt) or die(mysqli_error($db));
-                if (mysqli_stmt_num_rows($stmt) > 0) {
-                    mysqli_stmt_bind_result($stmt, $name, $city, $postalcode, $streetname, $houseNumber, $phoneNumber, $email, $kvk);
-                    mysqli_stmt_fetch($stmt);
-                    mysqli_stmt_close($stmt);
-                } else {
-                    echo "<div class='alert alert-danger'>Er zijn geen gebruikersgegevens beschikbaar</div>";
-                }
-
-
-                ?>
-                <!-- Company information -->
-                <div class="row mb-3">
-                    <div class="col-lg-12">
-                        <h1>Bedrijfsinformatie</h1>
-                    </div>
-                </div>
-                <form action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="POST">
                     <div class="row mb-3">
                         <div class="col-lg-12">
-                            <label for="username">Bedrijfsnaam</label>
+                            <label for="username">Gebruikersnaam</label>
                             <input type="text" id="username" value="<?= $name ?>" name="username" class="form-control" readonly required>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-lg-12">
-                            <label for="kvk_number">KVK nummer</label>
-                            <input type="number" id="kvk" value="<?= $kvk ?>" name="kvk" class="form-control" readonly required>
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-lg-12">
                             <label for="username">Email</label>
                             <input type="email" id="email" value="<?= $email ?>" name="email" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-lg-12">
+                            <label for="password">Wijzig Wachtwoord</label>
+                            <input type="password" id="password" name="password" class="form-control">
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -395,15 +303,107 @@ if (isset($_POST['companySubmit'])) {
 
                     <div class="row mb-3">
                         <div class="col-lg-12">
-                            <input type="submit" value="Bedrijfsgegevens opslaan" name="companySubmit" class="btn btn-primary">
+                            <input type="submit" value="Gebruikergegevens opslaan" name="userSubmit" class="btn btn-primary">
                         </div>
                     </div>
                 </form>
             </div>
-        <?php
-        }
-        ?>
-    </div>
+
+            <?php
+            if ($_SESSION['companyId'] != NULL) {
+            ?>
+                <div class="col-lg-12">
+                    <?php
+                    $stmt = mysqli_prepare($db, "
+                SELECT  name, 
+                        city,
+                        postalcode,
+                        streetname,
+                        house_number,
+                        phone_number,
+                        email_adres,
+                        kvk
+                FROM 	company
+                WHERE 	company_id = ?
+                ") or die(mysqli_error($db));
+                    mysqli_stmt_bind_param($stmt, "i", $_SESSION["companyId"]);
+                    mysqli_stmt_execute($stmt) or die(mysqli_error($db));
+                    mysqli_stmt_store_result($stmt) or die(mysqli_error($db));
+                    if (mysqli_stmt_num_rows($stmt) > 0) {
+                        mysqli_stmt_bind_result($stmt, $name, $city, $postalcode, $streetname, $houseNumber, $phoneNumber, $email, $kvk);
+                        mysqli_stmt_fetch($stmt);
+                        mysqli_stmt_close($stmt);
+                    } else {
+                        echo "<div class='alert alert-danger'>Er zijn geen gebruikersgegevens beschikbaar</div>";
+                    }
+
+
+                    ?>
+                    <!-- Company information -->
+                    <div class="row mb-3">
+                        <div class="col-lg-12">
+                            <h1>Bedrijfsinformatie</h1>
+                        </div>
+                    </div>
+                    <form action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="POST">
+                        <div class="row mb-3">
+                            <div class="col-lg-12">
+                                <label for="username">Bedrijfsnaam</label>
+                                <input type="text" id="username" value="<?= $name ?>" name="username" class="form-control" readonly required>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-lg-12">
+                                <label for="kvk_number">KVK nummer</label>
+                                <input type="number" id="kvk" value="<?= $kvk ?>" name="kvk" class="form-control" readonly required>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-lg-12">
+                                <label for="username">Email</label>
+                                <input type="email" id="email" value="<?= $email ?>" name="email" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-lg-12">
+                                <label for="postal">Postcode</label>
+                                <input type="text" id="postal" value="<?= $postalcode ?>" name="postal" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-lg-12">
+                                <label for="city">Woonplaats</label>
+                                <input type="text" id="city" value="<?= $city ?>" name="city" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-lg-6">
+                                <label for="street">Straatnaam</label>
+                                <input type="text" id="street" value="<?= $streetname ?>" name="street" class="form-control" required>
+                            </div>
+                            <div class="col-lg-6">
+                                <label for="housenumber">Huisnummer</label>
+                                <input type="number" id="housenumber" value="<?= $houseNumber ?>" name="housenumber" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-lg-12">
+                                <label for="phonenumber">Telefoonnummer</label>
+                                <input type="tel" id="phonenumber" value="<?= $phoneNumber ?>" name="phonenumber" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-lg-12">
+                                <input type="submit" value="Bedrijfsgegevens opslaan" name="companySubmit" class="btn btn-primary">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            <?php
+            }
+            ?>
+        </div>
     </div>
     </div>
     </div>

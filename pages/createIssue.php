@@ -70,31 +70,30 @@ if (isset($_POST['sendNewIssue'])) {
                             if (checkIfFile("issueFile")) {
                                 if (checkFileSize("issueFile")) {
                                     if (checkFileType("issueFile", $acceptedFileTypes)) {
-                                        if (makeIssueFolder($lastIssueId)) {
+                                        if (makeFolder($lastIssueId, "../assets/issueFiles/")) {
                                             if (!checkFileExist("../assets/issueFiles/" . $lastIssueId . "/", $_FILES["issueFile"]["name"])) {
                                                 if (uploadFile($db, "issueFile", "issue", "appendex_url", "issue_id", $lastIssueId, "../assets/issueFiles/" . $lastIssueId . "/")) {
-                                                    echo "<div class='alert alert-success'>Uw issue is verzonden</div>";  
-                                                }else{
+                                                    echo "<div class='alert alert-success'>Uw issue is verzonden</div>";
+                                                } else {
                                                     echo "<div class='alert alert-danger'>Uw bestand is niet toegevoegd, probeer het opnieuw</div>";
-                                                    deleteIssue($db,$lastIssueId);
+                                                    deleteIssue($db, $lastIssueId);
                                                 }
                                             } else {
                                                 echo "<div class='alert alert-danger'>U heeft deze bijlagen al toegevoegd</div>";
-                                                deleteIssue($db,$lastIssueId);
+                                                deleteIssue($db, $lastIssueId);
                                             }
                                         }
                                     } else {
                                         echo "<div class='alert alert-danger'>Uw geüploade bestand type wordt niet geaccepteerd. Er worden alleen pdf's, jpg's, jpeg's, png's, en gif's geaccepteerd</div>";
-                                        deleteIssue($db,$lastIssueId);
+                                        deleteIssue($db, $lastIssueId);
                                     }
                                 } else {
                                     echo "<div class='alert alert-danger'>Uw geüploade bestand is te groot</div>";
-                                    deleteIssue($db,$lastIssueId); 
+                                    deleteIssue($db, $lastIssueId);
                                 }
-                            }else {
+                            } else {
                                 echo "<div class='alert alert-success'>Uw issue is verzonden</div>";
                             }
-                            
                         } else {
                             echo "<div class='alert alert-danger'>De keuze bij de herhaalbaarheid valt niet onder de gegeven opties</div>";
                         }
@@ -111,8 +110,6 @@ if (isset($_POST['sendNewIssue'])) {
             echo "<div class='alert alert-danger'>De titel van de ticket is niet ingevuld</div>";
         }
     }
-
-    
 }
 ?>
 <!DOCTYPE HTML>
@@ -138,90 +135,90 @@ if (isset($_POST['sendNewIssue'])) {
                             if (isset($issueType) && isset($_SESSION['accountType'])) {
                             ?>
                                 <div class="row mb-3">
-                                     <div class="col-lg-6">
-                                    <label for="createIssueTitle">Titel</label>
-                                    <input type="text" id="createIssueTitle" class="form-control" name="createIssueTitle" />
-                                </div>
-                                </div>
-                                <div class="row mb-3">
-                                     <div class="col-lg-6">
-                                    <?php
-                                    if ($issueType == "ticket") {
-                                    ?>
-                                        <label for="createIssueCategory">sub-category</label>
-                                        <select id="createIssueCategory" name="createIssueCategory" class="form-control">
-                                            <option value="klacht">klacht</option>
-                                            <option value="feedback">feedback</option>
-                                        </select>
-                                    <?php
-                                    } else if ($issueType == "dienst/service") {
-                                    ?>
-                                        <label for="createIssueCategory">sub-category</label>
-                                        <select id="createIssueCategory" name="createIssueCategory" class="form-control">
-                                            <option value="watervoliere">watervoliere</option>
-                                            <option value="vogelhuis">vogelhuis</option>
-                                            <option value="grasmaaien">grasmaaien</option>
-                                            <option value="schuuronderhoud">schuuronderhoud</option>
-                                            <option value="tuinonderhoud">tuinonderhoud</option>
-                                        </select>
-                                    <?php
-                                    } else {
-                                    ?>
-                                        <label for="createIssueCategory">sub-category</label>
-                                        <select id="createIssueCategory" name="createIssueCategory" class="form-control">
-                                            <option value="schop">schop</option>
-                                            <option value="gereedschapskist">gereedschapskist</option>
-                                            <option value="graafmachine">graafmachine</option>
-                                            <option value="tracker">tracker</option>
-                                        </select>
-                                    <?php
-                                    }
-                                    ?>
-                                </div>
+                                    <div class="col-lg-6">
+                                        <label for="createIssueTitle">Titel</label>
+                                        <input type="text" id="createIssueTitle" class="form-control" name="createIssueTitle" />
+                                    </div>
                                 </div>
                                 <div class="row mb-3">
-                                     <div class="col-lg-6">
-                                    <label for="createIssueDescription">Omschrijving</label>
-                                    <textarea id="createIssueDescription" class="form-control" name="createIssueDescription"></textarea>
-                                </div>
+                                    <div class="col-lg-6">
+                                        <?php
+                                        if ($issueType == "ticket") {
+                                        ?>
+                                            <label for="createIssueCategory">sub-category</label>
+                                            <select id="createIssueCategory" name="createIssueCategory" class="form-control">
+                                                <option value="klacht">klacht</option>
+                                                <option value="feedback">feedback</option>
+                                            </select>
+                                        <?php
+                                        } else if ($issueType == "dienst/service") {
+                                        ?>
+                                            <label for="createIssueCategory">sub-category</label>
+                                            <select id="createIssueCategory" name="createIssueCategory" class="form-control">
+                                                <option value="watervoliere">watervoliere</option>
+                                                <option value="vogelhuis">vogelhuis</option>
+                                                <option value="grasmaaien">grasmaaien</option>
+                                                <option value="schuuronderhoud">schuuronderhoud</option>
+                                                <option value="tuinonderhoud">tuinonderhoud</option>
+                                            </select>
+                                        <?php
+                                        } else {
+                                        ?>
+                                            <label for="createIssueCategory">sub-category</label>
+                                            <select id="createIssueCategory" name="createIssueCategory" class="form-control">
+                                                <option value="schop">schop</option>
+                                                <option value="gereedschapskist">gereedschapskist</option>
+                                                <option value="graafmachine">graafmachine</option>
+                                                <option value="tracker">tracker</option>
+                                            </select>
+                                        <?php
+                                        }
+                                        ?>
+                                    </div>
                                 </div>
                                 <div class="row mb-3">
-                                     <div class="col-lg-6">
-                                    <label for="createIssueResult">Gewenst resultaat</label>
-                                    <textarea id="createIssueResult" class="form-control" name="createIssueResult"></textarea>
+                                    <div class="col-lg-6">
+                                        <label for="createIssueDescription">Omschrijving</label>
+                                        <textarea id="createIssueDescription" class="form-control" name="createIssueDescription"></textarea>
+                                    </div>
                                 </div>
+                                <div class="row mb-3">
+                                    <div class="col-lg-6">
+                                        <label for="createIssueResult">Gewenst resultaat</label>
+                                        <textarea id="createIssueResult" class="form-control" name="createIssueResult"></textarea>
+                                    </div>
                                 </div>
                                 <?php
                                 if ($_SESSION['accountType'] >= 1 && $issueType == "dienst/service") {
                                 ?>
                                     <div class="row mb-3">
-                                         <div class="col-lg-6">
-                                        <label for="createIssueFrequency">Ticket herhalen</label>
-                                        <select id="createIssueFrequency" class="form-control" name="createIssueFrequency">
-                                            <option value="N.V.T">N.V.T</option>
-                                            <option value="Dagelijks">Dagelijks</option>
-                                            <option value="Wekelijks">Weekelijks</option>
-                                            <option value="Maandelijks">Maandelijks</option>
-                                            <option value="Jaarlijks">Jaarlijks</option>
-                                        </select>
-                                    </div>
+                                        <div class="col-lg-6">
+                                            <label for="createIssueFrequency">Ticket herhalen</label>
+                                            <select id="createIssueFrequency" class="form-control" name="createIssueFrequency">
+                                                <option value="N.V.T">N.V.T</option>
+                                                <option value="Dagelijks">Dagelijks</option>
+                                                <option value="Wekelijks">Weekelijks</option>
+                                                <option value="Maandelijks">Maandelijks</option>
+                                                <option value="Jaarlijks">Jaarlijks</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 <?php
                                 }
                                 ?>
                                 <div class="row mb-3">
-                                     <div class="col-lg-6">
-                                    <label for="createIssueFile" class="pointer">Bijlagen</label>
-                                    <div class="custom-file">
-                                        <input type="file" name="issueFile" title="Kies uw bijlagen" name="createIssueFile" class="custom-file-input" id="createIssueFile">
-                                        <label class="custom-file-label" for="createIssueFile">Kies Bestand</label>
-                                    </div>
+                                    <div class="col-lg-6">
+                                        <label for="createIssueFile" class="pointer">Bijlagen</label>
+                                        <div class="custom-file">
+                                            <input type="file" name="issueFile" title="Kies uw bijlagen" name="createIssueFile" class="custom-file-input" id="createIssueFile">
+                                            <label class="custom-file-label" for="createIssueFile">Kies Bestand</label>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
-                                     <div class="col-lg-6">
-                                    <input type="submit" name="sendNewIssue" value="Versturen" class="sendNewIssue" />
-                                </div>
+                                    <div class="col-lg-6">
+                                        <input type="submit" name="sendNewIssue" value="Versturen" class="sendNewIssue" />
+                                    </div>
                                 </div>
                             <?php
                             } elseif ($issueType != "dienst/service" || $issueType != "product" || $issueType != "ticket") {

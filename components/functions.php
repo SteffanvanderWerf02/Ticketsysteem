@@ -30,7 +30,8 @@ function debugData($data, $type = "print_r")
  * @return: Array: $data, Debugtype: $type.
  */
 
-function uploadMessage($db, $userId, $message, $issueId) {
+function uploadMessage($db, $userId, $message, $issueId)
+{
 
     $sql = "INSERT
             INTO    `message`
@@ -49,7 +50,7 @@ function uploadMessage($db, $userId, $message, $issueId) {
     mysqli_stmt_bind_param($stmt, "is", $userId, $message) or die(mysqli_error($db));
     mysqli_stmt_execute($stmt) or die(mysqli_error($db));
     $lastMessageId = mysqli_insert_id($db);
-    mysqli_stmt_close($stmt); 
+    mysqli_stmt_close($stmt);
 
     $sql = "INSERT
             INTO    `issue_message` 
@@ -72,7 +73,8 @@ function uploadMessage($db, $userId, $message, $issueId) {
     mysqli_stmt_close($stmt);
 }
 
-function getMessage($db, $issueId) {
+function getMessage($db, $issueId)
+{
 
     $sql = "
             SELECT      `message`.`message`,
@@ -104,7 +106,8 @@ function getMessage($db, $issueId) {
     return $return;
 }
 
-function getActionIssue($db, $issueId) {
+function getActionIssue($db, $issueId)
+{
 
     $sql = "
             SELECT      issue_action
@@ -119,11 +122,11 @@ function getActionIssue($db, $issueId) {
     mysqli_stmt_fetch($stmt);
 
     return $issueAction;
-
 }
 
-function issueActionCheck($actionValue) {
-    $actionStat = [NULL=>"onbekend", 1=>"klant", 2=>"bottomup"];
+function issueActionCheck($actionValue)
+{
+    $actionStat = [NULL => "onbekend", 1 => "klant", 2 => "bottomup"];
     return $actionStat[$actionValue];
 }
 
@@ -133,8 +136,9 @@ function issueActionCheck($actionValue) {
  * @param: $issueAction: returns the action which has been chosen for the customer or admin
  * @return: Object: $db, Int: $issueId, Int: $issueAction.
  */
-function uploadActionIssue($db, $issueId, $issueAction) {
-    
+function uploadActionIssue($db, $issueId, $issueAction)
+{
+
     $sql = "UPDATE  issue 
             SET     issue_action = ? 
             WHERE   issue_id = ?";
@@ -317,23 +321,16 @@ function checkFileType($fileName, $mimeArray)
     }
 }
 
-function makeIssueFolder($issueId)
+function makeFolder($issueId, $path)
 {
-    $directory = "../assets/issueFiles/" . $issueId;
+    $directory = $path . $issueId;
     if (!file_exists($directory)) {
         mkdir($directory, 0777);
     }
     return true;
 }
 
-function makeUserFolder($userId)
-{
-    $directory = "../assets/img/pfpic/" . $userId;
-    if (!file_exists($directory)) {
-        mkdir($directory, 0777);
-    }
-    return true;
-}
+
 
 function checkFileExist($directory, $fileName)
 {
@@ -342,7 +339,7 @@ function checkFileExist($directory, $fileName)
 
 function deleteFile($directory)
 {
-    $files = glob($directory.'*'); // get all file names
+    $files = glob($directory . '*'); // get all file names
     foreach ($files as $file) { // iterate files
         if (is_file($file)) {
             unlink($file); // delete file
@@ -356,62 +353,30 @@ function uploadFile($db, $file, $tableName, $recordName, $relationId, $Id, $dire
     $type = "";
     $params = array();
 
-    $query = "UPDATE ";
-    switch ($tableName) {
-        case 'user':
-            $query .= "user ";
-            break;
-        case 'issue':
-            $query .= "issue ";
-            break;
+    $query = "UPDATE " . $tableName;
 
-        default:
-            # code...
-            break;
-    }
+    $query .= " SET " . $recordName . " = ? ";
+    $type .= "s";
+    array_push($params,  $directory . $_FILES[$file]["name"]);
 
-    switch ($recordName) {
-        case 'profilepicture':
-            $query .= "SET profilepicture = ? ";
-            $type .= "s";
-            array_push($params,  $directory . $_FILES[$file]["name"]);
-            break;
-        case 'appendex_url':
-            $query .= "SET appendex_url = ? ";
-            $type .= "s";
-            array_push($params,  $directory . $_FILES[$file]["name"]);
-            break;
-        default:
-            # code...
-            break;
-    }
+    $query .= "WHERE " . $relationId . " = ?";
+    $type .= "i";
+    array_push($params,  $Id);
 
-    switch ($relationId) {
-        case 'user_id':
-            $query .= "WHERE user_id = ?";
-            $type .= "i";
-            array_push($params, $Id);
-            break;
-        case 'user_id':
-            $query .= "WHERE issue_id = ?";
-            $type .= "i";
-            array_push($params, $Id);
-            break;
-        default:
-            # code...
-            break;
-    }
 
     $stmt = mysqli_prepare($db, $query) or die(mysqli_error($db));
     call_user_func_array(array($stmt, "bind_param"), makeValuesReferenced(array_merge(array($type), $params)));
     if (move_uploaded_file($_FILES[$file]["tmp_name"], realpath(dirname(getcwd())) . $directory . $_FILES[$file]["name"]) && mysqli_stmt_execute($stmt)) {
         mysqli_stmt_close($stmt);
         return true;
+    } else {
+        return false;
     }
 }
 
-function deleteIssue($db, $id) {
-    $stmt = mysqli_prepare($db,"
+function deleteIssue($db, $id)
+{
+    $stmt = mysqli_prepare($db, "
         DELETE 
         FROM issue 
         WHERE issue_id = ?

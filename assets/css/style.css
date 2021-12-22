@@ -93,7 +93,7 @@ input[type="radio"]:checked::after {
 .custom-file-label,
 .custom-select {
     transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
-    box-shadow 0.15s ease-in-out;
+        box-shadow 0.15s ease-in-out;
 }
 
 .custom-file-label::after {
@@ -723,12 +723,14 @@ select.form-control, label {
 }
 
 .form-container {
-  border: 1px solid grey;
-  width: 100%;
+    border: 1px solid grey;
+    width: 100%;
+    max-height: 500px;
+    overflow: auto;
 }
 
 #issue_choice {
-  text-align: center;
+    text-align: center;
     border: 1px solid grey;
 }
 

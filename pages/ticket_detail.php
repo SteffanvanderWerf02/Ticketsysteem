@@ -23,29 +23,48 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
     mysqli_stmt_bind_result($stmt, $issue_id, $priority, $category, $title, $description, $created_at, $frequency, $status);
     mysqli_stmt_fetch($stmt);
     mysqli_stmt_close($stmt);
-    
+
     $sql = "SELECT  `name`
             FROM    user
             WHERE   `user_id` = ?
            ";
 
-            $stmt = mysqli_prepare($db, $sql) or die(mysqli_error($db));
-            
-            mysqli_stmt_bind_param($stmt, "i", $_SESSION['userId']);  
-            mysqli_stmt_execute($stmt) or die(mysqli_error($db));
-            mysqli_stmt_bind_result($stmt, $name);
-            mysqli_stmt_fetch($stmt);
-            mysqli_stmt_close($stmt);
+    $stmt = mysqli_prepare($db, $sql) or die(mysqli_error($db));
+
+    mysqli_stmt_bind_param($stmt, "i", $_SESSION['userId']);
+    mysqli_stmt_execute($stmt) or die(mysqli_error($db));
+    mysqli_stmt_bind_result($stmt, $name);
+    mysqli_stmt_fetch($stmt);
+    mysqli_stmt_close($stmt);
 
     if (isset($_POST['upload_message'])) {
-        
+
         $issue_message = filter_input(INPUT_POST, 'issue_message', FILTER_SANITIZE_SPECIAL_CHARS);
         $issue_action = filter_input(INPUT_POST, 'action_point', FILTER_SANITIZE_NUMBER_INT);
 
         uploadMessage($db, $_SESSION['userId'], $issue_message, $id);
-
+        $messageId = mysqli_insert_id($db);
         uploadActionIssue($db, $id, $issue_action);
-
+        if (checkIfFile("b_file")) {
+            if (checkFileSize("b_file")) {
+                if (checkFileType("b_file", $acceptedFileTypes)) {
+                    if (makeFolder($id, "../assets/issueFiles/")) {
+                        if (!checkFileExist("../assets/issueFiles/" . $id . "/", $_FILES["b_file"]["name"])) {
+                            if (uploadFile($db, "b_file", "message", "appendex_url", "message_id", $messageId, "../assets/issueFiles/" . $id . "/")) {
+                            } else {
+                                echo "<div class='alert alert-danger'>Uw bijlage is niet toegevoegd, probeer het opnieuw</div>";
+                            }
+                        } else {
+                            echo "<div class='alert alert-danger'>Uw bijlage bestaat al</div>";
+                        }
+                    }
+                } else {
+                    echo "<div class='alert alert-danger'>Uw geüploadde bestand type wordt niet geaccepteerd. Er worden alleen pdf's, jpg's, jpeg's, png's, en gif's geaccepteerd</div>";
+                }
+            } else {
+                echo "<div class='alert alert-danger'>Uw geüploadde bestand is te groot</div>";
+            }
+        }
     }
 
 ?>
@@ -102,7 +121,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                                     <?php echo getMessage($db, $id); ?>
                                 </div>
                                 <div class="col-lg-12 ticket-form">
-                                    <form method="post" action="">
+                                    <form method="post" action="<?= htmlspecialchars($_SERVER["PHP_SELF"]) ?>?id=<?= $id ?>" enctype="multipart/form-data">
                                         <input type='radio' id='c_action' name='action_point' value='2' checked />
                                         <label for='c_action'>Actie Bottom up</label>
                                         <input type='radio' id='b_action' name='action_point' value='1' />
@@ -113,7 +132,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                                             <input type="file" name="b_file" title="Kies uw profielfoto" class="custom-file-input" id="customFile">
                                             <label class="custom-file-label" for="customFile">Kies Bestand</label>
                                         </div>
-                                        <input type="submit" class="upload_message" name="upload_message" value="Gesloten" />
+                                        <input type="submit" class="upload_message" name="upload_message" value="Versturen" />
                                     </form>
                                 </div>
                             </div>
@@ -126,6 +145,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
 
     <?php
 } ?>
-<?php include_once("../components/footer.php") ?>
-</body>
-</html>
+    <?php include_once("../components/footer.php") ?>
+    </body>
+
+    </html>
