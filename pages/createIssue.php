@@ -66,7 +66,7 @@ if (isset($_POST['sendNewIssue'])) {
                             mysqli_stmt_execute($stmt) or die(mysqli_error($db));
                             $lastIssueId = mysqli_insert_id($db);
                             mysqli_stmt_close($stmt);
-
+                           
                             if (checkIfFile("issueFile")) {
                                 if (checkFileSize("issueFile")) {
                                     if (checkFileType("issueFile", $acceptedFileTypes)) {
