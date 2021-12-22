@@ -48,9 +48,14 @@ function uploadMessage($db, $userId, $message, $issueId) {
     $stmt = mysqli_prepare($db, $sql) or die(mysqli_error($db));
     mysqli_stmt_bind_param($stmt, "is", $userId, $message) or die(mysqli_error($db));
     mysqli_stmt_execute($stmt) or die(mysqli_error($db));
-    $lastMessageId = mysqli_insert_id($db);
     mysqli_stmt_close($stmt); 
+    $lastMessageId = mysqli_insert_id($db);
+    getLastId($db, $lastMessageId, $issueId);
 
+    
+}
+
+function getLastId($db, $messageId, $issueId) {
     $sql = "INSERT
             INTO    `issue_message` 
             (
@@ -67,66 +72,78 @@ function uploadMessage($db, $userId, $message, $issueId) {
             ";
 
     $stmt = mysqli_prepare($db, $sql) or die(mysqli_error($db));
-    mysqli_stmt_bind_param($stmt, "ii", $issueId, $lastMessageId) or die(mysqli_error($db));
+    mysqli_stmt_bind_param($stmt, "ii", $issueId, $messageId) or die(mysqli_error($db));
     mysqli_stmt_execute($stmt) or die(mysqli_error($db));
     mysqli_stmt_close($stmt);
 }
 
-function getLastMessage($db, $issueId) {
+function insertStatus($db, $userId, $issueId, $status) {
+
     $sql = "
-            SELECT      `message`.`message`,
-                        `user`.name
-            FROM        `message`   
-            INNER JOIN  issue_message 
-            ON          `message`.message_id = issue_message.message_id
-            INNER JOIN  user
-            ON          `message`.user_id = user.user_id
-            WHERE       issue_message.issue_id = ?
-            ORDER BY    `message`.message_id DESC LIMIT 1
+            INSERT
+            INTO    `message`
+            (
+                    `user_id`,
+                    `date`,
+                    `message`
+            ) VALUES (
+                    ?,
+                    NOW(),
+                    ?
+            )
            ";
-
+    
     $stmt = mysqli_prepare($db, $sql) or die(mysqli_error($db));
-    mysqli_stmt_bind_param($stmt, 'i', $issueId) or die(mysqli_error($db));
+    if ($status == 1) {
+        $message = "De actie ligt bij: De klant";
+    } else {
+        $message = "De actie ligt bij: Bottomup";
+    }
+    mysqli_stmt_bind_param($stmt, "is", $userId, $message) or die(mysqli_error($db));
     mysqli_stmt_execute($stmt) or die(mysqli_error($db));
-    mysqli_stmt_bind_result($stmt, $message, $name);
-    mysqli_stmt_fetch($stmt);
-
-    $return = "<div class='col-lg-12 message-view'>";
-    $return .= "<p>{$name}</p>";
-    $return .= "<p class='title-messages'>{$message}</p>";
-    $return .= "</div>";
-
     mysqli_stmt_close($stmt);
 
-    return $return;
+    $lastMessageId = mysqli_insert_id($db);
+    getLastId($db, $lastMessageId, $issueId);
+
 }
 
 function getMessage($db, $issueId) {
 
     $sql = "
             SELECT      `message`.`message`,
-                        `user`.name
+                        `user`.name,
+                        `message`.appendex_url,
+                        `message`.date
             FROM        `message`   
             INNER JOIN  issue_message 
             ON          `message`.message_id = issue_message.message_id
             INNER JOIN  user
             ON          `message`.user_id = user.user_id
-            WHERE       issue_message.issue_id = ?  AND
-                        `message`.message_id != (SELECT MAX(`message`.message_id) FROM `message`)    
+            WHERE       issue_message.issue_id = ?  
             ORDER BY    issue_message.date DESC
            ";
 
     $stmt = mysqli_prepare($db, $sql) or die(mysqli_error($db));
     mysqli_stmt_bind_param($stmt, 'i', $issueId) or die(mysqli_error($db));
     mysqli_stmt_execute($stmt) or die(mysqli_error($db));
-    mysqli_stmt_bind_result($stmt, $message, $name);
+    mysqli_stmt_bind_result($stmt, $message, $name, $appendex_url, $message_date);
 
     $return = "";
     while (mysqli_stmt_fetch($stmt)) {
-        $return .= "<div class='col-lg-12 message-view'>";
-        $return .= "<p>{$name}</p>";
-        $return .= "<p class='title-messages'>{$message}</p>";
-        $return .= "</div>";
+        if ($message == "De actie ligt bij: Bottomup" || $message == "De actie ligt bij: De klant") {
+            $return .= "<div class='col-lg-12 issue_choice'>";
+            $return .= "<p class='action_message'>{$message}</p>";
+            $return .= "</div>";
+        } else {
+            $return .= "<div class='col-lg-12 message-view'>";
+            $return .= "<p>{$name}<span class='float-right'>". date("H:i d-m-Y", strtotime($message_date)) ."</span></p>";
+            $return .= "<p class='title-messages'>{$message}</p>";
+            if ($appendex_url != NULL) {
+                $return .= "<p class='title-message'><a href='{$appendex_url}'>Bijlage Bekijken.</a></p>";
+            }
+            $return .= "</div>";
+        }
     }
 
     mysqli_stmt_close($stmt);
@@ -153,7 +170,7 @@ function getActionIssue($db, $issueId) {
 }
 
 function issueActionCheck($actionValue) {
-    $actionStat = [NULL=>"onbekend", 1=>"klant", 2=>"bottomup"];
+    $actionStat = [NULL=>"bottomup", 1=>"klant", 2=>"bottomup"];
     return $actionStat[$actionValue];
 }
 

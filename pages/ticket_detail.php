@@ -12,7 +12,8 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
             `description`,
             `created_at`,
             frequency,
-            `status` 
+            `status`,
+            issue_action 
     FROM    issue
     WHERE   issue_id = ?
            ";
@@ -20,7 +21,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
     $stmt = mysqli_prepare($db, $sql) or die(mysqli_error($db));
     mysqli_stmt_bind_param($stmt, "i", $id);
     mysqli_stmt_execute($stmt) or die(mysqli_error($db));
-    mysqli_stmt_bind_result($stmt, $issue_id, $priority, $category, $title, $description, $created_at, $frequency, $status);
+    mysqli_stmt_bind_result($stmt, $issue_id, $priority, $category, $title, $description, $created_at, $frequency, $status, $issue_action);
     mysqli_stmt_fetch($stmt);
     mysqli_stmt_close($stmt);
     
@@ -37,16 +38,21 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
     mysqli_stmt_fetch($stmt);
     mysqli_stmt_close($stmt);
 
-    $count = 0;
-
     if (isset($_POST['upload_message'])) {
         
         if (!empty($_POST['issue_message']) && $issue_message = filter_input(INPUT_POST, 'issue_message', FILTER_SANITIZE_SPECIAL_CHARS)) {
-            $issue_action = filter_input(INPUT_POST, 'action_point', FILTER_SANITIZE_NUMBER_INT);
+            if (isset($_POST['action_point']) && $action_point = filter_input(INPUT_POST, 'action_point', FILTER_SANITIZE_NUMBER_INT)) {
 
-            uploadMessage($db, $_SESSION['userId'], $issue_message, $id);
+                uploadMessage($db, $_SESSION['userId'], $issue_message, $id);
 
-            uploadActionIssue($db, $id, $issue_action);
+                uploadActionIssue($db, $id, $action_point);
+                if ($issue_action != $action_point) {
+                    insertStatus($db, $_SESSION['userId'], $id, $action_point);
+                }
+
+            } else {
+                echo "<div class='alert alert-danger'>De optie van actie Bottom Up of Actie Klant is niet ingevuld</div>";
+            }
         } else {
             echo "<div class='alert alert-danger'>Het bericht is niet ingevuld</div>";
         }
@@ -104,17 +110,13 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                                     <div class="col-lg-12 message-view">
                                         <p class="title-messages">Bericht</p>
                                     </div>
-                                    <?php echo getLastMessage($db, $id); ?>
-                                        <div class='col-lg-12'>
-                                            <h2 id='issue_choice'>De keuze ligt nu aan: <?php echo issueActionCheck(getActionIssue($db, $id)); ?></h2>
-                                        </div>
                                     <?php echo getMessage($db, $id); ?>
                                 </div>
                                 <div class="col-lg-12 ticket-form">
                                     <form method="post" action="">
-                                        <input type='radio' id='c_action' name='action_point' value='2' checked />
+                                        <input type='radio' id='c_action' name='action_point' value='2' <?php echo (issueActionCheck(getActionIssue($db, $id))=="bottomup") ? 'checked="checked"':'';?> />
                                         <label for='c_action'>Actie Bottom up</label>
-                                        <input type='radio' id='b_action' name='action_point' value='1' />
+                                        <input type='radio' id='b_action' name='action_point' value='1' <?php echo (issueActionCheck(getActionIssue($db, $id))=="klant") ? 'checked="checked"':'';?> />
                                         <label for='b_action'>Actie klant</label>
                                         <textarea class="t_area" name="issue_message" placeholder="Uw bericht"></textarea>
                                         <label for="customFile">Bestand</label>

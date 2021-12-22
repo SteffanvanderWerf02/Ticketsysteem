@@ -725,10 +725,17 @@ select.form-control, label {
 .form-container {
   border: 1px solid grey;
   width: 100%;
+  max-height: 500px;
+  overflow: auto;
 }
 
-#issue_choice {
+.issue_choice {
   text-align: center;
+}
+
+.action_message {
+    font-size: 2rem;
+    font-weight: bold;
 }
 
 .message-view {
