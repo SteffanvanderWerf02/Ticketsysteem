@@ -426,7 +426,8 @@ function uploadFile($db, $file, $tableName, $recordName, $relationId, $Id, $dire
 
     $stmt = mysqli_prepare($db, $query) or die(mysqli_error($db));
     call_user_func_array(array($stmt, "bind_param"), makeValuesReferenced(array_merge(array($type), $params)));
-    if (move_uploaded_file($_FILES[$file]["tmp_name"], realpath(dirname(getcwd())) . $directory . $_FILES[$file]["name"]) && mysqli_stmt_execute($stmt)) {
+    
+    if (move_uploaded_file($_FILES[$file]["tmp_name"], realpath(dirname(getcwd())).$directory . $_FILES[$file]["name"]) && mysqli_stmt_execute($stmt)) {
         mysqli_stmt_close($stmt);
         return true;
     } else {

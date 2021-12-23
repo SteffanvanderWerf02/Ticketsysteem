@@ -46,7 +46,12 @@
                                 if ($profilePicture == NULL) {
                                     echo "<span class='material-icons align-middle'>person</span>";
                                 } else {
-                                    echo "<div class='profilepic' style='background-image: url($profilePicture);'></div>";
+                                    if(OS){
+                                        echo "<div class='profilepic' style='background-image: url(..$profilePicture);'></div>";
+                                    } else{
+                                       echo "<div class='profilepic' style='background-image: url($profilePicture);'></div>";
+                                    }
+                                    
                                 }
                                 ?>
                             </a>

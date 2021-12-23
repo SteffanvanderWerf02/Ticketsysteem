@@ -2,6 +2,7 @@
 include_once("../config.php");
 include_once("../connection.php");
 include_once("../components/functions.php");
+$acceptedFileTypesPP = ["image/jpg", "image/jpeg", "image/png", "image/gif"];
 
 if (isset($_POST['submit'])) {
     if (isset($_POST['auth']) && $auth = filter_input(INPUT_POST, "auth", FILTER_SANITIZE_NUMBER_INT)) {
@@ -98,11 +99,21 @@ if (isset($_POST['submit'])) {
                 if (makeFolder($lastUserId, "../assets/img/pfpic/")) {
                     if (!checkFileExist("../assets/img/pfpic/" . $lastUserId . "/", $_FILES["pfp"]["name"])) {
                         if (deleteFile("../assets/img/pfpic/" . $lastUserId . "/")) {
-                            if (uploadFile($db, "pfp", "user", "profilepicture", "user_id", $lastUserId, "../assets/img/pfpic/" . $lastUserId . "/")) {
-                                echo "<div class='alert alert-success'>Uw profielfoto is succesvol geüpload</div>";
-                            } else {
-                                echo "<div class='alert alert-danger'>Uw profielfoto is niet toegevoegd, probeer het opnieuw</div>";
-                            }
+                            //for mac
+                            if(OS){
+                                if (uploadFile($db, "pfp", "user", "profilepicture", "user_id", $_SESSION["userId"], "/assets/img/pfpic/" . $_SESSION["userId"] . "/")) {
+                                    echo "<div class='alert alert-success'>Uw profielfoto is succesvol geüpload</div>";
+                                } else {
+                                    echo "<div class='alert alert-danger'>Uw profielfoto is niet toegevoegd, probeer het opnieuw</div>";
+                                }
+                            } else{
+                                //for windwos
+                                if (uploadFile($db, "pfp", "user", "profilepicture", "user_id", $_SESSION["userId"], "../assets/img/pfpic/" . $_SESSION["userId"] . "/")) {
+                                    echo "<div class='alert alert-success'>Uw profielfoto is succesvol geüpload</div>";
+                                } else {
+                                    echo "<div class='alert alert-danger'>Uw profielfoto is niet toegevoegd, probeer het opnieuw</div>";
+                                }
+    
                         }
                     } else {
                         echo "<div class='alert alert-danger'>Uw profielfoto bestaat al</div>";
@@ -115,7 +126,9 @@ if (isset($_POST['submit'])) {
             echo "<div class='alert alert-danger'>Uw geüploadde bestand is te groot</div>";
         }
     }
+    }
 }
+
 
 
 ?>

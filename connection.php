@@ -8,15 +8,11 @@ $acceptedFileTypes = ["image/jpg", "image/jpeg", "image/png", "image/gif", "appl
 
 mysqli_report(MYSQLI_REPORT_STRICT);
 
-$connection = 'localhost';
-$database = 'bottomup';
-$username = 'root';
-$password = 'root';
 
 try {
     // Create connection
-    $db = new mysqli($connection, $username, $password, $database);
-    // echo "You have connected to your database with MYSQLI";
+    $db = new mysqli('CONNECTION', 'USERNAME', 'PASSWORD', 'DATABASE');
+     //echo "You have connected to your database with MYSQLI";
 } catch (Exception $e) {
     // error connection
     $error_message = $e->getMessage();

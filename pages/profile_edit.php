@@ -94,11 +94,22 @@ if (isset($_POST['userSubmit'])) {
                 if (makeFolder($_SESSION["userId"], "../assets/img/pfpic/")) {
                     if (!checkFileExist("../assets/img/pfpic/" . $_SESSION["userId"] . "/", $_FILES["pfp"]["name"])) {
                         if (deleteFile("../assets/img/pfpic/" . $_SESSION["userId"] . "/")) {
+                            //for mac
+                            if(OS){
+                            if (uploadFile($db, "pfp", "user", "profilepicture", "user_id", $_SESSION["userId"], "/assets/img/pfpic/" . $_SESSION["userId"] . "/")) {
+                                echo "<div class='alert alert-success'>Uw profielfoto is succesvol geüpload</div>";
+                            } else {
+                                echo "<div class='alert alert-danger'>Uw profielfoto is niet toegevoegd, probeer het opnieuw</div>";
+                            }
+                        } else{
+                            //for windwos
                             if (uploadFile($db, "pfp", "user", "profilepicture", "user_id", $_SESSION["userId"], "../assets/img/pfpic/" . $_SESSION["userId"] . "/")) {
                                 echo "<div class='alert alert-success'>Uw profielfoto is succesvol geüpload</div>";
                             } else {
                                 echo "<div class='alert alert-danger'>Uw profielfoto is niet toegevoegd, probeer het opnieuw</div>";
                             }
+
+                        }
                         }
                     } else {
                         echo "<div class='alert alert-danger'>Uw profielfoto bestaat al</div>";
@@ -242,7 +253,14 @@ if (isset($_POST['companySubmit'])) {
                     ?>
                         <div class="row mb-3">
                             <div class="col-lg-2">
-                                <img src="<?= $profilePicture ?>" class="profileprev" alt="Profiel Foto">
+                                <?php
+                                if(OS){
+                                    echo  "<img src='..".$profilePicture."' class='profileprev' alt='Profiel Foto'>";
+                                } else{
+                                   echo "<img src= '".$profilePicture."' class='profileprev' alt='Profiel Foto'>";
+                                }
+                               
+                                ?>
 
                             </div>
                             <div class="col-lg-10 my-auto">
