@@ -339,7 +339,7 @@ function makeValuesReferenced($arr)
 
 function priorityCheck($priorityValue)
 {
-    $priorityStat = [0 => "Laag", 1 => "Gemiddeld", 2 => "Hoog"];
+    $priorityStat = [1 => "Laag", 2 => "Gemiddeld", 3 => "Hoog"];
 
     return $priorityStat[$priorityValue];
 }
