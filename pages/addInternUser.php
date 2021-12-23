@@ -60,34 +60,34 @@ if (isset($_POST['submit'])) {
                                             mysqli_stmt_execute($stmt) or die(mysqli_error($db));
                                             mysqli_stmt_close($stmt);
                                         } else {
-                                            echo "<div class='alert alert-danger'>Deze naam of email bestaat al.</div>";
+                                            echo "<div class='alert alert-danger'>Deze naam of email bestaat al</div>";
                                         }
                                     } else {
-                                        echo "<div class='alert alert-danger'>Uw telefoonnummer bevat speciale tekens die niet zijn toegestaan.</div>";
+                                        echo "<div class='alert alert-danger'>Uw telefoonnummer bevat speciale tekens die niet zijn toegestaan</div>";
                                     }
                                 } else {
-                                    echo "<div class='alert alert-danger'>Uw huisnummer bevat speciale tekens die niet zijn toegestaan.</div>";
+                                    echo "<div class='alert alert-danger'>Uw huisnummer bevat speciale tekens die niet zijn toegestaan</div>";
                                 }
                             } else {
-                                echo "<div class='alert alert-danger'>Uw straatnaam bevat speciale tekens die niet zijn toegestaan.</div>";
+                                echo "<div class='alert alert-danger'>Uw straatnaam bevat speciale tekens die niet zijn toegestaan</div>";
                             }
                         } else {
-                            echo "<div class='alert alert-danger'>Uw woonplaats bevat speciale tekens die niet zijn toegestaan.</div>";
+                            echo "<div class='alert alert-danger'>Uw woonplaats bevat speciale tekens die niet zijn toegestaan</div>";
                         }
                     } else {
-                        echo "<div class='alert alert-danger'>Uw postcode bevat speciale tekens die niet zijn toegestaan.</div>";
+                        echo "<div class='alert alert-danger'>Uw postcode bevat speciale tekens die niet zijn toegestaan</div>";
                     }
                 } else {
-                    echo "<div class='alert alert-danger'>Uw wachtwoord bevat speciale tekens die niet zijn toegestaan.</div>";
+                    echo "<div class='alert alert-danger'>Uw wachtwoord bevat speciale tekens die niet zijn toegestaan</div>";
                 }
             } else {
-                echo "<div class='alert alert-danger'>Uw username bevat speciale tekens die niet zijn toegestaan.</div>";
+                echo "<div class='alert alert-danger'>Uw username bevat speciale tekens die niet zijn toegestaan</div>";
             }
         } else {
-            echo "<div class='alert alert-danger'> Uw emailadres bevat speciale tekens die niet zijn toegestaan.</div>";
+            echo "<div class='alert alert-danger'> Uw emailadres bevat speciale tekens die niet zijn toegestaan</div>";
         }
     } else {
-        echo "<div class='alert alert-danger'> U heeft de rechten niet correct ingevuld.</div>";
+        echo "<div class='alert alert-danger'> U heeft de rechten niet correct ingevuld</div>";
     }
 }
 ?>
@@ -106,7 +106,7 @@ if (isset($_POST['submit'])) {
     <div id="content" class="container">
         <div class="row">
             <div class="col-lg-12">
-                <h1>Gebruikers Informatie</h1>
+                <h1>Gebruikersinformatie</h1>
             </div>
             <div class="col-lg-12">
                 <?php
@@ -114,7 +114,7 @@ if (isset($_POST['submit'])) {
                 <form method="POST">
                     <div class="row mb-3">
                         <div class="col-lg-12">
-                            <label for="customFile" class="pointer">Profiel foto</label>
+                            <label for="customFile" class="pointer">Profielfoto</label>
                             <div class="custom-file">
                                 <input type="file" title="Kies uw profielfoto" class="custom-file-input" id="customFile">
                                 <label class="custom-file-label" for="customFile">Kies Bestand</label>
@@ -137,7 +137,7 @@ if (isset($_POST['submit'])) {
                     </div>
                     <div class="row mb-3">
                         <div class="col-lg-12">
-                            <label for="username">Email</label>
+                            <label for="username">E-mail</label>
                             <input type="email" id="username" value="" name="email" class="form-control" required>
                         </div>
                     </div>
@@ -156,7 +156,7 @@ if (isset($_POST['submit'])) {
                     <div class="row mb-3">
                         <div class="col-lg-12">
                             <label for="phonenumber">
-                                Telefoon nummer
+                                Telefoonnummer
                             </label>
                         </div>
                         <div class="col-lg-12">
