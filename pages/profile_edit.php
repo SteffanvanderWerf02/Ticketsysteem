@@ -173,7 +173,7 @@ if (isset($_POST['companySubmit'])) {
             </div>
             <div class="col-lg-12 mb-3">
                 <?php
-                if ($_SESSION["accountType"] == 3 || $_SESSION["accountType"] == 2) {
+                if ($_SESSION["accountType"] == 4 || $_SESSION["accountType"] == 3 || $_SESSION["accountType"] == 2) {
                 ?>
                     <a class="d-block mb-1" href="./addInternUser.php"><span class="material-icons align-middle">add</span>Nieuwe
                         gebruiker aanmaken</a>

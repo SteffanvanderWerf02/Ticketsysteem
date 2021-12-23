@@ -140,7 +140,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                         </div>
                         <div class="col-lg-2 my-auto text-right">
                             <?php
-                            if (isset($_GET['edit']) && $_SESSION["accountType"] == 3) {
+                            if (isset($_GET['edit']) && $_SESSION["accountType"] == 3 || $_SESSION['accountType'] == 4) {
                             ?>
                                 <form id="editForm" class="d-inline" action="<?= htmlentities($_SERVER['PHP_SELF']) ?>?id=<?= $id ?>" method="POST">
                                     <button class="btn d-inline btn-primary" name="updateIssue" type="submit"><span class="material-icons align-middle">done</span></button>
@@ -165,7 +165,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                                         <td class="text-left td-left">Status:</td>
                                         <td class="td-right text-right">
                                             <?php
-                                            if (isset($_GET['edit']) && $_SESSION["accountType"] == 3) {
+                                            if (isset($_GET['edit']) && $_SESSION["accountType"] == 3 || $_SESSION['accountType'] == 4) {
                                             ?>
                                                 <select name="issueStatus" class="form-control" form="editForm">
                                                     <option value="1" <?= ($status == 1 ? "selected" : "") ?>>Nieuw</option>
@@ -186,7 +186,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                                         <td class="text-left td-left">Prioriteit:</td>
                                         <td class="td-right text-right">
                                             <?php
-                                            if (isset($_GET['edit']) && $_SESSION["accountType"] == 3) {
+                                            if (isset($_GET['edit']) && $_SESSION["accountType"] == 3 || $_SESSION['accountType'] == 4) {
                                             ?>
                                                 <select name="issuePir" class="form-control" form="editForm">
                                                     <option value="0" <?= ($priority == 0 ? "selected" : "") ?>>Laag</option>
@@ -206,7 +206,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                                         <td class="text-left td-left">Categorie:</td>
                                         <td class="td-right text-right">
                                             <?php
-                                            if (isset($_GET['edit']) && $_SESSION["accountType"] == 3) {
+                                            if (isset($_GET['edit']) && $_SESSION["accountType"] == 3 || $_SESSION['accountType'] == 4) {
                                             ?>
                                                 <select name="issueCat" class="form-control" form="editForm">
                                                     <option value="Dienst/service" <?= ($category == "Dienst/service" ? "selected" : "") ?>>Dienst / Service</option>
@@ -226,7 +226,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                                         <td class="text-left td-left">Sub categorie:</td>
                                         <td class="td-right text-right">
                                             <?php
-                                            if (isset($_GET['edit']) && $_SESSION["accountType"] == 3) {
+                                            if (isset($_GET['edit']) && $_SESSION["accountType"] == 3 || $_SESSION['accountType'] == 4) {
                                             ?>
                                                 <select name="issueSCat" class="form-control" form="editForm">
                                                     <?= getCatOptions($category, $subCat) ?>
