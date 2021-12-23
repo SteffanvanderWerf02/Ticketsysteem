@@ -1,6 +1,7 @@
 <?php
 include_once("../config.php");
 include_once("../connection.php");
+include_once("../components/functions.php");
 
 if (isset($_POST['submit'])) {
     if (isset($_POST['auth']) && $auth = filter_input(INPUT_POST, "auth", FILTER_SANITIZE_NUMBER_INT)) {
@@ -59,6 +60,7 @@ if (isset($_POST['submit'])) {
                                             mysqli_stmt_bind_param($stmt, "iissssssss", $_SESSION['companyId'], $_SESSION['accountType'], $username, $city, $streetname, $postalcode, $housenumber, $phonenumber, $email, $hash_password);
                                             mysqli_stmt_execute($stmt) or die(mysqli_error($db));
                                             mysqli_stmt_close($stmt);
+                                            $lastUserId = mysqli_insert_id($db);
                                         } else {
                                             echo "<div class='alert alert-danger'>Deze naam of dit e-mailadres bestaat al.</div>";
                                         }
@@ -89,7 +91,33 @@ if (isset($_POST['submit'])) {
     } else {
         echo "<div class='alert alert-danger'> U heeft de rechten niet correct ingevuld.</div>";
     }
+
+    if (checkIfFile("pfp")) {
+        if (checkFileSize("pfp")) {
+            if (checkFileType("pfp", $acceptedFileTypesPP)) {
+                if (makeFolder($lastUserId, "../assets/img/pfpic/")) {
+                    if (!checkFileExist("../assets/img/pfpic/" . $lastUserId . "/", $_FILES["pfp"]["name"])) {
+                        if (deleteFile("../assets/img/pfpic/" . $lastUserId . "/")) {
+                            if (uploadFile($db, "pfp", "user", "profilepicture", "user_id", $lastUserId, "../assets/img/pfpic/" . $lastUserId . "/")) {
+                                echo "<div class='alert alert-success'>Uw profielfoto is succesvol geüpload</div>";
+                            } else {
+                                echo "<div class='alert alert-danger'>Uw profielfoto is niet toegevoegd, probeer het opnieuw</div>";
+                            }
+                        }
+                    } else {
+                        echo "<div class='alert alert-danger'>Uw profielfoto bestaat al</div>";
+                    }
+                }
+            } else {
+                echo "<div class='alert alert-danger'>Uw geüploadde bestand type wordt niet geaccepteerd. Er worden alleen jpg's, jpeg's, png's, en gif's geaccepteerd</div>";
+            }
+        } else {
+            echo "<div class='alert alert-danger'>Uw geüploadde bestand is te groot</div>";
+        }
+    }
 }
+
+
 ?>
 
 <!DOCTYPE html>
@@ -111,12 +139,12 @@ if (isset($_POST['submit'])) {
             <div class="col-lg-12">
                 <?php
                 ?>
-                <form action="<?=htmlspecialchars($_SERVER['PHP_SELF'])?>" method="POST">
+                <form action="<?=htmlspecialchars($_SERVER['PHP_SELF'])?>" method="POST" enctype="multipart/form-data">
                     <div class="row mb-3">
                         <div class="col-lg-12">
                             <label for="customFile" class="pointer">Profiel foto</label>
                             <div class="custom-file">
-                                <input type="file" title="Kies uw profielfoto" class="custom-file-input" id="customFile">
+                                <input type="file" title="Kies uw profielfoto" name="pfp" class="custom-file-input" id="customFile">
                                 <label class="custom-file-label" for="customFile">Kies Bestand</label>
                             </div>
                         </div>
