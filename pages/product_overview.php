@@ -33,10 +33,10 @@ if (isset($_GET['submit'])) {
             <div class="col-lg-12">
                 <form action="<?= $_SERVER["PHP_SELF"] ?>" method="GET">
                     <label>Product aanvraag id
-                        <input type="text" name="ticket_id" class="rounded form-control w-25 d-inline" value="<?=(isset($_GET['ticket_id'])&& $id = filter_input(INPUT_GET, 'ticket_id', FILTER_SANITIZE_NUMBER_INT))?$id : "" ?>">
+                        <input type="text" name="ticket_id" class="rounded form-control w-25 d-inline" value="<?= (isset($_GET['ticket_id']) && $id = filter_input(INPUT_GET, 'ticket_id', FILTER_SANITIZE_NUMBER_INT)) ? $id : "" ?>">
                     </label>
                     <label class="ml-2">Titel
-                        <input type="text" name="ticket_title" class="rounded form-control w-25 d-inline" value="<?=(isset($_GET['ticket_title'])&& $title = filter_input(INPUT_GET, 'ticket_title', FILTER_SANITIZE_SPECIAL_CHARS))?$title : ""?>">
+                        <input type="text" name="ticket_title" class="rounded form-control w-25 d-inline" value="<?= (isset($_GET['ticket_title']) && $title = filter_input(INPUT_GET, 'ticket_title', FILTER_SANITIZE_SPECIAL_CHARS)) ? $title : "" ?>">
                     </label>
                     <button class="btn btn-primary" name="submit" type="submit"><span class="material-icons align-middle">search</span> Zoeken</button>
                 </form>
@@ -50,35 +50,35 @@ if (isset($_GET['submit'])) {
                     </div>
                     <div class="col-lg-12">
                         <form action="<?= $_SERVER["PHP_SELF"] ?>" method="GET">
-                            <button class="btn btn-small btn-primary" name="filter" value="" type="submit">Alles</button>
+                            <button class="btn btn-standard btn-primary" name="filter" value="" type="submit">Alles</button>
                         </form>
                     </div>
                 </div>
                 <div class="row mb-2">
                     <div class="col-lg-12">
                         <form action="<?= $_SERVER["PHP_SELF"] ?>" method="GET">
-                            <button class="btn btn-small btn-primary" name="filter" value="1" type="submit">Nieuw</button>
+                            <button class="btn btn-standard btn-primary" name="filter" value="1" type="submit">Nieuw</button>
                         </form>
                     </div>
                 </div>
                 <div class="row mb-2">
                     <div class="col-lg-12">
                         <form action="<?= $_SERVER["PHP_SELF"] ?>" method="GET">
-                            <button class="btn btn-small btn-primary" name="filter" value="2" type="submit">Bezig</button>
+                            <button class="btn btn-standard btn-primary" name="filter" value="2" type="submit">Bezig</button>
                         </form>
                     </div>
                 </div>
                 <div class="row mb-2">
                     <div class="col-lg-12">
                         <form action="<?= $_SERVER["PHP_SELF"] ?>" method="GET">
-                            <button class="btn btn-small btn-primary" name="filter" value="3" type="submit">On hold</button>
+                            <button class="btn btn-standard btn-primary" name="filter" value="3" type="submit">On hold</button>
                         </form>
                     </div>
                 </div>
                 <div class="row mb-2">
                     <div class="col-lg-12">
                         <form action="<?= $_SERVER["PHP_SELF"] ?>" method="GET">
-                            <button class="btn btn-small btn-primary" name="filter" value="4" type="submit">Gesloten</button>
+                            <button class="btn btn-standard btn-primary" name="filter" value="4" type="submit">Gesloten</button>
                         </form>
                     </div>
                 </div>
