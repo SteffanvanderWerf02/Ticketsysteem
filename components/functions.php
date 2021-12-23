@@ -215,7 +215,8 @@ function getIssueOverview($db, $companyId, $userId, $issueType, $filterStatus, $
             <tr>
                 <th>id</th>
                 <th>Naam</th>
-                <th>Aanmaak datum</th>
+                <th>Aanmaakdatum</th>
+                <th>Sluitingsdatum</th>
                 <th>Titel</th>
                 ';
 
@@ -239,7 +240,8 @@ function getIssueOverview($db, $companyId, $userId, $issueType, $filterStatus, $
                 issue.frequency,
                 issue.sub_category, 
                 user.name,
-                company.name
+                company.name,
+                issue.closed_at
         FROM    issue
         LEFT JOIN company 
         ON issue.company_id = company.company_id
@@ -294,23 +296,30 @@ function getIssueOverview($db, $companyId, $userId, $issueType, $filterStatus, $
         $type .= "si";
         array_push($params, $searchTitle, $searchId);
     }
+    $query .= " ORDER BY `issue`.status";
     $stmt = mysqli_prepare($db, $query);
     call_user_func_array(array($stmt, "bind_param"), makeValuesReferenced(array_merge(array($type), $params)));
     mysqli_stmt_execute($stmt) or die(mysqli_error($db));
     mysqli_stmt_store_result($stmt) or die(mysqli_error($db));
-    mysqli_stmt_bind_result($stmt, $issueId, $createdAt, $title, $priority, $status, $category, $frequency, $subCategory, $userName, $companyName);
+    mysqli_stmt_bind_result($stmt, $issueId, $createdAt, $title, $priority, $status, $category, $frequency, $subCategory, $userName, $companyName, $closedAt);
     if (mysqli_stmt_num_rows($stmt) > 0) {
         while (mysqli_stmt_fetch($stmt)) {
-
-            $return .= "<tr class='action' data-href='issue_detail.php?id={$issueId}'>
+            if($filterStatus != 4 && $status == 4) {
+                $lineThrough = "table_linethrough";
+            } else {
+                $lineThrough = "";
+            }
+            $return .= "<tr class='action {$lineThrough}' data-href='issue_detail.php?id={$issueId}'>
                     <td>{$issueId}</td>
                     <td>{$userName}</td>
-                    <td>{$createdAt}</td>
-                    <td>{$title}</td>";
+                    <td>{$createdAt}</td>";
+            ($closedAt == NULL) ? $return .= "<td>N.V.T.</td>"  : $return .= "<td>{$closedAt}</td>";
+
+                    $return .= "<td>{$title}</td>";
             ($companyId == NULL) ? ""  : $return .= "<td>{$companyName}</td> <td>{$frequency}</td> ";
 
             $return .= "
-                    <td>" . priorityCheck($status) . "</td>
+                    <td>" . priorityCheck($priority) . "</td>
                     <td>" . statuscheck($status) . "</td>
                     <td>" . ucFirst($category) . "</td>
                     <td>" . ucFirst($subCategory) . "</td>

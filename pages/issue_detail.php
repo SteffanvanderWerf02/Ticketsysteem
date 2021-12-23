@@ -20,6 +20,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                 if (isset($_POST['issuePir']) && $issuePir = filter_input(INPUT_POST, 'issuePir', FILTER_SANITIZE_NUMBER_INT)) {
                     if (isset($_POST['issueCat']) && $issueCat = filter_input(INPUT_POST, 'issueCat', FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
                         if (isset($_POST['issueSCat']) && $issueSCat = filter_input(INPUT_POST, 'issueSCat', FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
+                            
                             $stmt = mysqli_prepare($db, " 
                                     UPDATE  issue 
                                     SET     priority = ?,
@@ -31,6 +32,17 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                             mysqli_stmt_bind_param($stmt, "iissi", $issuePir, $issueStatus, $issueCat, $issueSCat, $id) or die(mysqli_error($db));
                             mysqli_stmt_execute($stmt) or die(mysqli_error($db));
                             mysqli_stmt_close($stmt);
+                            
+                            if($issueStatus == 4) {
+                                $stmt = mysqli_prepare($db, " 
+                                        UPDATE  issue 
+                                        SET     closed_at = NOW()
+                                        WHERE   issue_id = ?
+                                ") or die(mysqli_error($db));
+                                mysqli_stmt_bind_param($stmt, "i", $id) or die(mysqli_error($db));
+                                mysqli_stmt_execute($stmt) or die(mysqli_error($db));
+                                mysqli_stmt_close($stmt);
+                            }
                             echo "<div class='alert alert-success'>Uw issue is succesvol aangepast</div>";
                         } else {
                             echo "<div class='alert alert-danger'>Uw sub-categorie komt niet overeen met de opties</div>";
