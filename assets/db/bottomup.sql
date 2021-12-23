@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 4.9.0.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 23, 2021 at 11:52 AM
--- Server version: 10.4.22-MariaDB
--- PHP Version: 8.0.14
+-- Gegenereerd op: 23 dec 2021 om 12:11
+-- Serverversie: 10.3.16-MariaDB
+-- PHP-versie: 7.3.7
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -24,7 +25,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `authentication`
+-- Tabelstructuur voor tabel `authentication`
 --
 
 CREATE TABLE `authentication` (
@@ -34,18 +35,19 @@ CREATE TABLE `authentication` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `authentication`
+-- Gegevens worden geëxporteerd voor tabel `authentication`
 --
 
 INSERT INTO `authentication` (`auth_id`, `name`, `description`) VALUES
 (1, 'particulier', 'de particulieren klant'),
 (2, 'zakelijk account', 'de zakelijke klant/medewerker'),
-(3, 'Beheerder', 'De beheerder van het systeem');
+(3, 'Beheerder', 'De beheerder van het systeem'),
+(4, 'Ticketmaster', 'De ticket beheerder van het systeem');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `company`
+-- Tabelstructuur voor tabel `company`
 --
 
 CREATE TABLE `company` (
@@ -62,7 +64,7 @@ CREATE TABLE `company` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `company`
+-- Gegevens worden geëxporteerd voor tabel `company`
 --
 
 INSERT INTO `company` (`company_id`, `name`, `email_adres`, `city`, `streetname`, `postalcode`, `house_number`, `phone_number`, `status`, `kvk`) VALUES
@@ -73,7 +75,7 @@ INSERT INTO `company` (`company_id`, `name`, `email_adres`, `city`, `streetname`
 -- --------------------------------------------------------
 
 --
--- Table structure for table `issue`
+-- Tabelstructuur voor tabel `issue`
 --
 
 CREATE TABLE `issue` (
@@ -96,7 +98,7 @@ CREATE TABLE `issue` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `issue`
+-- Gegevens worden geëxporteerd voor tabel `issue`
 --
 
 INSERT INTO `issue` (`issue_id`, `user_id`, `company_id`, `priority`, `category`, `sub_category`, `title`, `description`, `result`, `created_at`, `closed_at`, `frequency`, `appendex_url`, `status_timestamp`, `status`, `issue_action`) VALUES
@@ -107,7 +109,7 @@ INSERT INTO `issue` (`issue_id`, `user_id`, `company_id`, `priority`, `category`
 -- --------------------------------------------------------
 
 --
--- Table structure for table `issue_message`
+-- Tabelstructuur voor tabel `issue_message`
 --
 
 CREATE TABLE `issue_message` (
@@ -120,7 +122,7 @@ CREATE TABLE `issue_message` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `message`
+-- Tabelstructuur voor tabel `message`
 --
 
 CREATE TABLE `message` (
@@ -134,7 +136,7 @@ CREATE TABLE `message` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user`
+-- Tabelstructuur voor tabel `user`
 --
 
 CREATE TABLE `user` (
@@ -156,33 +158,34 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `user`
+-- Gegevens worden geëxporteerd voor tabel `user`
 --
 
 INSERT INTO `user` (`user_id`, `company_id`, `auth_id`, `profilepicture`, `name`, `postalcode`, `city`, `streetname`, `house_number`, `phone_number`, `email_adres`, `hash_password`, `status`, `passwordForget_token`, `token_expireDate`) VALUES
 (1, 1, 3, NULL, 'admin', '4953PG', 'Emmen', 'Steenstraat', 23, '394394', 'steffanhenrybart@gmail.com', '$2y$10$TvYzf.Zi96CKrO2wt1FyUO42lx8TH0SkBU.ga039chPuZNYuTgCI.', 1, NULL, NULL),
 (2, 2, 1, NULL, 'Mac Donalds', '9531pg', 'Borger', 'Deksteen', 1, '324435', 'Donald@gmail.com', '$2y$10$LXSLDp3sCREnc3Al1zoHxucFokLTwFTyLEKhUpHl3IE3OkhDBgXba', 0, NULL, NULL),
 (3, 3, 2, NULL, 'fia', '3939PG', 'London', 'Kingstreet', 343, '934939', 'Fia@gmail.com', '$2y$10$7vrIGvKXUS.YbKFUgFP6HOjJlBq4RANJblBbZ9gRXGG2R6yX/K3Ui', 0, NULL, NULL),
-(4, NULL, 0, NULL, 'Andr&eacute;', '9531PG', 'Borger', 'Deksteen', 1, '0611775675', 'Test@gmail.com', '$2y$10$kZHavAjnf.OkwwSUlGMYfuHZVYXWmfcLkWERo2NUtQgPdat3A/Oo2', 1, NULL, NULL);
+(4, NULL, 0, NULL, 'Andr&eacute;', '9531PG', 'Borger', 'Deksteen', 1, '0611775675', 'Test@gmail.com', '$2y$10$kZHavAjnf.OkwwSUlGMYfuHZVYXWmfcLkWERo2NUtQgPdat3A/Oo2', 1, NULL, NULL),
+(9, 1, 4, NULL, 'Ticketbeheer', '6574AR', 'Amsterdam', 'straatingen', 98, '0623241210', 'koertvanhaan@gmail.com', '$2y$10$vR89oCj3k8/JncKXPTgVuO3sRxfmj6iPW02pUtebAwkmisx2mrfrq', 1, NULL, NULL);
 
 --
--- Indexes for dumped tables
+-- Indexen voor geëxporteerde tabellen
 --
 
 --
--- Indexes for table `authentication`
+-- Indexen voor tabel `authentication`
 --
 ALTER TABLE `authentication`
   ADD PRIMARY KEY (`auth_id`);
 
 --
--- Indexes for table `company`
+-- Indexen voor tabel `company`
 --
 ALTER TABLE `company`
   ADD PRIMARY KEY (`company_id`);
 
 --
--- Indexes for table `issue`
+-- Indexen voor tabel `issue`
 --
 ALTER TABLE `issue`
   ADD PRIMARY KEY (`issue_id`),
@@ -190,7 +193,7 @@ ALTER TABLE `issue`
   ADD KEY `user_id` (`user_id`);
 
 --
--- Indexes for table `issue_message`
+-- Indexen voor tabel `issue_message`
 --
 ALTER TABLE `issue_message`
   ADD PRIMARY KEY (`id`),
@@ -198,78 +201,78 @@ ALTER TABLE `issue_message`
   ADD KEY `message_id` (`message_id`);
 
 --
--- Indexes for table `message`
+-- Indexen voor tabel `message`
 --
 ALTER TABLE `message`
   ADD PRIMARY KEY (`message_id`);
 
 --
--- Indexes for table `user`
+-- Indexen voor tabel `user`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`user_id`),
   ADD KEY `company_id` (`company_id`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT voor geëxporteerde tabellen
 --
 
 --
--- AUTO_INCREMENT for table `authentication`
+-- AUTO_INCREMENT voor een tabel `authentication`
 --
 ALTER TABLE `authentication`
-  MODIFY `auth_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `auth_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT for table `company`
+-- AUTO_INCREMENT voor een tabel `company`
 --
 ALTER TABLE `company`
   MODIFY `company_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `issue`
+-- AUTO_INCREMENT voor een tabel `issue`
 --
 ALTER TABLE `issue`
   MODIFY `issue_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `issue_message`
+-- AUTO_INCREMENT voor een tabel `issue_message`
 --
 ALTER TABLE `issue_message`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT for table `message`
+-- AUTO_INCREMENT voor een tabel `message`
 --
 ALTER TABLE `message`
   MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT for table `user`
+-- AUTO_INCREMENT voor een tabel `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
--- Constraints for dumped tables
+-- Beperkingen voor geëxporteerde tabellen
 --
 
 --
--- Constraints for table `issue`
+-- Beperkingen voor tabel `issue`
 --
 ALTER TABLE `issue`
   ADD CONSTRAINT `CompanyRelaties` FOREIGN KEY (`company_id`) REFERENCES `company` (`company_id`),
   ADD CONSTRAINT `UserissueRelatie` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`);
 
 --
--- Constraints for table `issue_message`
+-- Beperkingen voor tabel `issue_message`
 --
 ALTER TABLE `issue_message`
   ADD CONSTRAINT `issuesRelatie` FOREIGN KEY (`issue_id`) REFERENCES `issue` (`issue_id`),
   ADD CONSTRAINT `messageRelatie` FOREIGN KEY (`message_id`) REFERENCES `message` (`message_id`);
 
 --
--- Constraints for table `user`
+-- Beperkingen voor tabel `user`
 --
 ALTER TABLE `user`
   ADD CONSTRAINT `CompanyRelatie` FOREIGN KEY (`company_id`) REFERENCES `company` (`company_id`);
