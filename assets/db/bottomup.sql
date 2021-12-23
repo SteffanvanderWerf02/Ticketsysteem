@@ -102,9 +102,10 @@ CREATE TABLE `issue` (
 --
 
 INSERT INTO `issue` (`issue_id`, `user_id`, `company_id`, `priority`, `category`, `sub_category`, `title`, `description`, `result`, `created_at`, `closed_at`, `frequency`, `appendex_url`, `status_timestamp`, `status`, `issue_action`) VALUES
-(1, 1, 1, 1, 'Ticket', 'Klachten', 'Mijn schep is kapot', 'Ik ging 1 keer scheppen en toen ging die kapot', 'Een nieuwe schep', '2021-12-23', NULL, 'N.V.T', NULL, '2021-12-23 10:51:21', 1, NULL),
-(2, 1, 1, 1, 'Dienst/service', 'Vijvers', 'Nieuw vijver', 'Ik wil graag een nieuwe vijver voor in mijn tuin', 'Een nieuwe vijver', '2021-12-23', NULL, 'Dagelijks', NULL, '2021-12-23 10:51:53', 1, NULL),
-(3, 1, 1, 1, 'Product', 'Gereedschap opslag', 'Boormachine', 'Ik wil een nieuwe boormachine', 'nieuwe boormachine', '2021-12-23', NULL, 'N.V.T', NULL, '2021-12-23 10:52:17', 1, NULL);
+(1, 3, 3, 1, 'Ticket', 'Klachten', 'Mijn schep is kapot', 'Ik ging 1 keer scheppen en toen ging die kapot', 'Een nieuwe schep', '2021-12-23', NULL, 'N.V.T', NULL, '2021-12-23 10:51:21', 1, NULL),
+(2, 2, 1, 1, 'Dienst/service', 'Vijvers', 'Nieuw vijver', 'Ik wil graag een nieuwe vijver voor in mijn tuin', 'Een nieuwe vijver', '2021-12-23', NULL, 'Dagelijks', NULL, '2021-12-23 10:51:53', 1, NULL),
+(3, 4, 1, 1, 'Dienst/service', 'Vijvers', 'Nieuw vijver', 'Ik wil graag een nieuwe vijver voor in mijn tuin', 'Een nieuwe vijver', '2021-12-23', "2021-12-23", 'Weekelijks', NULL, '2021-12-23 10:51:53', 4, NULL),
+(4, 2, 1, 1, 'Product', 'Gereedschap opslag', 'Boormachine', 'Ik wil een nieuwe boormachine', 'nieuwe boormachine', '2021-12-23', NULL, 'N.V.T', NULL, '2021-12-23 10:52:17', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -162,11 +163,10 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`user_id`, `company_id`, `auth_id`, `profilepicture`, `name`, `postalcode`, `city`, `streetname`, `house_number`, `phone_number`, `email_adres`, `hash_password`, `status`, `passwordForget_token`, `token_expireDate`) VALUES
-(1, 1, 3, NULL, 'admin', '4953PG', 'Emmen', 'Steenstraat', 23, '394394', 'steffanhenrybart@gmail.com', '$2y$10$TvYzf.Zi96CKrO2wt1FyUO42lx8TH0SkBU.ga039chPuZNYuTgCI.', 1, NULL, NULL),
+(1, 1, 3, NULL, 'admin', '4953PG', 'Emmen', 'Steenstraat', 23, '394394', 'chris.klunder@student.nhlstenden.com', '$2y$10$TvYzf.Zi96CKrO2wt1FyUO42lx8TH0SkBU.ga039chPuZNYuTgCI.', 1, NULL, NULL),
 (2, 2, 1, NULL, 'Mac Donalds', '9531pg', 'Borger', 'Deksteen', 1, '324435', 'Donald@gmail.com', '$2y$10$LXSLDp3sCREnc3Al1zoHxucFokLTwFTyLEKhUpHl3IE3OkhDBgXba', 0, NULL, NULL),
 (3, 3, 2, NULL, 'fia', '3939PG', 'London', 'Kingstreet', 343, '934939', 'Fia@gmail.com', '$2y$10$7vrIGvKXUS.YbKFUgFP6HOjJlBq4RANJblBbZ9gRXGG2R6yX/K3Ui', 0, NULL, NULL),
-(4, NULL, 0, NULL, 'Andr&eacute;', '9531PG', 'Borger', 'Deksteen', 1, '0611775675', 'Test@gmail.com', '$2y$10$kZHavAjnf.OkwwSUlGMYfuHZVYXWmfcLkWERo2NUtQgPdat3A/Oo2', 1, NULL, NULL),
-(9, 1, 4, NULL, 'Ticketbeheer', '6574AR', 'Amsterdam', 'straatingen', 98, '0623241210', 'koertvanhaan@gmail.com', '$2y$10$vR89oCj3k8/JncKXPTgVuO3sRxfmj6iPW02pUtebAwkmisx2mrfrq', 1, NULL, NULL);
+(4, 1, 4, NULL, 'Ticketbeheer', '6574AR', 'Amsterdam', 'straatingen', 98, '0623241210', 'koertvanhaan@gmail.com', '$2y$10$vR89oCj3k8/JncKXPTgVuO3sRxfmj6iPW02pUtebAwkmisx2mrfrq', 1, NULL, NULL);
 
 --
 -- Indexen voor geëxporteerde tabellen
