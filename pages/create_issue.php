@@ -193,7 +193,7 @@ if (isset($_POST['sendNewIssue'])) {
                                     </div>
                                 </div>
                             <?php
-                            } elseif ($issueType != "dienst/service" || $issueType != "product" || $issueType != "ticket") {
+                            } elseif ($issueType != "dienst/service" || $issueType != "Product" || $issueType != "ticket") {
                                 die("<div class='col-lg-12'>
                                         <div class='alert alert-danger'>
                                             Het gegeven issue type is nog niet gespecificeerd, ga terug naar de vorige pagina
