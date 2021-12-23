@@ -169,7 +169,7 @@ if (isset($_POST['sendNewIssue'])) {
                                             <select id="createIssueFrequency" class="form-control" name="createIssueFrequency">
                                                 <option value="N.V.T">N.V.T</option>
                                                 <option value="Dagelijks">Dagelijks</option>
-                                                <option value="Wekelijks">Weekelijks</option>
+                                                <option value="Wekelijks">Wekelijks</option>
                                                 <option value="Maandelijks">Maandelijks</option>
                                                 <option value="Jaarlijks">Jaarlijks</option>
                                             </select>

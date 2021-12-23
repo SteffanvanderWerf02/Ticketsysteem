@@ -10,7 +10,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
 
     <head>
         <?php include_once("../components/head.html") ?>
-        <title>Bottom Up - Ticket detail</title>
+        <title>Bottom Up - Issue detail</title>
     </head>
 
     <body>
@@ -42,6 +42,21 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                                 mysqli_stmt_bind_param($stmt, "i", $id) or die(mysqli_error($db));
                                 mysqli_stmt_execute($stmt) or die(mysqli_error($db));
                                 mysqli_stmt_close($stmt);
+                            
+                            }
+                            if($issueCat == "Dienst/service" && $_SESSION['accountType'] == 3 || $issueCat == "Dienst/service" && $_SESSION['accountType'] == 4 ) {
+                                if ($frequency = filter_input(INPUT_POST, 'issueFreq', FILTER_SANITIZE_FULL_SPECIAL_CHARS)){
+                                    $stmt = mysqli_prepare($db, " 
+                                            UPDATE  issue 
+                                            SET     frequency = ?
+                                            WHERE   issue_id = ?
+                                    ") or die(mysqli_error($db));
+                                    mysqli_stmt_bind_param($stmt, "si", $frequency, $id) or die(mysqli_error($db));
+                                    mysqli_stmt_execute($stmt) or die(mysqli_error($db));
+                                    mysqli_stmt_close($stmt);
+                                } else {
+                                    echo "<div class='alert alert-danger'>Uw herhalingsniveau komt niet overeen met de opties</div>";
+                                }
                             }
                             echo "<div class='alert alert-success'>Uw issue is succesvol aangepast</div>";
                         } else {
@@ -59,39 +74,33 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
         }
 
         $sql = "
-            SELECT  issue_id,
-                    priority,
-                    category,
-                    sub_category,
-                    title,
-                    `description`,
-                    `created_at`,
-                    frequency,
-                    `status`,
-                    appendex_url,
-                    issue_action 
+            SELECT  issue.issue_id,
+                    issue.priority,
+                    issue.category,
+                    issue.sub_category,
+                    issue.title,
+                    issue.`description`,
+                    issue.`created_at`,
+                    issue.frequency,
+                    issue.`status`,
+                    issue.appendex_url,
+                    issue.issue_action,
+                    issue.company_id,
+                    company.name,
+                    user.name,
+                    issue.result
             FROM    issue
+            INNER JOIN user
+            ON issue.user_id = user.user_id
+            LEFT JOIN   company
+            ON  issue.company_id = company.company_id
             WHERE   issue_id = ?
         ";
 
         $stmt = mysqli_prepare($db, $sql) or die(mysqli_error($db));
         mysqli_stmt_bind_param($stmt, "i", $id);
         mysqli_stmt_execute($stmt) or die(mysqli_error($db));
-        mysqli_stmt_bind_result($stmt, $issue_id, $priority, $category, $subCat, $title, $description, $created_at, $frequency, $status, $appendex, $issue_action);
-        mysqli_stmt_fetch($stmt);
-        mysqli_stmt_close($stmt);
-
-        $sql = "
-            SELECT  `name`
-            FROM    user
-            WHERE   `user_id` = ?
-        ";
-
-        $stmt = mysqli_prepare($db, $sql) or die(mysqli_error($db));
-
-        mysqli_stmt_bind_param($stmt, "i", $_SESSION['userId']);
-        mysqli_stmt_execute($stmt) or die(mysqli_error($db));
-        mysqli_stmt_bind_result($stmt, $name);
+        mysqli_stmt_bind_result($stmt, $issue_id, $priority, $category, $subCat, $title, $description, $created_at, $frequency, $status, $appendex, $issue_action, $companyId, $companyName, $name, $result);
         mysqli_stmt_fetch($stmt);
         mysqli_stmt_close($stmt);
 
@@ -148,7 +157,8 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                     <div class="row mt-2 mb-2">
                         <div class="col-lg-10">
                             <h2 class="m-0">Id #<?= $issue_id; ?> | <?= $title; ?> | <?= date("d-m-Y", strtotime($created_at)) ?> </h2>
-                            <h4 class="m-0"><?= $description; ?></h4>
+                            <p><b>Omschrijving: </b><?= $description; ?></p>
+                            <p><b>Gewenst Resultaat: </b><?= $result; ?></p>
                         </div>
                         <div class="col-lg-2 my-auto text-right">
                             <?php
@@ -172,7 +182,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                     <div class="row">
                         <div class="col-lg-6">
 
-                            <table class="t_detail_table">
+                            <table class="t_detail_table mb-3">
                                 <tbody class="t_detail_tbody">
                                     <tr>
                                         <td class="text-left td-left">Status:</td>
@@ -215,6 +225,30 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                                             ?>
                                         </td>
                                     </tr>
+                                    <?php if ($category == "Dienst/service" && $_SESSION['accountType'] == 2 || $category == "Dienst/service" && $_SESSION['accountType'] == 3 || $category == "Dienst/service" && $_SESSION['accountType'] == 4 ) { ?>
+                                        <tr>
+                                            <td class="text-left td-left">Herhaling:</td>
+                                            <td class="td-right text-right">
+                                                <?php
+                                                if (isset($_GET['edit']) && $_SESSION["accountType"] == 3 || isset($_GET['edit']) && $_SESSION['accountType'] == 4) {
+                                                ?>
+                                                    <select name="issueFreq" class="form-control" form="editForm">
+                                                        <option value="N.V.T" <?= ($frequency == "N.V.T" ? "selected" : "") ?>>N.V.T</option>
+                                                        <option value="Dagelijks" <?= ($frequency == "Dagelijks" ? "selected" : "") ?>>Dagelijks</option>
+                                                        <option value="Wekelijks" <?= ($frequency == "Wekelijks" ? "selected" : "") ?>>Wekelijks</option>
+                                                        <option value="Maandelijks" <?= ($frequency == "Maandelijks" ? "selected" : "") ?>>Maandelijks</option>
+                                                        <option value="Jaarlijks" <?= ($frequency == "Jaarlijks" ? "selected" : "") ?>>Jaarlijks</option>
+                                                    </select>
+                                                <?php
+                                                } else {
+                                                ?>
+                                                    <?= $frequency; ?>
+                                                <?php
+                                                }
+                                                ?>
+                                            </td>
+                                        </tr>
+                                    <?php } ?>
                                     <tr>
                                         <td class="text-left td-left">Categorie:</td>
                                         <td class="td-right text-right">
@@ -260,6 +294,16 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                                         </td>
                                     </tr>
                                     <?php
+                                    if ($companyId != NULL) {
+                                    ?>
+                                    <tr>
+                                        <td class="text-left td-left">Bedrijf:</td>
+                                        <td class="td-right text-right">
+                                            <?= $companyName; ?>
+                                        </td>
+                                    </tr>
+                                    <?php 
+                                    }
                                     if ($appendex != NULL) {
                                     ?>
                                         <tr>
