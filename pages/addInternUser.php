@@ -156,7 +156,10 @@ if (isset($_POST['submit'])) {
                                 <?php
                                 if ($_SESSION['accountType'] == 3) {
                                     echo "<option value='3'>Beheer</option>";
-                                }else {
+                                    echo "<option value='4'>Ticketmaster</option>";
+                                }elseif ($_SESSION['accountType'] == 4) {
+                                    echo "<option value='4'>Ticketmaster</option>";
+                                } else {
                                     echo "<option value='2'>Zakelijk</option>";
                                 }
                                 ?>
