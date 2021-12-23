@@ -149,7 +149,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                             }
                             if ($_SESSION["accountType"] == 3) {
                             ?>
-                                <a href="./issue-detail.php?id=<?= $id ?>&amp;edit=true" class="btn d-inline btn-primary"><span class="material-icons align-middle">edit</span></a>
+                                <a href="./issue_detail.php?id=<?= $id ?>&amp;edit=true" class="btn d-inline btn-primary"><span class="material-icons align-middle">edit</span></a>
                             <?php
                             }
                             ?>
