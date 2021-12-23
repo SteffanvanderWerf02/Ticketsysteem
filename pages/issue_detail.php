@@ -145,6 +145,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                                 <form id="editForm" class="d-inline" action="<?= htmlentities($_SERVER['PHP_SELF']) ?>?id=<?= $id ?>" method="POST">
                                     <button class="btn d-inline btn-primary" name="updateIssue" type="submit"><span class="material-icons align-middle">done</span></button>
                                 </form>
+                                
                             <?php
                             }
                             if ($_SESSION["accountType"] == 3) {
@@ -189,9 +190,9 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                                             if (isset($_GET['edit']) && $_SESSION["accountType"] == 3) {
                                             ?>
                                                 <select name="issuePir" class="form-control" form="editForm">
-                                                    <option value="0" <?= ($priority == 0 ? "selected" : "") ?>>Laag</option>
-                                                    <option value="1" <?= ($priority == 1 ? "selected" : "") ?>>Gemiddeld</option>
-                                                    <option value="2" <?= ($priority == 2 ? "selected" : "") ?>>Hoog</option>
+                                                    <option value="1" <?= ($priority == 1 ? "selected" : "") ?>>Laag</option>
+                                                    <option value="2" <?= ($priority == 2 ? "selected" : "") ?>>Gemiddeld</option>
+                                                    <option value="3" <?= ($priority == 3 ? "selected" : "") ?>>Hoog</option>
                                                 </select>
                                             <?php
                                             } else {
@@ -208,10 +209,10 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                                             <?php
                                             if (isset($_GET['edit']) && $_SESSION["accountType"] == 3) {
                                             ?>
-                                                <select name="issueCat" class="form-control" form="editForm">
+                                                <select name="issueCat" class="form-control" form="editForm" id="test">
                                                     <option value="Dienst/service" <?= ($category == "Dienst/service" ? "selected" : "") ?>>Dienst / Service</option>
                                                     <option value="Ticket" <?= ($category == "Ticket" ? "selected" : "") ?>>Ticket</option>
-                                                    <option value="Product" <?= ($category == "Product" ? "selected" : "") ?>>Product aanvraag</option>
+                                                    <option value="Product" <?= ($category == "Product" ? "selected" : "") ?>>Product</option>
                                                 </select>
                                             <?php
                                             } else {
@@ -291,6 +292,14 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                 </div>
             </div>
         </div>
+        <script>
+            $(document).ready(function(){
+                $("#test").on("change", function(){
+                    let form = $("#editForm");
+                    form.find("button[type=submit]").click();
+                })
+            })
+        </script>
         <!-- Footer include -->
 
     <?php
