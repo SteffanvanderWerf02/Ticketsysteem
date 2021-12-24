@@ -64,7 +64,7 @@ if (isset($_POST['sendNewIssue'])) {
                             $stmt = mysqli_prepare($db, $sql) or die(mysqli_error($db));
                             mysqli_stmt_bind_param($stmt, 'iiissssssi', $_SESSION['userId'], $_SESSION['companyId'], $priority, $issueType, $subCategory, $title, $description, $result, $frequency, $status);
                             mysqli_stmt_execute($stmt) or die(mysqli_error($db));
-                            $lastIssueId = mysqli_insert_id($db);
+                            $lastIssueId = getLastId($db);
                             mysqli_stmt_close($stmt);
 
                             if (checkIfFile("issueFile")) {

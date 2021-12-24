@@ -2,7 +2,7 @@
 include_once("../config.php");
 include_once("../connection.php");
 include_once("../components/functions.php");
-$acceptedFileTypesPP = ["image/jpg", "image/jpeg", "image/png", "image/gif"];
+
 
 if (isset($_POST["deletepfp"]) && $id = filter_input(INPUT_POST, "deletepfp", FILTER_SANITIZE_NUMBER_INT)) {
     $stmt = mysqli_prepare($db, "
@@ -95,21 +95,20 @@ if (isset($_POST['userSubmit'])) {
                     if (!checkFileExist("../assets/img/pfpic/" . $_SESSION["userId"] . "/", $_FILES["pfp"]["name"])) {
                         if (deleteFile("../assets/img/pfpic/" . $_SESSION["userId"] . "/")) {
                             //for mac
-                            if(OS){
-                            if (uploadFile($db, "pfp", "user", "profilepicture", "user_id", $_SESSION["userId"], "/assets/img/pfpic/" . $_SESSION["userId"] . "/")) {
-                                echo "<div class='alert alert-success'>Uw profielfoto is succesvol geüpload</div>";
+                            if (OS) {
+                                if (uploadFile($db, "pfp", "user", "profilepicture", "user_id", $_SESSION["userId"], "/assets/img/pfpic/" . $_SESSION["userId"] . "/")) {
+                                    echo "<div class='alert alert-success'>Uw profielfoto is succesvol geüpload</div>";
+                                } else {
+                                    echo "<div class='alert alert-danger'>Uw profielfoto is niet toegevoegd, probeer het opnieuw</div>";
+                                }
                             } else {
-                                echo "<div class='alert alert-danger'>Uw profielfoto is niet toegevoegd, probeer het opnieuw</div>";
+                                //for windwos
+                                if (uploadFile($db, "pfp", "user", "profilepicture", "user_id", $_SESSION["userId"], "../assets/img/pfpic/" . $_SESSION["userId"] . "/")) {
+                                    echo "<div class='alert alert-success'>Uw profielfoto is succesvol geüpload</div>";
+                                } else {
+                                    echo "<div class='alert alert-danger'>Uw profielfoto is niet toegevoegd, probeer het opnieuw</div>";
+                                }
                             }
-                        } else{
-                            //for windwos
-                            if (uploadFile($db, "pfp", "user", "profilepicture", "user_id", $_SESSION["userId"], "../assets/img/pfpic/" . $_SESSION["userId"] . "/")) {
-                                echo "<div class='alert alert-success'>Uw profielfoto is succesvol geüpload</div>";
-                            } else {
-                                echo "<div class='alert alert-danger'>Uw profielfoto is niet toegevoegd, probeer het opnieuw</div>";
-                            }
-
-                        }
                         }
                     } else {
                         echo "<div class='alert alert-danger'>Uw profielfoto bestaat al</div>";
@@ -172,6 +171,8 @@ if (isset($_POST['companySubmit'])) {
 <head>
     <?php include_once("../components/head.html") ?>
     <title>Bottom up - Profiel</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
 </head>
 
 <body>
@@ -254,12 +255,12 @@ if (isset($_POST['companySubmit'])) {
                         <div class="row mb-3">
                             <div class="col-lg-2">
                                 <?php
-                                if(OS){
-                                    echo  "<img src='..".$profilePicture."' class='profileprev' alt='Profiel Foto'>";
-                                } else{
-                                   echo "<img src= '".$profilePicture."' class='profileprev' alt='Profiel Foto'>";
+                                if (OS) {
+                                    echo  "<img data-fancybox='gallery' src='.." . $profilePicture . "' class='profileprev' alt='Profiel Foto'>";
+                                } else {
+                                    echo "<img data-fancybox='gallery' src= '" . $profilePicture . "' class='profileprev' alt='Profiel Foto'>";
                                 }
-                               
+
                                 ?>
 
                             </div>
@@ -425,7 +426,16 @@ if (isset($_POST['companySubmit'])) {
     </div>
     </div>
     </div>
-
+    <script>
+        Fancybox.bind('[data-fancybox="gallery"]', {
+            caption: function(fancybox, carousel, slide) {
+                return (
+                    `${slide.index + 1} / ${carousel.slides.length} <br />` + slide.caption
+                );
+            },
+        });
+    </script>
+    </script>
 
     <!-- Footer include -->
     <?php include_once("../components/footer.php") ?>

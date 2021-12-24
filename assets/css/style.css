@@ -714,7 +714,9 @@ label {
   font-size: 25px;
   color: grey;
 }
-
+.dec-underline {
+  text-decoration: underline;
+}
 .td-left {
   border-bottom: 1px solid grey;
   border-right: 1px solid grey;
@@ -736,23 +738,36 @@ label {
   overflow: auto;
   position: relative;
 }
+.img-appendex {
+  display: block;
+  height: 150px;
+  max-width: 100%;
+}
 .form-container .message-view:first-child {
   position: sticky;
   top: 0;
   z-index: 3;
-  background: #1c9941;
+  background: var(--green);
+  margin: 0 0 15px;
 }
 .issue_choice {
   text-align: center;
+  border-bottom: 1px solid grey;
 }
 
 .action_message {
   font-size: 2rem;
   font-weight: bold;
 }
-
-.message-view {
+.message-view .header-messages {
+  margin: 0;
+  padding: 15px 0;
+}
+.form-container .message-view:nth-child(2) {
   border-top: 1px solid grey;
+}
+.message-view {
+  
   border-bottom: 1px solid grey;
   margin-bottom: 30px;
 }
