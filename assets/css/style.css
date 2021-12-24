@@ -25,7 +25,7 @@ body {
 }
 
 .material-icons {
-  font-size: 1rem;
+  font-size: 1rem!important;
 }
 
 textarea {
@@ -526,7 +526,7 @@ header .nav a {
 
 header .nav span.material-icons {
   color: var(--white-color);
-  font-size: 2rem;
+  font-size: 2rem!important;
 }
 
 .profilepic {
