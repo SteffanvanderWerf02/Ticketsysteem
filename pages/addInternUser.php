@@ -1,8 +1,8 @@
 <?php
 include_once("../config.php");
-include_once("../connection.php");
 include_once("../components/functions.php");
-$acceptedFileTypesPP = ["image/jpg", "image/jpeg", "image/png", "image/gif"];
+include_once("../connection.php");
+
 
 // Checking if values have been set & filtering them
 if (isset($_POST['submit'])) {
@@ -62,7 +62,7 @@ if (isset($_POST['submit'])) {
                                             mysqli_stmt_bind_param($stmt, "iissssssss", $_SESSION['companyId'], $auth, $username, $city, $streetname, $postalcode, $housenumber, $phonenumber, $email, $hash_password);
                                             mysqli_stmt_execute($stmt) or die(mysqli_error($db));
                                             mysqli_stmt_close($stmt);
-                                            $lastUserId = mysqli_insert_id($db);
+                                            $lastUserId = getLastId($db);
                                         } else {
                                             echo "<div class='alert alert-danger'>Deze naam of dit e-mailadres bestaat al.</div>";
                                         }

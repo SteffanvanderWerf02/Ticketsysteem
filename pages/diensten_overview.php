@@ -1,6 +1,6 @@
 <?php include_once("../config.php"); ?>
-<?php include_once("../connection.php"); ?>
 <?php include_once("../components/functions.php");
+include_once("../connection.php");
 
 // Checking if there are any search requests to filter on
 if (isset($_GET['filter'])) {

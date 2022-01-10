@@ -1,6 +1,8 @@
 <?php
 include_once("./config.php");
+include_once("./components/functions.php");
 include_once("./connection.php");
+
 
 // Delete all session data when logout button is pressed
 if (isset($_POST['logout'])) {
@@ -108,6 +110,8 @@ if (isset($_POST['login'])) {
         echo "<div class='alert alert-danger'>Uw gebruikersnaam is niet ingevuld</div>";
     }
 }
+
+
 ?>
 <!DOCTYPE html>
 <html lang="nl" class="h-100">

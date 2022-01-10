@@ -5,7 +5,6 @@
  * @param: $type: gives type of debugging
  * @return: Array: $data, Debugtype: $type.
  */
-
 function debugData($data, $type = "print_r")
 {
     $return = '<pre>';
@@ -23,16 +22,45 @@ function debugData($data, $type = "print_r")
 }
 
 /**
+ * @param: $db: returns database object 
+ * @return: Int : id
+ */
+
+function getLastId($db)
+{
+    return mysqli_insert_id($db);
+}
+
+
+/**
+ * @param: $loggedIn: true or false
+ * @param: $link: current url
+ * @return: Error message or true
+ */
+
+function CheckAcces($loggedIn, $link)
+{
+    if (substr($link, -9) == "index.php" || strpos($link, "password_forget.php") || substr($link, -14) == "Ticketsysteem/") {
+        return true;
+    } else {
+        if (!$loggedIn) {
+            header("HTTP/1.1 403");
+            die(include("../error/403.php"));
+        } else {
+            return true;
+        }
+    }
+}
+
+/**
  * @param: $db: return mysqli object
  * @param: $userId: returns id from user
  * @param: $message: returns the message that has been typed
  * @param: $issueId: returns id from the url
- * @return: Array: $data, Debugtype: $type.
  */
 
 function uploadMessage($db, $userId, $message, $issueId)
 {
-
     $sql = "INSERT
             INTO    `message`
             (
@@ -50,11 +78,17 @@ function uploadMessage($db, $userId, $message, $issueId)
     mysqli_stmt_bind_param($stmt, "is", $userId, $message) or die(mysqli_error($db));
     mysqli_stmt_execute($stmt) or die(mysqli_error($db));
     mysqli_stmt_close($stmt);
-    $lastMessageId = mysqli_insert_id($db);
-    getLastId($db, $lastMessageId, $issueId);
+
+    linkMessagetoIssue($db, getLastId($db), $issueId);
 }
 
-function getLastId($db, $messageId, $issueId)
+/**
+ * @param: $db: return mysqli object
+ * @param: $messageId: returns id from message
+ * @param: $issueId: returns id from the url
+ */
+
+function linkMessagetoIssue($db, $messageId, $issueId)
 {
     $sql = "INSERT
             INTO    `issue_message` 
@@ -77,9 +111,15 @@ function getLastId($db, $messageId, $issueId)
     mysqli_stmt_close($stmt);
 }
 
-function insertStatus($db, $userId, $issueId, $status)
-{
+/**
+ * @param: $db: return mysqli object
+ * @param: $userId: returns id from user
+ * @param: $issueId: returns id from the url
+ * @param: $action: returns which user has to take action
+ */
 
+function updateIssueAction($db, $userId, $issueId, $action)
+{
     $sql = "
             INSERT
             INTO    `message`
@@ -95,7 +135,7 @@ function insertStatus($db, $userId, $issueId, $status)
            ";
 
     $stmt = mysqli_prepare($db, $sql) or die(mysqli_error($db));
-    if ($status == 1) {
+    if ($action == 1) {
         $message = "De actie ligt bij: De klant";
     } else {
         $message = "De actie ligt bij: Bottom Up";
@@ -104,9 +144,73 @@ function insertStatus($db, $userId, $issueId, $status)
     mysqli_stmt_execute($stmt) or die(mysqli_error($db));
     mysqli_stmt_close($stmt);
 
-    $lastMessageId = mysqli_insert_id($db);
-    getLastId($db, $lastMessageId, $issueId);
+    linkMessagetoIssue($db, getLastId($db), $issueId);
 }
+
+/**
+ * @param: $db: return mysqli object
+ * @param: $userId: returns id from user
+ * @param: $issueId: returns id from the url
+ * @param: $status: returns int with status
+ * @return: true or false
+ */
+
+function issueStatusUpdate($db, $userId, $issueId, $status)
+{
+    $stmt = mysqli_prepare($db, " 
+        SELECT issue.status
+        FROM issue
+        WHERE issue_id = ?
+    ") or die(mysqli_error($db));
+    mysqli_stmt_bind_param($stmt, "i", $issueId) or die(mysqli_error($db));
+    mysqli_stmt_execute($stmt) or die(mysqli_error($db));
+    mysqli_stmt_bind_result($stmt, $dbStatus);
+    mysqli_stmt_fetch($stmt);
+    mysqli_stmt_close($stmt);
+    if ($dbStatus != $status) {
+
+        $stmt = mysqli_prepare($db, " 
+        INSERT
+        INTO    `message`
+        (
+                `user_id`,
+                `date`,
+                `message`
+        ) 
+        VALUES 
+        (
+                ?,
+                NOW(),
+                ?
+        )
+    ") or die(mysqli_error($db));
+        $message = "De status van uw issue is: ";
+        if ($status == 1) {
+            $message .= "Nieuw";
+        } else if ($status == 2) {
+            $message .= "In behandeling";
+        } else if ($status == 3) {
+            $message .= "On hold";
+        } else {
+            $message .= "Gesloten";
+        }
+        mysqli_stmt_bind_param($stmt, "is", $userId, $message) or die(mysqli_error($db));
+        mysqli_stmt_execute($stmt) or die(mysqli_error($db));
+        mysqli_stmt_close($stmt);
+
+        linkMessagetoIssue($db, getLastId($db), $issueId);
+
+        return true;
+    } else {
+        return false;
+    }
+}
+
+/**
+ * @param: $db: return mysqli object
+ * @param: $issueId: returns id from the url
+ * @return: Array: Messages
+ */
 
 function getMessage($db, $issueId)
 {
@@ -133,14 +237,24 @@ function getMessage($db, $issueId)
     while (mysqli_stmt_fetch($stmt)) {
         if ($message == "De actie ligt bij: Bottom Up" || $message == "De actie ligt bij: De klant") {
             $return .= "<div class='col-lg-12 issue_choice'>";
+            $return .= "<span class='d-block text-right mt-1'>" . date("H:i d-m-Y", strtotime($message_date)) . "</span>";
+            $return .= "<p class='action_message'>{$message}</p>";
+            $return .= "</div>";
+        } else if ($message == "De status van uw issue is: Nieuw" || $message == "De status van uw issue is: In behandeling" || $message == "De status van uw issue is: On hold" || $message == "De status van uw issue is: Gesloten") {
+            $return .= "<div class='col-lg-12 issue_choice'>";
+            $return .= "<span class='d-block text-right mt-1'>" . date("H:i d-m-Y", strtotime($message_date)) . "</span>";
             $return .= "<p class='action_message'>{$message}</p>";
             $return .= "</div>";
         } else {
             $return .= "<div class='col-lg-12 message-view'>";
-            $return .= "<p>{$name}<span class='float-right'>" . date("H:i d-m-Y", strtotime($message_date)) . "</span></p>";
+            $return .= "<p>" . ucFirst($name) . "<span class='float-right'>" . date("H:i d-m-Y", strtotime($message_date)) . "</span></p>";
             $return .= "<p class='title-messages'>" . nl2br($message) . "</p>";
             if ($appendex_url != NULL) {
-                $return .= "<p class='title-message'><a target='blank' href='{$appendex_url}'>Bijlage Bekijken.</a></p>";
+                $fileInfo = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $appendex_url);
+                if (in_array($fileInfo, ["image/jpg", "image/jpeg", "image/png", "image/gif"])) {
+                    $return .= "<p class='title-message mt-4'><img data-fancybox='gallery' class='img-appendex pointer' src='{$appendex_url}' alt='bijlagen'></p>";
+                }
+                $return .= "<p class='title-message'><a target='blank' class='dec-underline' href='{$appendex_url}'>Bijlage Bekijken.</a></p>";
             }
             $return .= "</div>";
         }
@@ -149,6 +263,12 @@ function getMessage($db, $issueId)
 
     return $return;
 }
+
+/**
+ * @param: $db: return mysqli object
+ * @param: $issueId: returns id from the url
+ * @return: int: number that signifies who has to take action
+ */
 
 function getActionIssue($db, $issueId)
 {
@@ -167,9 +287,14 @@ function getActionIssue($db, $issueId)
     return $issueAction;
 }
 
+/**
+ * @param: $actionValue int: Number of action
+ * @return: String: changes number into word
+ */
+
 function issueActionCheck($actionValue)
 {
-    $actionStat = [NULL => "Bottom Up", 1 => "klant", 2 => "Bottom Up"];
+    $actionStat = [NULL => "Bottom Up", 1 => "Klant", 2 => "Bottom Up"];
 
     return $actionStat[$actionValue];
 }
@@ -180,6 +305,7 @@ function issueActionCheck($actionValue)
  * @param: $issueAction: returns the action which has been chosen for the customer or admin
  * @return: Object: $db, Int: $issueId, Int: $issueAction.
  */
+
 function uploadActionIssue($db, $issueId, $issueAction)
 {
     $sql = "UPDATE  issue 
@@ -192,6 +318,11 @@ function uploadActionIssue($db, $issueId, $issueAction)
     mysqli_stmt_close($stmt);
 }
 
+/**
+ * @param: $db: returns mysqli object
+ * @param: $id: returns the issueId that belongs to the issue in question
+ */
+
 function deleteIssue($db, $id)
 {
     $stmt = mysqli_prepare($db, "
@@ -203,6 +334,17 @@ function deleteIssue($db, $id)
     mysqli_stmt_execute($stmt) or die(mysqli_error($db));
     mysqli_stmt_close($stmt);
 }
+
+/**
+ * @param: $db: returns mysqli object
+ * @param: $companyId: returns the issueId that belongs to the issue in question
+ * @param: $userId: returns the action which has been chosen for the customer or admin
+ * @param: $issueType: returns string with the issue type
+ * @param: $filterStatus: returns int with status number
+ * @param: $searchId: returns int with id of search action
+ * @param: $searchTitle: returns string with title of the search action
+ * @return: Table with issue overview
+ */
 
 function getIssueOverview($db, $companyId, $userId, $issueType, $filterStatus, $searchId, $searchTitle)
 {
@@ -304,18 +446,18 @@ function getIssueOverview($db, $companyId, $userId, $issueType, $filterStatus, $
     mysqli_stmt_bind_result($stmt, $issueId, $createdAt, $title, $priority, $status, $category, $frequency, $subCategory, $userName, $companyName, $closedAt);
     if (mysqli_stmt_num_rows($stmt) > 0) {
         while (mysqli_stmt_fetch($stmt)) {
-            if($filterStatus != 4 && $status == 4) {
+            if ($filterStatus != 4 && $status == 4) {
                 $lineThrough = "table_linethrough";
             } else {
                 $lineThrough = "";
             }
             $return .= "<tr class='action {$lineThrough}' data-href='issue_detail.php?id={$issueId}'>
                     <td>{$issueId}</td>
-                    <td>{$userName}</td>
+                    <td>" . ucFirst($userName) . "</td>
                     <td>{$createdAt}</td>";
             ($closedAt == NULL) ? $return .= "<td>N.V.T.</td>"  : $return .= "<td>{$closedAt}</td>";
 
-                    $return .= "<td>{$title}</td>";
+            $return .= "<td>{$title}</td>";
             ($companyId == NULL) ? ""  : $return .= "<td>{$companyName}</td> <td>{$frequency}</td> ";
 
             $return .= "
@@ -336,7 +478,12 @@ function getIssueOverview($db, $companyId, $userId, $issueType, $filterStatus, $
 
     return $return;
 }
-//this function makes from merged to seperate and individual values for the bind param function
+
+/**
+ * @param: $arr: an array with bind param values
+ * @return: an array with specific references
+ * this function makes from merged to seperate and individual values for the bind param function
+ */
 function makeValuesReferenced($arr)
 {
     $refs = array();
@@ -346,12 +493,22 @@ function makeValuesReferenced($arr)
     return $refs;
 }
 
+/**
+ * @param: $priorityValue int: Number of priority
+ * @return: String: changes number into word
+ */
+
 function priorityCheck($priorityValue)
 {
     $priorityStat = [1 => "Laag", 2 => "Gemiddeld", 3 => "Hoog"];
 
     return $priorityStat[$priorityValue];
 }
+
+/**
+ * @param: $statusValue int: Number of status
+ * @return: String: changes number into word
+ */
 
 function statusCheck($statusValue)
 {
@@ -360,10 +517,20 @@ function statusCheck($statusValue)
     return $statusStat[$statusValue];
 }
 
+/**
+ * @param: $file: returns file object with properties
+ * @return: true or false
+ */
+
 function checkIfFile($file)
 {
     return is_uploaded_file($_FILES[$file]["tmp_name"]);
 }
+
+/**
+ * @param: $fileName: returns file name
+ * @return: true or false
+ */
 
 function checkFileSize($fileName)
 {
@@ -373,6 +540,12 @@ function checkFileSize($fileName)
         return false;
     }
 }
+
+/**
+ * @param: $fileName: returns file name
+ * @param: $mimeArray: returns array with MIME types
+ * @return: true or false
+ */
 
 function checkFileType($fileName, $mimeArray)
 {
@@ -388,6 +561,12 @@ function checkFileType($fileName, $mimeArray)
     }
 }
 
+/**
+ * @param: $issueId: returns id of issue
+ * @param: $path: returns file path
+ * @return: true or false
+ */
+
 function makeFolder($issueId, $path)
 {
     $directory = $path . $issueId;
@@ -398,12 +577,21 @@ function makeFolder($issueId, $path)
     return true;
 }
 
-
+/**
+ * @param: $directory: returns directory to file
+ * @param: $fileName: returns file name
+ * @return: true or false
+ */
 
 function checkFileExist($directory, $fileName)
 {
     return file_exists($directory . $fileName);
 }
+
+/**
+ * @param: $directory: returns directory to file
+ * @return: true
+ */
 
 function deleteFile($directory)
 {
@@ -416,6 +604,17 @@ function deleteFile($directory)
 
     return true;
 }
+
+/**
+ * @param: $db: returns mysqli object
+ * @param: $file: returns file object with properties
+ * @param: $tableName: returns name of the selected table
+ * @param: $recordName: returns name of selected record
+ * @param: $relationId string: name of relation
+ * @param: $Id int: relation ID
+ * @param: $directory: returns directory
+ * @return: true or false
+ */
 
 function uploadFile($db, $file, $tableName, $recordName, $relationId, $Id, $directory)
 {
@@ -435,14 +634,20 @@ function uploadFile($db, $file, $tableName, $recordName, $relationId, $Id, $dire
 
     $stmt = mysqli_prepare($db, $query) or die(mysqli_error($db));
     call_user_func_array(array($stmt, "bind_param"), makeValuesReferenced(array_merge(array($type), $params)));
-    
-    if (move_uploaded_file($_FILES[$file]["tmp_name"], realpath(dirname(getcwd())).$directory . $_FILES[$file]["name"]) && mysqli_stmt_execute($stmt)) {
+
+    if (move_uploaded_file($_FILES[$file]["tmp_name"], realpath(dirname(getcwd())) . $directory . $_FILES[$file]["name"]) && mysqli_stmt_execute($stmt)) {
         mysqli_stmt_close($stmt);
         return true;
     } else {
         return false;
     }
 }
+
+/**
+ * @param: $category string: returns category of issue 
+ * @param: $subCat string: returns subcategory of issue
+ * @return: returns options for dropdown menu
+ */
 
 function getCatOptions($category, $subCat = "")
 {

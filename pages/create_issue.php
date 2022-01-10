@@ -1,7 +1,7 @@
 <?php
 include_once("../config.php");
-include_once("../connection.php");
 include_once("../components/functions.php");
+include_once("../connection.php");
 
 // Checking if the values have been set & filtering them
 $issueType = filter_input(INPUT_GET, 'issueType', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -67,7 +67,7 @@ if (isset($_POST['sendNewIssue'])) {
                             $stmt = mysqli_prepare($db, $sql) or die(mysqli_error($db));
                             mysqli_stmt_bind_param($stmt, 'iiissssssi', $_SESSION['userId'], $_SESSION['companyId'], $priority, $issueType, $subCategory, $title, $description, $result, $frequency, $status);
                             mysqli_stmt_execute($stmt) or die(mysqli_error($db));
-                            $lastIssueId = mysqli_insert_id($db);
+                            $lastIssueId = getLastId($db);
                             mysqli_stmt_close($stmt);
 
                             // Checking if the file meets the requirements
@@ -133,7 +133,7 @@ if (isset($_POST['sendNewIssue'])) {
     <div id="content" class="container">
         <div class="row">
             <div class="col-lg-12">
-                <h1><?php echo ucFirst($issueType) . " "; ?>Toevoegen</h1>
+                <h1><?php echo ucFirst($issueType) . " "; ?> Aanvraag</h1>
             </div>
             <div class="col-lg-12">
                 <form method="post" action="" enctype="multipart/form-data">
@@ -150,7 +150,7 @@ if (isset($_POST['sendNewIssue'])) {
                                 </div>
                                 <div class="row mb-3">
                                     <div class="col-lg-6">
-                                    <label for="createIssueCategory">sub-category</label>
+                                    <label for="createIssueCategory">sub-categorie</label>
                                     <select id="createIssueCategory" name="createIssueCategory" class="form-control">
                                     <?= getCatOptions(str_replace(' ', '', $issueType))?>  
                                     </select>
@@ -188,7 +188,7 @@ if (isset($_POST['sendNewIssue'])) {
                                 ?>
                                 <div class="row mb-3">
                                     <div class="col-lg-6">
-                                        <label for="createIssueFile" class="pointer">Bijlagen</label>
+                                        <label for="createIssueFile" class="pointer">Bijlagen (Optioneel)</label>
                                         <div class="custom-file">
                                             <input type="file" name="issueFile" title="Kies uw bijlagen" name="createIssueFile" class="custom-file-input" id="createIssueFile">
                                             <label class="custom-file-label" for="createIssueFile">Kies Bestand</label>
