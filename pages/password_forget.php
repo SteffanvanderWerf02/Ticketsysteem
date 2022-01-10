@@ -1,8 +1,9 @@
 <?php
 include_once("../config.php");
+include_once("../components/functions.php");
 include_once("../connection.php");
 // adding basic functions
-require_once("../components/functions.php");
+
 
 
 if (isset($_POST['passwordConfirm'])) {

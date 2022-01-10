@@ -5,7 +5,6 @@
  * @param: $type: gives type of debugging
  * @return: Array: $data, Debugtype: $type.
  */
-
 function debugData($data, $type = "print_r")
 {
     $return = '<pre>';
@@ -25,6 +24,19 @@ function debugData($data, $type = "print_r")
 function getLastId($db)
 {
     return mysqli_insert_id($db);
+}
+
+function CheckAcces($loggedIn, $link)
+{
+    if (substr($link, -9) == "index.php") {
+        return true;
+    } else {
+        if (!$loggedIn) {
+            return die(header("HTTP/1.1 403 Forbidden"));
+        } else {
+            return true;
+        }
+    }
 }
 
 /**
@@ -123,7 +135,7 @@ function issueStatusUpdate($db, $userId, $issueId, $status)
     mysqli_stmt_fetch($stmt);
     mysqli_stmt_close($stmt);
     if ($dbStatus != $status) {
-        
+
         $stmt = mysqli_prepare($db, " 
         INSERT
         INTO    `message`
@@ -157,7 +169,7 @@ function issueStatusUpdate($db, $userId, $issueId, $status)
 
         return true;
     } else {
-       return false;
+        return false;
     }
 }
 
@@ -196,12 +208,12 @@ function getMessage($db, $issueId)
             $return .= "</div>";
         } else {
             $return .= "<div class='col-lg-12 message-view'>";
-            $return .= "<p>".ucFirst($name)."<span class='float-right'>" . date("H:i d-m-Y", strtotime($message_date)) . "</span></p>";
+            $return .= "<p>" . ucFirst($name) . "<span class='float-right'>" . date("H:i d-m-Y", strtotime($message_date)) . "</span></p>";
             $return .= "<p class='title-messages'>" . nl2br($message) . "</p>";
             if ($appendex_url != NULL) {
                 $fileInfo = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $appendex_url);
                 if (in_array($fileInfo, ["image/jpg", "image/jpeg", "image/png", "image/gif"])) {
-                $return .= "<p class='title-message mt-4'><img data-fancybox='gallery' class='img-appendex pointer' src='{$appendex_url}' alt='bijlagen'></p>";
+                    $return .= "<p class='title-message mt-4'><img data-fancybox='gallery' class='img-appendex pointer' src='{$appendex_url}' alt='bijlagen'></p>";
                 }
                 $return .= "<p class='title-message'><a target='blank' class='dec-underline' href='{$appendex_url}'>Bijlage Bekijken.</a></p>";
             }
@@ -375,7 +387,7 @@ function getIssueOverview($db, $companyId, $userId, $issueType, $filterStatus, $
             }
             $return .= "<tr class='action {$lineThrough}' data-href='issue_detail.php?id={$issueId}'>
                     <td>{$issueId}</td>
-                    <td>".ucFirst($userName)."</td>
+                    <td>" . ucFirst($userName) . "</td>
                     <td>{$createdAt}</td>";
             ($closedAt == NULL) ? $return .= "<td>N.V.T.</td>"  : $return .= "<td>{$closedAt}</td>";
 
