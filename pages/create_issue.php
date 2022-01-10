@@ -125,7 +125,7 @@ if (isset($_POST['sendNewIssue'])) {
     <div id="content" class="container">
         <div class="row">
             <div class="col-lg-12">
-                <h1><?php echo ucFirst($issueType) . " "; ?>Toevoegen</h1>
+                <h1><?php echo ucFirst($issueType) . " "; ?> Aanvraag</h1>
             </div>
             <div class="col-lg-12">
                 <form method="post" action="" enctype="multipart/form-data">

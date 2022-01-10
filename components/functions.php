@@ -45,7 +45,7 @@ function CheckAcces($loggedIn, $link)
     } else {
         if (!$loggedIn) {
             header("HTTP/1.1 403");
-            // include();
+            die(include("../error/403.php"));
         } else {
             return true;
         }
