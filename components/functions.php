@@ -21,18 +21,31 @@ function debugData($data, $type = "print_r")
     return $return;
 }
 
+/**
+ * @param: $db: returns database object 
+ * @return: Int : id
+ */
+
 function getLastId($db)
 {
     return mysqli_insert_id($db);
 }
 
+
+/**
+ * @param: $loggedIn: true or false
+ * @param: $link: current url
+ * @return: Error message or true
+ */
+
 function CheckAcces($loggedIn, $link)
 {
-    if (substr($link, -9) == "index.php" || strpos($link, "password_forget.php")) {
+    if (substr($link, -9) == "index.php" || strpos($link, "password_forget.php") || substr($link, -14) == "Ticketsysteem/") {
         return true;
     } else {
         if (!$loggedIn) {
-            return die(header("HTTP/1.1 403 Forbidden"));
+            header("HTTP/1.1 403");
+            // include();
         } else {
             return true;
         }
@@ -44,7 +57,6 @@ function CheckAcces($loggedIn, $link)
  * @param: $userId: returns id from user
  * @param: $message: returns the message that has been typed
  * @param: $issueId: returns id from the url
- * @return: Array: $data, Debugtype: $type.
  */
 
 function uploadMessage($db, $userId, $message, $issueId)
@@ -70,6 +82,12 @@ function uploadMessage($db, $userId, $message, $issueId)
     linkMessagetoIssue($db, getLastId($db), $issueId);
 }
 
+/**
+ * @param: $db: return mysqli object
+ * @param: $messageId: returns id from message
+ * @param: $issueId: returns id from the url
+ */
+
 function linkMessagetoIssue($db, $messageId, $issueId)
 {
     $sql = "INSERT
@@ -92,6 +110,13 @@ function linkMessagetoIssue($db, $messageId, $issueId)
     mysqli_stmt_execute($stmt) or die(mysqli_error($db));
     mysqli_stmt_close($stmt);
 }
+
+/**
+ * @param: $db: return mysqli object
+ * @param: $userId: returns id from user
+ * @param: $issueId: returns id from the url
+ * @param: $action: returns which user has to take action
+ */
 
 function updateIssueAction($db, $userId, $issueId, $action)
 {
@@ -121,6 +146,14 @@ function updateIssueAction($db, $userId, $issueId, $action)
 
     linkMessagetoIssue($db, getLastId($db), $issueId);
 }
+
+/**
+ * @param: $db: return mysqli object
+ * @param: $userId: returns id from user
+ * @param: $issueId: returns id from the url
+ * @param: $status: returns int with status
+ * @return: true or false
+ */
 
 function issueStatusUpdate($db, $userId, $issueId, $status)
 {
@@ -172,6 +205,12 @@ function issueStatusUpdate($db, $userId, $issueId, $status)
         return false;
     }
 }
+
+/**
+ * @param: $db: return mysqli object
+ * @param: $issueId: returns id from the url
+ * @return: Array: Messages
+ */
 
 function getMessage($db, $issueId)
 {
@@ -225,6 +264,12 @@ function getMessage($db, $issueId)
     return $return;
 }
 
+/**
+ * @param: $db: return mysqli object
+ * @param: $issueId: returns id from the url
+ * @return: int: number that signifies who has to take action
+ */
+
 function getActionIssue($db, $issueId)
 {
     $sql = "
@@ -241,6 +286,11 @@ function getActionIssue($db, $issueId)
 
     return $issueAction;
 }
+
+/**
+ * @param: $actionValue int: Number of action
+ * @return: String: changes number into word
+ */
 
 function issueActionCheck($actionValue)
 {
@@ -268,6 +318,11 @@ function uploadActionIssue($db, $issueId, $issueAction)
     mysqli_stmt_close($stmt);
 }
 
+/**
+ * @param: $db: returns mysqli object
+ * @param: $id: returns the issueId that belongs to the issue in question
+ */
+
 function deleteIssue($db, $id)
 {
     $stmt = mysqli_prepare($db, "
@@ -279,6 +334,17 @@ function deleteIssue($db, $id)
     mysqli_stmt_execute($stmt) or die(mysqli_error($db));
     mysqli_stmt_close($stmt);
 }
+
+/**
+ * @param: $db: returns mysqli object
+ * @param: $companyId: returns the issueId that belongs to the issue in question
+ * @param: $userId: returns the action which has been chosen for the customer or admin
+ * @param: $issueType: returns string with the issue type
+ * @param: $filterStatus: returns int with status number
+ * @param: $searchId: returns int with id of search action
+ * @param: $searchTitle: returns string with title of the search action
+ * @return: Table with issue overview
+ */
 
 function getIssueOverview($db, $companyId, $userId, $issueType, $filterStatus, $searchId, $searchTitle)
 {
@@ -412,7 +478,12 @@ function getIssueOverview($db, $companyId, $userId, $issueType, $filterStatus, $
 
     return $return;
 }
-//this function makes from merged to seperate and individual values for the bind param function
+
+/**
+ * @param: $arr: an array with bind param values
+ * @return: an array with specific references
+ * this function makes from merged to seperate and individual values for the bind param function
+ */
 function makeValuesReferenced($arr)
 {
     $refs = array();
@@ -422,12 +493,22 @@ function makeValuesReferenced($arr)
     return $refs;
 }
 
+/**
+ * @param: $priorityValue int: Number of priority
+ * @return: String: changes number into word
+ */
+
 function priorityCheck($priorityValue)
 {
     $priorityStat = [1 => "Laag", 2 => "Gemiddeld", 3 => "Hoog"];
 
     return $priorityStat[$priorityValue];
 }
+
+/**
+ * @param: $statusValue int: Number of status
+ * @return: String: changes number into word
+ */
 
 function statusCheck($statusValue)
 {
@@ -436,10 +517,20 @@ function statusCheck($statusValue)
     return $statusStat[$statusValue];
 }
 
+/**
+ * @param: $file: returns file object with properties
+ * @return: true or false
+ */
+
 function checkIfFile($file)
 {
     return is_uploaded_file($_FILES[$file]["tmp_name"]);
 }
+
+/**
+ * @param: $fileName: returns file name
+ * @return: true or false
+ */
 
 function checkFileSize($fileName)
 {
@@ -449,6 +540,12 @@ function checkFileSize($fileName)
         return false;
     }
 }
+
+/**
+ * @param: $fileName: returns file name
+ * @param: $mimeArray: returns array with MIME types
+ * @return: true or false
+ */
 
 function checkFileType($fileName, $mimeArray)
 {
@@ -464,6 +561,12 @@ function checkFileType($fileName, $mimeArray)
     }
 }
 
+/**
+ * @param: $issueId: returns id of issue
+ * @param: $path: returns file path
+ * @return: true or false
+ */
+
 function makeFolder($issueId, $path)
 {
     $directory = $path . $issueId;
@@ -474,12 +577,21 @@ function makeFolder($issueId, $path)
     return true;
 }
 
-
+/**
+ * @param: $directory: returns directory to file
+ * @param: $fileName: returns file name
+ * @return: true or false
+ */
 
 function checkFileExist($directory, $fileName)
 {
     return file_exists($directory . $fileName);
 }
+
+/**
+ * @param: $directory: returns directory to file
+ * @return: true
+ */
 
 function deleteFile($directory)
 {
@@ -492,6 +604,17 @@ function deleteFile($directory)
 
     return true;
 }
+
+/**
+ * @param: $db: returns mysqli object
+ * @param: $file: returns file object with properties
+ * @param: $tableName: returns name of the selected table
+ * @param: $recordName: returns name of selected record
+ * @param: $relationId string: name of relation
+ * @param: $Id int: relation ID
+ * @param: $directory: returns directory
+ * @return: true or false
+ */
 
 function uploadFile($db, $file, $tableName, $recordName, $relationId, $Id, $directory)
 {
@@ -519,6 +642,12 @@ function uploadFile($db, $file, $tableName, $recordName, $relationId, $Id, $dire
         return false;
     }
 }
+
+/**
+ * @param: $category string: returns category of issue 
+ * @param: $subCat string: returns subcategory of issue
+ * @return: returns options for dropdown menu
+ */
 
 function getCatOptions($category, $subCat = "")
 {
