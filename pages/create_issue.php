@@ -142,7 +142,7 @@ if (isset($_POST['sendNewIssue'])) {
                                 </div>
                                 <div class="row mb-3">
                                     <div class="col-lg-6">
-                                    <label for="createIssueCategory">sub-category</label>
+                                    <label for="createIssueCategory">sub-categorie</label>
                                     <select id="createIssueCategory" name="createIssueCategory" class="form-control">
                                     <?= getCatOptions(str_replace(' ', '', $issueType))?>  
                                     </select>
@@ -180,7 +180,7 @@ if (isset($_POST['sendNewIssue'])) {
                                 ?>
                                 <div class="row mb-3">
                                     <div class="col-lg-6">
-                                        <label for="createIssueFile" class="pointer">Bijlagen</label>
+                                        <label for="createIssueFile" class="pointer">Bijlagen (Optioneel)</label>
                                         <div class="custom-file">
                                             <input type="file" name="issueFile" title="Kies uw bijlagen" name="createIssueFile" class="custom-file-input" id="createIssueFile">
                                             <label class="custom-file-label" for="createIssueFile">Kies Bestand</label>

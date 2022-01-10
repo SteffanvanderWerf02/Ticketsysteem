@@ -11,7 +11,7 @@ mysqli_report(MYSQLI_REPORT_STRICT);
 
 try {
     // Create connection
-    $db = new mysqli('CONNECTION', 'USERNAME', 'PASSWORD', 'DATABASE');
+    $db = new mysqli('localhost', 'root', 'root', 'bottomup');
      //echo "You have connected to your database with MYSQLI";
 } catch (Exception $e) {
     // error connection
