@@ -28,7 +28,7 @@ function getLastId($db)
 
 function CheckAcces($loggedIn, $link)
 {
-    if (substr($link, -9) == "index.php") {
+    if (substr($link, -9) == "index.php" || strpos($link, "password_forget.php")) {
         return true;
     } else {
         if (!$loggedIn) {
