@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Gegenereerd op: 23 dec 2021 om 12:11
+-- Gegenereerd op: 20 dec 2021 om 17:35
 -- Serverversie: 10.3.16-MariaDB
 -- PHP-versie: 7.3.7
 
@@ -41,8 +41,7 @@ CREATE TABLE `authentication` (
 INSERT INTO `authentication` (`auth_id`, `name`, `description`) VALUES
 (1, 'particulier', 'de particulieren klant'),
 (2, 'zakelijk account', 'de zakelijke klant/medewerker'),
-(3, 'Beheerder', 'De beheerder van het systeem'),
-(4, 'Ticketmaster', 'De ticket beheerder van het systeem');
+(3, 'Beheerder', 'De beheerder van het systeem');
 
 -- --------------------------------------------------------
 
@@ -102,10 +101,9 @@ CREATE TABLE `issue` (
 --
 
 INSERT INTO `issue` (`issue_id`, `user_id`, `company_id`, `priority`, `category`, `sub_category`, `title`, `description`, `result`, `created_at`, `closed_at`, `frequency`, `appendex_url`, `status_timestamp`, `status`, `issue_action`) VALUES
-(1, 3, 3, 1, 'Ticket', 'Klachten', 'Mijn schep is kapot', 'Ik ging 1 keer scheppen en toen ging die kapot', 'Een nieuwe schep', '2021-12-23', NULL, 'N.V.T', NULL, '2021-12-23 10:51:21', 1, NULL),
-(2, 2, 1, 1, 'Dienst/service', 'Vijvers', 'Nieuw vijver', 'Ik wil graag een nieuwe vijver voor in mijn tuin', 'Een nieuwe vijver', '2021-12-23', NULL, 'Dagelijks', NULL, '2021-12-23 10:51:53', 1, NULL),
-(3, 4, 1, 1, 'Dienst/service', 'Vijvers', 'Nieuw vijver', 'Ik wil graag een nieuwe vijver voor in mijn tuin', 'Een nieuwe vijver', '2021-12-23', "2021-12-23", 'Weekelijks', NULL, '2021-12-23 10:51:53', 4, NULL),
-(4, 2, 1, 1, 'Product', 'Gereedschap opslag', 'Boormachine', 'Ik wil een nieuwe boormachine', 'nieuwe boormachine', '2021-12-23', NULL, 'N.V.T', NULL, '2021-12-23 10:52:17', 1, NULL);
+(1, 1, 1, 0, 'dienst/service', 'Voiliere', 'Voiliere maken', 'Ik wil volgens', '', '2021-12-10', '2021-12-10', 'Weekly', NULL, '2021-12-14 15:23:25', 1, NULL),
+(2, 1, 1, 2, 'ticket', 'Klacht', 'Slechte service', 'er was ruzie tussen mij en werknemers.', '', '2021-12-14', NULL, '', NULL, '2021-12-16 13:43:16', 1, NULL),
+(3, 2, 1, 1, 'Product', 'Schop', 'Schop kopen', 'Ik wil graag een schop 2000 kopen hebben jullie hier een voorbeeld van', '', '2021-12-14', NULL, NULL, NULL, '2021-12-16 13:43:21', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -133,6 +131,7 @@ CREATE TABLE `message` (
   `message` varchar(100) NOT NULL,
   `appendex_url` varchar(128) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 
 -- --------------------------------------------------------
 
@@ -163,10 +162,10 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`user_id`, `company_id`, `auth_id`, `profilepicture`, `name`, `postalcode`, `city`, `streetname`, `house_number`, `phone_number`, `email_adres`, `hash_password`, `status`, `passwordForget_token`, `token_expireDate`) VALUES
-(1, 1, 3, NULL, 'admin', '4953PG', 'Emmen', 'Steenstraat', 23, '394394', 'chris.klunder@student.nhlstenden.com', '$2y$10$TvYzf.Zi96CKrO2wt1FyUO42lx8TH0SkBU.ga039chPuZNYuTgCI.', 1, NULL, NULL),
+(1, 1, 3, NULL, 'admin', '4953PG', 'Emmen', 'Steenstraat', 23, '394394', 'steffanhenrybart@gmail.com', '$2y$10$TvYzf.Zi96CKrO2wt1FyUO42lx8TH0SkBU.ga039chPuZNYuTgCI.', 1, NULL, NULL),
 (2, 2, 1, NULL, 'Mac Donalds', '9531pg', 'Borger', 'Deksteen', 1, '324435', 'Donald@gmail.com', '$2y$10$LXSLDp3sCREnc3Al1zoHxucFokLTwFTyLEKhUpHl3IE3OkhDBgXba', 0, NULL, NULL),
 (3, 3, 2, NULL, 'fia', '3939PG', 'London', 'Kingstreet', 343, '934939', 'Fia@gmail.com', '$2y$10$7vrIGvKXUS.YbKFUgFP6HOjJlBq4RANJblBbZ9gRXGG2R6yX/K3Ui', 0, NULL, NULL),
-(4, 1, 4, NULL, 'Ticketbeheer', '6574AR', 'Amsterdam', 'straatingen', 98, '0623241210', 'koertvanhaan@gmail.com', '$2y$10$vR89oCj3k8/JncKXPTgVuO3sRxfmj6iPW02pUtebAwkmisx2mrfrq', 1, NULL, NULL);
+(4, NULL, 0, NULL, 'Andr&eacute;', '9531PG', 'Borger', 'Deksteen', 1, '0611775675', 'Test@gmail.com', '$2y$10$kZHavAjnf.OkwwSUlGMYfuHZVYXWmfcLkWERo2NUtQgPdat3A/Oo2', 1, NULL, NULL);
 
 --
 -- Indexen voor geëxporteerde tabellen
@@ -221,7 +220,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT voor een tabel `authentication`
 --
 ALTER TABLE `authentication`
-  MODIFY `auth_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `auth_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT voor een tabel `company`
@@ -233,7 +232,7 @@ ALTER TABLE `company`
 -- AUTO_INCREMENT voor een tabel `issue`
 --
 ALTER TABLE `issue`
-  MODIFY `issue_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `issue_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT voor een tabel `issue_message`
@@ -251,7 +250,7 @@ ALTER TABLE `message`
 -- AUTO_INCREMENT voor een tabel `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- Beperkingen voor geëxporteerde tabellen
