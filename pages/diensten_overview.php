@@ -2,12 +2,14 @@
 <?php include_once("../connection.php"); ?>
 <?php include_once("../components/functions.php");
 
+// Checking if there are any search requests to filter on
 if (isset($_GET['filter'])) {
     $filter = filter_input(INPUT_GET, "filter", FILTER_SANITIZE_NUMBER_INT);
 } else {
     $filter = NULL;
 }
 
+// Filtering the tickets by the values from the search request
 if (isset($_GET['submit'])) {
     $ticket_id = filter_input(INPUT_GET, "ticket_id", FILTER_SANITIZE_SPECIAL_CHARS);
     $ticket_title = filter_input(INPUT_GET, "ticket_title", FILTER_SANITIZE_SPECIAL_CHARS);

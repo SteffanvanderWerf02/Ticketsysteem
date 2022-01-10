@@ -3,6 +3,7 @@ include_once("../config.php");
 include_once("../connection.php");
 include_once("../components/functions.php");
 
+// Filtering the Id
 if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
 ?>
     <!DOCTYPE html>
@@ -15,12 +16,15 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
 
     <body>
         <?php
+
+        // Checking if the issue details have been changed
         if (isset($_POST['updateIssue'])) {
             if (isset($_POST['issueStatus']) && $issueStatus = filter_input(INPUT_POST, 'issueStatus', FILTER_SANITIZE_NUMBER_INT)) {
                 if (isset($_POST['issuePir']) && $issuePir = filter_input(INPUT_POST, 'issuePir', FILTER_SANITIZE_NUMBER_INT)) {
                     if (isset($_POST['issueCat']) && $issueCat = filter_input(INPUT_POST, 'issueCat', FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
                         if (isset($_POST['issueSCat']) && $issueSCat = filter_input(INPUT_POST, 'issueSCat', FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
                             
+                            // Updating the data if the issue details have been changed
                             $stmt = mysqli_prepare($db, " 
                                     UPDATE  issue 
                                     SET     priority = ?,
@@ -33,6 +37,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                             mysqli_stmt_execute($stmt) or die(mysqli_error($db));
                             mysqli_stmt_close($stmt);
                             
+                            // Closing the issue
                             if($issueStatus == 4) {
                                 $stmt = mysqli_prepare($db, " 
                                         UPDATE  issue 
@@ -42,8 +47,9 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                                 mysqli_stmt_bind_param($stmt, "i", $id) or die(mysqli_error($db));
                                 mysqli_stmt_execute($stmt) or die(mysqli_error($db));
                                 mysqli_stmt_close($stmt);
-                            
                             }
+
+                            // Updating the frequency of an issue & filtering
                             if($issueCat == "Dienst/service" && $_SESSION['accountType'] == 3 || $issueCat == "Dienst/service" && $_SESSION['accountType'] == 4 ) {
                                 if ($frequency = filter_input(INPUT_POST, 'issueFreq', FILTER_SANITIZE_FULL_SPECIAL_CHARS)){
                                     $stmt = mysqli_prepare($db, " 
@@ -104,21 +110,26 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
         mysqli_stmt_fetch($stmt);
         mysqli_stmt_close($stmt);
 
+        // Checking if the button has been pressed & filtering
         if (isset($_POST['upload_message'])) {
             if (!empty($_POST['issue_message']) && $issue_message = filter_input(INPUT_POST, 'issue_message', FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
                 if (isset($_POST['action_point']) && $action_point = filter_input(INPUT_POST, 'action_point', FILTER_SANITIZE_NUMBER_INT)) {
 
+                    // Checking if the file meets the requirements
                     if (checkIfFile("b_file")) {
                         if (checkFileSize("b_file")) {
                             if (checkFileType("b_file", $acceptedFileTypes)) {
                                 if (makeFolder($id, "../assets/issueFiles/")) {
+                                    // Checking if the file already exists
                                     if (!checkFileExist("../assets/issueFiles/" . $id . "/", $_FILES["b_file"]["name"])) {
                                         uploadMessage($db, $_SESSION['userId'], $issue_message, $id);
                                         $messageId = mysqli_insert_id($db);
                                         uploadActionIssue($db, $id, $action_point);
+                                        // Checking if the actions of the issue & the radio buttons are the same & inserting this
                                         if ($issue_action != $action_point) {
                                             insertStatus($db, $_SESSION['userId'], $id, $action_point);
                                         }
+                                        
                                         if (uploadFile($db, "b_file", "message", "appendex_url", "message_id", $messageId, "../assets/issueFiles/" . $id . "/")) {
                                         } else {
                                             echo "<div class='alert alert-danger'>Uw bijlage is niet toegevoegd, probeer het opnieuw</div>";

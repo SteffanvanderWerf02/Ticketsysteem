@@ -3,6 +3,7 @@ include_once("../config.php");
 include_once("../connection.php");
 include_once("../components/functions.php");
 
+// Checking if the values have been set & filtering them
 $issueType = filter_input(INPUT_GET, 'issueType', FILTER_SANITIZE_SPECIAL_CHARS);
 if (isset($_POST['sendNewIssue'])) {
     if (isset($_SESSION['accountType'])) {
@@ -11,6 +12,7 @@ if (isset($_POST['sendNewIssue'])) {
         $description = filter_input(INPUT_POST, 'createIssueDescription', FILTER_SANITIZE_SPECIAL_CHARS);
         $result = filter_input(INPUT_POST, 'createIssueResult', FILTER_SANITIZE_SPECIAL_CHARS);
 
+        // Setting the frequency of an issue
         if ($_SESSION['accountType'] == 0 || $issueType == "Ticket" ||  $issueType == "Product") {
             $frequency = "N.V.T";
         } else {
@@ -19,7 +21,8 @@ if (isset($_POST['sendNewIssue'])) {
 
         $priority = 1;
         $status = 1;
-
+        
+        // Checking if the values have been set & inserting them into the database if this was a success
         if (isset($title)) {
             if (isset($issueType)) {
                 if (isset($description)) {
@@ -67,6 +70,7 @@ if (isset($_POST['sendNewIssue'])) {
                             $lastIssueId = mysqli_insert_id($db);
                             mysqli_stmt_close($stmt);
 
+                            // Checking if the file meets the requirements
                             if (checkIfFile("issueFile")) {
                                 if (checkFileSize("issueFile")) {
                                     if (checkFileType("issueFile", $acceptedFileTypes)) {
@@ -76,19 +80,23 @@ if (isset($_POST['sendNewIssue'])) {
                                                     echo "<div class='alert alert-success'>Uw issue is verzonden</div>";
                                                 } else {
                                                     echo "<div class='alert alert-danger'>Uw bestand is niet toegevoegd, probeer het opnieuw</div>";
+                                                    // Deleting the issue when the file doesn't meet the requirements
                                                     deleteIssue($db, $lastIssueId);
                                                 }
                                             } else {
                                                 echo "<div class='alert alert-danger'>U heeft deze bijlagen al toegevoegd</div>";
+                                                // Deleting the issue when the file doesn't meet the requirements
                                                 deleteIssue($db, $lastIssueId);
                                             }
                                         }
                                     } else {
                                         echo "<div class='alert alert-danger'>Uw geüploade bestand type wordt niet geaccepteerd. Er worden alleen pdf's, jpg's, jpeg's, png's, en gif's geaccepteerd</div>";
+                                        // Deleting the issue when the file doesn't meet the requirements
                                         deleteIssue($db, $lastIssueId);
                                     }
                                 } else {
                                     echo "<div class='alert alert-danger'>Uw geüploade bestand is te groot</div>";
+                                    // Deleting the issue when the file doesn't meet the requirements
                                     deleteIssue($db, $lastIssueId);
                                 }
                             } else {
