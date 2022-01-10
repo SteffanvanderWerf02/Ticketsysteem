@@ -15,9 +15,9 @@ try {
     // Create connection
     $db = new mysqli(CONNECTION, USERNAME, PASSWORD, DATABASE);
     CheckAcces(isset($_SESSION['loggedIn']), $actual_link);
-    //echo "You have connected to your database with MYSQLI";
+    
 } catch (Exception $e) {
-    // error connection
+    // Error connection
     $error_message = $e->getMessage();
     echo $error_message;
     exit();

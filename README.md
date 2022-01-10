@@ -11,7 +11,7 @@
 - config file
 
 
-### mailserver config
+### Mailserver config
 - open de php.ini
 - verander in
 - SMTP=smtp.gmail.com
@@ -29,7 +29,7 @@
 - auth_password=my-gmail-password
 - force_sender=my-gmail-id@gmail.com
 
-### config file
+### Config file
 - zet je config file op zelfde niveau als de index.php
 - maak een define met PROJECT_PATH met het pad van het project
 - maak define('ROOT_PATH', dirname(__DIR__) . '/')

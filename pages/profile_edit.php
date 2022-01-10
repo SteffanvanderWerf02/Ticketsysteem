@@ -1,9 +1,10 @@
 <?php
 include_once("../config.php");
+// Adding basic functions
 include_once("../components/functions.php");
 include_once("../connection.php");
 
-
+// Removing the profile picture 
 if (isset($_POST["deletepfp"]) && $id = filter_input(INPUT_POST, "deletepfp", FILTER_SANITIZE_NUMBER_INT)) {
     $stmt = mysqli_prepare($db, "
         UPDATE  user
@@ -18,7 +19,7 @@ if (isset($_POST["deletepfp"]) && $id = filter_input(INPUT_POST, "deletepfp", FI
     }
 }
 
-// User update
+// Updating the userinfo
 if (isset($_POST['userSubmit'])) {
     if (isset($_POST['username']) && $username = filter_input(INPUT_POST, "username", FILTER_SANITIZE_SPECIAL_CHARS)) {
         if (isset($_POST['city']) && $city = filter_input(INPUT_POST, "city", FILTER_SANITIZE_SPECIAL_CHARS)) {
@@ -62,6 +63,7 @@ if (isset($_POST['userSubmit'])) {
         echo "<div class='alert alert-danger>Voer uw gebruikersnaam in</div>";
     }
 
+    // Checking if the password is set & filtering
     if (isset($_POST['password']) && $password = filter_input(INPUT_POST, "password", FILTER_SANITIZE_SPECIAL_CHARS)) {
         $stmt = mysqli_prepare($db, "
         SELECT hash_password
@@ -74,6 +76,7 @@ if (isset($_POST['userSubmit'])) {
         mysqli_stmt_fetch($stmt);
         mysqli_stmt_close($stmt);
 
+        // Updating the password if the new and old password don't match
         if (password_verify($password, $hashPassword) == false) {
             $stmt = mysqli_prepare($db, "
             UPDATE user
@@ -88,13 +91,14 @@ if (isset($_POST['userSubmit'])) {
             echo "<div class='alert alert-danger'>Het nieuwe ingevoerde wachtwoord kan niet gelijk zijn aan het oude wachtwoord</div>";
         }
     }
+    // Checking if the profile picture meets the requirements
     if (checkIfFile("pfp")) {
         if (checkFileSize("pfp")) {
             if (checkFileType("pfp", $acceptedFileTypesPP)) {
                 if (makeFolder($_SESSION["userId"], "../assets/img/pfpic/")) {
                     if (!checkFileExist("../assets/img/pfpic/" . $_SESSION["userId"] . "/", $_FILES["pfp"]["name"])) {
                         if (deleteFile("../assets/img/pfpic/" . $_SESSION["userId"] . "/")) {
-                            //for mac
+                            // For Mac
                             if (OS) {
                                 if (uploadFile($db, "pfp", "user", "profilepicture", "user_id", $_SESSION["userId"], "/assets/img/pfpic/" . $_SESSION["userId"] . "/")) {
                                     echo "<div class='alert alert-success'>Uw profielfoto is succesvol geüpload</div>";
@@ -102,7 +106,7 @@ if (isset($_POST['userSubmit'])) {
                                     echo "<div class='alert alert-danger'>Uw profielfoto is niet toegevoegd, probeer het opnieuw</div>";
                                 }
                             } else {
-                                //for windwos
+                                // For Windows
                                 if (uploadFile($db, "pfp", "user", "profilepicture", "user_id", $_SESSION["userId"], "../assets/img/pfpic/" . $_SESSION["userId"] . "/")) {
                                     echo "<div class='alert alert-success'>Uw profielfoto is succesvol geüpload</div>";
                                 } else {
@@ -123,7 +127,7 @@ if (isset($_POST['userSubmit'])) {
     }
 }
 
-// Company update
+// Updating the company info
 if (isset($_POST['companySubmit'])) {
     if (isset($_POST['city']) && $city = filter_input(INPUT_POST, "city", FILTER_SANITIZE_SPECIAL_CHARS)) {
         if (isset($_POST['postal']) && $postal = filter_input(INPUT_POST, "postal", FILTER_SANITIZE_SPECIAL_CHARS)) {
@@ -188,9 +192,10 @@ if (isset($_POST['companySubmit'])) {
                 if ($_SESSION["accountType"] == 4 || $_SESSION["accountType"] == 3 || $_SESSION["accountType"] == 2) {
                 ?>
                     <a class="d-block mb-1" href="./addInternUser.php"><span class="material-icons align-middle">add</span>Nieuwe
-                        gebruiker aanmaken</a>
+                        Gebruiker aanmaken</a>
                 <?php
                 }
+                // Selecting the amount of companies if the user is an administrator
                 if ($_SESSION["accountType"] == 3) {
                     $stmt = mysqli_prepare($db, "
                     SELECT  count(company_id) as amount
@@ -199,6 +204,7 @@ if (isset($_POST['companySubmit'])) {
                 ") or die(mysqli_error($db));
                     mysqli_stmt_execute($stmt) or die(mysqli_error($db));
                     mysqli_stmt_store_result($stmt) or die(mysqli_error($db));
+
                     if (mysqli_stmt_num_rows($stmt) > 0) {
                         mysqli_stmt_bind_result($stmt, $amount);
                         mysqli_stmt_fetch($stmt);
@@ -214,6 +220,7 @@ if (isset($_POST['companySubmit'])) {
             </div>
             <div class="col-lg-12">
                 <?php
+                // Selecting all the data of a certain user
                 $stmt = mysqli_prepare($db, "
                     SELECT  name, 
                             city,
@@ -250,6 +257,7 @@ if (isset($_POST['companySubmit'])) {
                         </div>
                     </div>
                     <?php
+                    // Checking if the account has a profile picture
                     if ($profilePicture != NULL) {
                     ?>
                         <div class="row mb-3">
@@ -329,6 +337,7 @@ if (isset($_POST['companySubmit'])) {
             </div>
 
             <?php
+            // Checking if there is a company with the same Id as the session
             if ($_SESSION['companyId'] != NULL) {
             ?>
                 <div class="col-lg-12">
@@ -427,6 +436,7 @@ if (isset($_POST['companySubmit'])) {
     </div>
     </div>
     <script>
+        // All images with the data attribute 'data-fancybox="gallery"' will have the function carousel from Fancybox
         Fancybox.bind('[data-fancybox="gallery"]', {
             caption: function(fancybox, carousel, slide) {
                 return (
@@ -435,8 +445,7 @@ if (isset($_POST['companySubmit'])) {
             },
         });
     </script>
-    </script>
-
+    
     <!-- Footer include -->
     <?php include_once("../components/footer.php") ?>
 </body>

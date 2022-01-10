@@ -1,5 +1,6 @@
 <?php
 include_once("../config.php");
+// Adding basic functions
 include_once("../components/functions.php");
 include_once("../connection.php");
 
@@ -100,7 +101,7 @@ if (isset($_POST['submit'])) {
                 if (makeFolder($lastUserId, "../assets/img/pfpic/")) {
                     if (!checkFileExist("../assets/img/pfpic/" . $lastUserId . "/", $_FILES["pfp"]["name"])) {
                         if (deleteFile("../assets/img/pfpic/" . $lastUserId . "/")) {
-                            // For mac
+                            // For Mac
                             if (OS) {
                                 if (uploadFile($db, "pfp", "user", "profilepicture", "user_id", $lastUserId, "/assets/img/pfpic/" . $lastUserId . "/")) {
                                     echo "<div class='alert alert-success'>Uw profielfoto is succesvol geüpload</div>";
@@ -108,7 +109,7 @@ if (isset($_POST['submit'])) {
                                     echo "<div class='alert alert-danger'>Uw profielfoto is niet toegevoegd, probeer het opnieuw</div>";
                                 }
                             } else {
-                                // For windwos
+                                // For Windows
                                 if (uploadFile($db, "pfp", "user", "profilepicture", "user_id", $lastUserId, "../assets/img/pfpic/" . $lastUserId . "/")) {
                                     echo "<div class='alert alert-success'>Uw profielfoto is succesvol geüpload</div>";
                                 } else {

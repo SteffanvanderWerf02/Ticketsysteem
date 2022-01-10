@@ -33,7 +33,7 @@
                             </div>
                             <div class="text-center account-created-size">
                                 Uw Zakelijk account is aangemaakt. Deze moet eerst nog worden goedgekeurd en is dus nog niet actief tot deze in behandeling is genomen.</br>
-                                U krijgt een mailtje wanneer uw account is goedgekeurd.
+                                U krijgt een mail wanneer uw account is goedgekeurd.
                             </div>
                             <div class="col-lg-12 mb-1 text-center">
                                 <button type="submit" name="login" class="btn btn-primary ml-2 mt-3">

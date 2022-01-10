@@ -1,5 +1,6 @@
 <?php
 include_once("../config.php");
+// Adding basic functions
 include_once("../components/functions.php");
 include_once("../connection.php");
 
@@ -80,22 +81,26 @@ if (isset($_POST['sendNewIssue'])) {
                                                     echo "<div class='alert alert-success'>Uw issue is verzonden</div>";
                                                 } else {
                                                     echo "<div class='alert alert-danger'>Uw bestand is niet toegevoegd, probeer het opnieuw</div>";
+                                                    
                                                     // Deleting the issue when the file doesn't meet the requirements
                                                     deleteIssue($db, $lastIssueId);
                                                 }
                                             } else {
                                                 echo "<div class='alert alert-danger'>U heeft deze bijlagen al toegevoegd</div>";
+                                                
                                                 // Deleting the issue when the file doesn't meet the requirements
                                                 deleteIssue($db, $lastIssueId);
                                             }
                                         }
                                     } else {
                                         echo "<div class='alert alert-danger'>Uw geüploade bestand type wordt niet geaccepteerd. Er worden alleen pdf's, jpg's, jpeg's, png's, en gif's geaccepteerd</div>";
+                                        
                                         // Deleting the issue when the file doesn't meet the requirements
                                         deleteIssue($db, $lastIssueId);
                                     }
                                 } else {
                                     echo "<div class='alert alert-danger'>Uw geüploade bestand is te groot</div>";
+
                                     // Deleting the issue when the file doesn't meet the requirements
                                     deleteIssue($db, $lastIssueId);
                                 }
@@ -150,7 +155,7 @@ if (isset($_POST['sendNewIssue'])) {
                                 </div>
                                 <div class="row mb-3">
                                     <div class="col-lg-6">
-                                    <label for="createIssueCategory">sub-categorie</label>
+                                    <label for="createIssueCategory">Subcategorie</label>
                                     <select id="createIssueCategory" name="createIssueCategory" class="form-control">
                                     <?= getCatOptions(str_replace(' ', '', $issueType))?>  
                                     </select>
