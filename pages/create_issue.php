@@ -1,7 +1,7 @@
 <?php
 include_once("../config.php");
-include_once("../connection.php");
 include_once("../components/functions.php");
+include_once("../connection.php");
 
 $issueType = filter_input(INPUT_GET, 'issueType', FILTER_SANITIZE_SPECIAL_CHARS);
 if (isset($_POST['sendNewIssue'])) {
@@ -64,7 +64,7 @@ if (isset($_POST['sendNewIssue'])) {
                             $stmt = mysqli_prepare($db, $sql) or die(mysqli_error($db));
                             mysqli_stmt_bind_param($stmt, 'iiissssssi', $_SESSION['userId'], $_SESSION['companyId'], $priority, $issueType, $subCategory, $title, $description, $result, $frequency, $status);
                             mysqli_stmt_execute($stmt) or die(mysqli_error($db));
-                            $lastIssueId = mysqli_insert_id($db);
+                            $lastIssueId = getLastId($db);
                             mysqli_stmt_close($stmt);
 
                             if (checkIfFile("issueFile")) {
@@ -169,7 +169,7 @@ if (isset($_POST['sendNewIssue'])) {
                                             <select id="createIssueFrequency" class="form-control" name="createIssueFrequency">
                                                 <option value="N.V.T">N.V.T</option>
                                                 <option value="Dagelijks">Dagelijks</option>
-                                                <option value="Wekelijks">Weekelijks</option>
+                                                <option value="Wekelijks">Wekelijks</option>
                                                 <option value="Maandelijks">Maandelijks</option>
                                                 <option value="Jaarlijks">Jaarlijks</option>
                                             </select>

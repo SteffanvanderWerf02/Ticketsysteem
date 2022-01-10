@@ -1,6 +1,6 @@
 <?php include_once("../config.php"); ?>
-<?php include_once("../connection.php"); ?>
 <?php include_once("../components/functions.php");
+include_once("../connection.php");
 
 if (isset($_GET['filter'])) {
     $filter = filter_input(INPUT_GET, "filter", FILTER_SANITIZE_NUMBER_INT);

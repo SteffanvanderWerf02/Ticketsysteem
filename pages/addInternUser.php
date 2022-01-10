@@ -1,8 +1,8 @@
 <?php
 include_once("../config.php");
-include_once("../connection.php");
 include_once("../components/functions.php");
-$acceptedFileTypesPP = ["image/jpg", "image/jpeg", "image/png", "image/gif"];
+include_once("../connection.php");
+
 
 if (isset($_POST['submit'])) {
     if (isset($_POST['auth']) && $auth = filter_input(INPUT_POST, "auth", FILTER_SANITIZE_NUMBER_INT)) {
@@ -58,10 +58,10 @@ if (isset($_POST['submit'])) {
                                                         1
                                                     )
                                                 ") or die(mysqli_error($db));
-                                            mysqli_stmt_bind_param($stmt, "iissssssss", $_SESSION['companyId'], $_SESSION['accountType'], $username, $city, $streetname, $postalcode, $housenumber, $phonenumber, $email, $hash_password);
+                                            mysqli_stmt_bind_param($stmt, "iissssssss", $_SESSION['companyId'], $auth, $username, $city, $streetname, $postalcode, $housenumber, $phonenumber, $email, $hash_password);
                                             mysqli_stmt_execute($stmt) or die(mysqli_error($db));
                                             mysqli_stmt_close($stmt);
-                                            $lastUserId = mysqli_insert_id($db);
+                                            $lastUserId = getLastId($db);
                                         } else {
                                             echo "<div class='alert alert-danger'>Deze naam of dit e-mailadres bestaat al.</div>";
                                         }
@@ -100,32 +100,31 @@ if (isset($_POST['submit'])) {
                     if (!checkFileExist("../assets/img/pfpic/" . $lastUserId . "/", $_FILES["pfp"]["name"])) {
                         if (deleteFile("../assets/img/pfpic/" . $lastUserId . "/")) {
                             //for mac
-                            if(OS){
-                                if (uploadFile($db, "pfp", "user", "profilepicture", "user_id", $_SESSION["userId"], "/assets/img/pfpic/" . $_SESSION["userId"] . "/")) {
+                            if (OS) {
+                                if (uploadFile($db, "pfp", "user", "profilepicture", "user_id", $lastUserId, "/assets/img/pfpic/" . $lastUserId . "/")) {
                                     echo "<div class='alert alert-success'>Uw profielfoto is succesvol geüpload</div>";
                                 } else {
                                     echo "<div class='alert alert-danger'>Uw profielfoto is niet toegevoegd, probeer het opnieuw</div>";
                                 }
-                            } else{
+                            } else {
                                 //for windwos
-                                if (uploadFile($db, "pfp", "user", "profilepicture", "user_id", $_SESSION["userId"], "../assets/img/pfpic/" . $_SESSION["userId"] . "/")) {
+                                if (uploadFile($db, "pfp", "user", "profilepicture", "user_id", $lastUserId, "../assets/img/pfpic/" . $lastUserId . "/")) {
                                     echo "<div class='alert alert-success'>Uw profielfoto is succesvol geüpload</div>";
                                 } else {
                                     echo "<div class='alert alert-danger'>Uw profielfoto is niet toegevoegd, probeer het opnieuw</div>";
                                 }
-    
+                            }
+                        } else {
+                            echo "<div class='alert alert-danger'>Uw profielfoto bestaat al</div>";
                         }
-                    } else {
-                        echo "<div class='alert alert-danger'>Uw profielfoto bestaat al</div>";
                     }
+                } else {
+                    echo "<div class='alert alert-danger'>Uw geüploadde bestand type wordt niet geaccepteerd. Er worden alleen jpg's, jpeg's, png's, en gif's geaccepteerd</div>";
                 }
             } else {
-                echo "<div class='alert alert-danger'>Uw geüploadde bestand type wordt niet geaccepteerd. Er worden alleen jpg's, jpeg's, png's, en gif's geaccepteerd</div>";
+                echo "<div class='alert alert-danger'>Uw geüploadde bestand is te groot</div>";
             }
-        } else {
-            echo "<div class='alert alert-danger'>Uw geüploadde bestand is te groot</div>";
         }
-    }
     }
 }
 
@@ -152,7 +151,7 @@ if (isset($_POST['submit'])) {
             <div class="col-lg-12">
                 <?php
                 ?>
-                <form action="<?=htmlspecialchars($_SERVER['PHP_SELF'])?>" method="POST" enctype="multipart/form-data">
+                <form action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="POST" enctype="multipart/form-data">
                     <div class="row mb-3">
                         <div class="col-lg-12">
                             <label for="customFile" class="pointer">Profiel foto</label>
@@ -170,7 +169,7 @@ if (isset($_POST['submit'])) {
                                 if ($_SESSION['accountType'] == 3) {
                                     echo "<option value='3'>Beheer</option>";
                                     echo "<option value='4'>Ticketmaster</option>";
-                                }elseif ($_SESSION['accountType'] == 4) {
+                                } elseif ($_SESSION['accountType'] == 4) {
                                     echo "<option value='4'>Ticketmaster</option>";
                                 } else {
                                     echo "<option value='2'>Zakelijk</option>";
@@ -208,13 +207,11 @@ if (isset($_POST['submit'])) {
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <div class="col-lg-12">
+                        <div class="col-lg-6">
                             <label for="postal">Postcode</label>
                             <input type="text" id="postal" value="" name="postalcode" class="form-control" required>
                         </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-lg-12">
+                        <div class="col-lg-6">
                             <label for="city">Woonplaats</label>
                             <input type="text" id="city" value="" name="city" class="form-control" required>
                         </div>

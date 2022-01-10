@@ -1,7 +1,7 @@
 <?php
 include_once("../config.php");
-include_once("../connection.php");
 include_once("../components/functions.php");
+include_once("../connection.php");
 
 if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
 ?>
@@ -10,7 +10,10 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
 
     <head>
         <?php include_once("../components/head.html") ?>
-        <title>Bottom Up - Ticket detail</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css" />
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
+    </head>
+    <title>Bottom Up - Issue detail</title>
     </head>
 
     <body>
@@ -20,6 +23,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                 if (isset($_POST['issuePir']) && $issuePir = filter_input(INPUT_POST, 'issuePir', FILTER_SANITIZE_NUMBER_INT)) {
                     if (isset($_POST['issueCat']) && $issueCat = filter_input(INPUT_POST, 'issueCat', FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
                         if (isset($_POST['issueSCat']) && $issueSCat = filter_input(INPUT_POST, 'issueSCat', FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
+                            issueStatusUpdate($db, $_SESSION['userId'], $id, $issueStatus);
                             $stmt = mysqli_prepare($db, " 
                                     UPDATE  issue 
                                     SET     priority = ?,
@@ -31,6 +35,41 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                             mysqli_stmt_bind_param($stmt, "iissi", $issuePir, $issueStatus, $issueCat, $issueSCat, $id) or die(mysqli_error($db));
                             mysqli_stmt_execute($stmt) or die(mysqli_error($db));
                             mysqli_stmt_close($stmt);
+
+                            if ($issueStatus == 4) {
+                                $stmt = mysqli_prepare($db, " 
+                                        UPDATE  issue 
+                                        SET     closed_at = NOW()
+                                        WHERE   issue_id = ?
+                                ") or die(mysqli_error($db));
+                                mysqli_stmt_bind_param($stmt, "i", $id) or die(mysqli_error($db));
+                                mysqli_stmt_execute($stmt) or die(mysqli_error($db));
+                                mysqli_stmt_close($stmt);
+                            } else {
+                                $stmt = mysqli_prepare($db, " 
+                                        UPDATE  issue 
+                                        SET     closed_at = NULL
+                                        WHERE   issue_id = ?
+                                ") or die(mysqli_error($db));
+                                mysqli_stmt_bind_param($stmt, "i", $id) or die(mysqli_error($db));
+                                mysqli_stmt_execute($stmt) or die(mysqli_error($db));
+                                mysqli_stmt_close($stmt);
+                            }
+
+                            if ($issueCat == "Dienst/service" && $_SESSION['accountType'] == 3 || $issueCat == "Dienst/service" && $_SESSION['accountType'] == 4) {
+                                if ($frequency = filter_input(INPUT_POST, 'issueFreq', FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
+                                    $stmt = mysqli_prepare($db, " 
+                                            UPDATE  issue 
+                                            SET     frequency = ?
+                                            WHERE   issue_id = ?
+                                    ") or die(mysqli_error($db));
+                                    mysqli_stmt_bind_param($stmt, "si", $frequency, $id) or die(mysqli_error($db));
+                                    mysqli_stmt_execute($stmt) or die(mysqli_error($db));
+                                    mysqli_stmt_close($stmt);
+                                } else {
+                                    echo "<div class='alert alert-danger'>Uw herhalingsniveau komt niet overeen met de opties</div>";
+                                }
+                            }
                             echo "<div class='alert alert-success'>Uw issue is succesvol aangepast</div>";
                         } else {
                             echo "<div class='alert alert-danger'>Uw sub-categorie komt niet overeen met de opties</div>";
@@ -47,39 +86,33 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
         }
 
         $sql = "
-            SELECT  issue_id,
-                    priority,
-                    category,
-                    sub_category,
-                    title,
-                    `description`,
-                    `created_at`,
-                    frequency,
-                    `status`,
-                    appendex_url,
-                    issue_action 
+            SELECT  issue.issue_id,
+                    issue.priority,
+                    issue.category,
+                    issue.sub_category,
+                    issue.title,
+                    issue.`description`,
+                    issue.`created_at`,
+                    issue.frequency,
+                    issue.`status`,
+                    issue.appendex_url,
+                    issue.issue_action,
+                    issue.company_id,
+                    company.name,
+                    user.name,
+                    issue.result
             FROM    issue
+            INNER JOIN user
+            ON issue.user_id = user.user_id
+            LEFT JOIN   company
+            ON  issue.company_id = company.company_id
             WHERE   issue_id = ?
         ";
 
         $stmt = mysqli_prepare($db, $sql) or die(mysqli_error($db));
         mysqli_stmt_bind_param($stmt, "i", $id);
         mysqli_stmt_execute($stmt) or die(mysqli_error($db));
-        mysqli_stmt_bind_result($stmt, $issue_id, $priority, $category, $subCat, $title, $description, $created_at, $frequency, $status, $appendex, $issue_action);
-        mysqli_stmt_fetch($stmt);
-        mysqli_stmt_close($stmt);
-
-        $sql = "
-            SELECT  `name`
-            FROM    user
-            WHERE   `user_id` = ?
-        ";
-
-        $stmt = mysqli_prepare($db, $sql) or die(mysqli_error($db));
-
-        mysqli_stmt_bind_param($stmt, "i", $_SESSION['userId']);
-        mysqli_stmt_execute($stmt) or die(mysqli_error($db));
-        mysqli_stmt_bind_result($stmt, $name);
+        mysqli_stmt_bind_result($stmt, $issue_id, $priority, $category, $subCat, $title, $description, $created_at, $frequency, $status, $appendex, $issue_action, $companyId, $companyName, $name, $result);
         mysqli_stmt_fetch($stmt);
         mysqli_stmt_close($stmt);
 
@@ -93,10 +126,10 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                                 if (makeFolder($id, "../assets/issueFiles/")) {
                                     if (!checkFileExist("../assets/issueFiles/" . $id . "/", $_FILES["b_file"]["name"])) {
                                         uploadMessage($db, $_SESSION['userId'], $issue_message, $id);
-                                        $messageId = mysqli_insert_id($db);
+                                        $messageId = getLastId($db);
                                         uploadActionIssue($db, $id, $action_point);
                                         if ($issue_action != $action_point) {
-                                            insertStatus($db, $_SESSION['userId'], $id, $action_point);
+                                            updateIssueAction($db, $_SESSION['userId'], $id, $action_point);
                                         }
                                         if (uploadFile($db, "b_file", "message", "appendex_url", "message_id", $messageId, "../assets/issueFiles/" . $id . "/")) {
                                         } else {
@@ -114,10 +147,10 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                         }
                     } else {
                         uploadMessage($db, $_SESSION['userId'], $issue_message, $id);
-                        $messageId = mysqli_insert_id($db);
+                        $messageId = getLastId($db);
                         uploadActionIssue($db, $id, $action_point);
                         if ($issue_action != $action_point) {
-                            insertStatus($db, $_SESSION['userId'], $id, $action_point);
+                            updateIssueAction($db, $_SESSION['userId'], $id, $action_point);
                         }
                     }
                 } else {
@@ -136,7 +169,8 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                     <div class="row mt-2 mb-2">
                         <div class="col-lg-10">
                             <h2 class="m-0">Id #<?= $issue_id; ?> | <?= $title; ?> | <?= date("d-m-Y", strtotime($created_at)) ?> </h2>
-                            <h4 class="m-0"><?= $description; ?></h4>
+                            <p><b>Omschrijving: </b><?= $description; ?></p>
+                            <p><b>Gewenst Resultaat: </b><?= $result; ?></p>
                         </div>
                         <div class="col-lg-2 my-auto text-right">
                             <?php
@@ -145,7 +179,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                                 <form id="editForm" class="d-inline" action="<?= htmlentities($_SERVER['PHP_SELF']) ?>?id=<?= $id ?>" method="POST">
                                     <button class="btn d-inline btn-primary" name="updateIssue" type="submit"><span class="material-icons align-middle">done</span></button>
                                 </form>
-                                
+
                             <?php
                             }
                             if ($_SESSION["accountType"] == 3) {
@@ -160,7 +194,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                     <div class="row">
                         <div class="col-lg-6">
 
-                            <table class="t_detail_table">
+                            <table class="t_detail_table mb-3">
                                 <tbody class="t_detail_tbody">
                                     <tr>
                                         <td class="text-left td-left">Status:</td>
@@ -170,7 +204,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                                             ?>
                                                 <select name="issueStatus" class="form-control" form="editForm">
                                                     <option value="1" <?= ($status == 1 ? "selected" : "") ?>>Nieuw</option>
-                                                    <option value="2" <?= ($status == 2 ? "selected" : "") ?>>Bezig</option>
+                                                    <option value="2" <?= ($status == 2 ? "selected" : "") ?>>In behandeling</option>
                                                     <option value="3" <?= ($status == 3 ? "selected" : "") ?>>On hold</option>
                                                     <option value="4" <?= ($status == 4 ? "selected" : "") ?>>Gesloten</option>
                                                 </select>
@@ -203,6 +237,30 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                                             ?>
                                         </td>
                                     </tr>
+                                    <?php if ($category == "Dienst/service" && $_SESSION['accountType'] == 2 || $category == "Dienst/service" && $_SESSION['accountType'] == 3 || $category == "Dienst/service" && $_SESSION['accountType'] == 4) { ?>
+                                        <tr>
+                                            <td class="text-left td-left">Herhaling:</td>
+                                            <td class="td-right text-right">
+                                                <?php
+                                                if (isset($_GET['edit']) && $_SESSION["accountType"] == 3 || isset($_GET['edit']) && $_SESSION['accountType'] == 4) {
+                                                ?>
+                                                    <select name="issueFreq" class="form-control" form="editForm">
+                                                        <option value="N.V.T" <?= ($frequency == "N.V.T" ? "selected" : "") ?>>N.V.T</option>
+                                                        <option value="Dagelijks" <?= ($frequency == "Dagelijks" ? "selected" : "") ?>>Dagelijks</option>
+                                                        <option value="Wekelijks" <?= ($frequency == "Wekelijks" ? "selected" : "") ?>>Wekelijks</option>
+                                                        <option value="Maandelijks" <?= ($frequency == "Maandelijks" ? "selected" : "") ?>>Maandelijks</option>
+                                                        <option value="Jaarlijks" <?= ($frequency == "Jaarlijks" ? "selected" : "") ?>>Jaarlijks</option>
+                                                    </select>
+                                                <?php
+                                                } else {
+                                                ?>
+                                                    <?= $frequency; ?>
+                                                <?php
+                                                }
+                                                ?>
+                                            </td>
+                                        </tr>
+                                    <?php } ?>
                                     <tr>
                                         <td class="text-left td-left">Categorie:</td>
                                         <td class="td-right text-right">
@@ -248,6 +306,16 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                                         </td>
                                     </tr>
                                     <?php
+                                    if ($companyId != NULL) {
+                                    ?>
+                                        <tr>
+                                            <td class="text-left td-left">Bedrijf:</td>
+                                            <td class="td-right text-right">
+                                                <?= $companyName; ?>
+                                            </td>
+                                        </tr>
+                                    <?php
+                                    }
                                     if ($appendex != NULL) {
                                     ?>
                                         <tr>
@@ -271,21 +339,32 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                                     </div>
                                     <?= getMessage($db, $id); ?>
                                 </div>
-                                <div class="col-lg-12 ticket-form">
-                                    <form method="post" action="<?= htmlspecialchars($_SERVER["PHP_SELF"]) ?>?id=<?= $id ?>" enctype="multipart/form-data">
-                                        <input type='radio' id='c_action' name='action_point' value='2' <?= (issueActionCheck(getActionIssue($db, $id)) == "bottomup") ? 'checked="checked"' : ''; ?> />
-                                        <label for='c_action'>Actie Bottom up</label>
-                                        <input type='radio' id='b_action' name='action_point' value='1' <?= (issueActionCheck(getActionIssue($db, $id)) == "klant") ? 'checked="checked"' : ''; ?> />
-                                        <label for='b_action'>Actie klant</label>
-                                        <textarea class="t_area" name="issue_message" placeholder="Uw bericht"></textarea>
-                                        <label for="customFile">Bestand</label>
-                                        <div class="custom-file">
-                                            <input type="file" name="b_file" title="Kies uw profielfoto" class="custom-file-input" id="customFile">
-                                            <label class="custom-file-label" for="customFile">Kies Bestand</label>
-                                        </div>
-                                        <input type="submit" class="upload_message" name="upload_message" value="Versturen" />
-                                    </form>
-                                </div>
+                                <?php if ($status != 4) {
+                                ?>
+                                    <div class="col-lg-12 ticket-form">
+                                        <form method="post" action="<?= htmlspecialchars($_SERVER["PHP_SELF"]) ?>?id=<?= $id ?>" enctype="multipart/form-data">
+                                            <input type='radio' id='c_action' name='action_point' value='2' <?= (issueActionCheck(getActionIssue($db, $id)) == "Bottom Up") ? 'checked="checked"' : ''; ?> />
+                                            <label for='c_action'>Actie Bottom up</label>
+                                            <input type='radio' id='b_action' name='action_point' value='1' <?= (issueActionCheck(getActionIssue($db, $id)) == "Klant") ? 'checked="checked"' : ''; ?> />
+                                            <label for='b_action'>Actie klant</label>
+                                            <textarea class="t_area" name="issue_message" placeholder="Uw bericht"></textarea>
+                                            <label for="customFile">Bestand</label>
+                                            <div class="custom-file">
+                                                <input type="file" name="b_file" title="Kies uw profielfoto" class="custom-file-input" id="customFile">
+                                                <label class="custom-file-label" for="customFile">Kies Bestand</label>
+                                            </div>
+                                            <input type="submit" class="upload_message" name="upload_message" value="Versturen" />
+                                        </form>
+                                    </div>
+                                <?php
+                                } else {
+                                ?>
+                                    <div class="col-lg-12">
+                                        <p><b>De issue is gesloten u kunt geen berichten meer plaatsen. Mocht u achteraf nog vragen hebben verzoeken wij u om een nieuwe issue aan te maken.</b></p>
+                                    </div>
+                                <?php
+                                }
+                                ?>
                             </div>
                         </div>
                     </div>
@@ -293,12 +372,19 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
             </div>
         </div>
         <script>
-            $(document).ready(function(){
-                $("#test").on("change", function(){
+            $(document).ready(function() {
+                $("#test").on("change", function() {
                     let form = $("#editForm");
                     form.find("button[type=submit]").click();
                 })
             })
+            Fancybox.bind('[data-fancybox="gallery"]', {
+                caption: function(fancybox, carousel, slide) {
+                    return (
+                        `${slide.index + 1} / ${carousel.slides.length} <br />` + slide.caption
+                    );
+                },
+            });
         </script>
         <!-- Footer include -->
 

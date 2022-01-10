@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.0.1
+-- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Gegenereerd op: 23 dec 2021 om 12:11
--- Serverversie: 10.3.16-MariaDB
--- PHP-versie: 7.3.7
+-- Gegenereerd op: 10 jan 2022 om 11:24
+-- Serverversie: 10.4.20-MariaDB
+-- PHP-versie: 8.0.9
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -102,9 +101,10 @@ CREATE TABLE `issue` (
 --
 
 INSERT INTO `issue` (`issue_id`, `user_id`, `company_id`, `priority`, `category`, `sub_category`, `title`, `description`, `result`, `created_at`, `closed_at`, `frequency`, `appendex_url`, `status_timestamp`, `status`, `issue_action`) VALUES
-(1, 1, 1, 1, 'Ticket', 'Klachten', 'Mijn schep is kapot', 'Ik ging 1 keer scheppen en toen ging die kapot', 'Een nieuwe schep', '2021-12-23', NULL, 'N.V.T', NULL, '2021-12-23 10:51:21', 1, NULL),
-(2, 1, 1, 1, 'Dienst/service', 'Vijvers', 'Nieuw vijver', 'Ik wil graag een nieuwe vijver voor in mijn tuin', 'Een nieuwe vijver', '2021-12-23', NULL, 'Dagelijks', NULL, '2021-12-23 10:51:53', 1, NULL),
-(3, 1, 1, 1, 'Product', 'Gereedschap opslag', 'Boormachine', 'Ik wil een nieuwe boormachine', 'nieuwe boormachine', '2021-12-23', NULL, 'N.V.T', NULL, '2021-12-23 10:52:17', 1, NULL);
+(1, 3, 3, 2, 'Ticket', 'Klachten', 'Mijn schep is kapot', 'Ik ging 1 keer scheppen en toen ging die kapot', 'Een nieuwe schep', '2021-12-23', NULL, 'N.V.T', NULL, '2021-12-24 10:36:32', 1, 2),
+(2, 2, 1, 1, 'Dienst/service', 'Vijvers', 'Nieuw vijver', 'Ik wil graag een nieuwe vijver voor in mijn tuin', 'Een nieuwe vijver', '2021-12-23', NULL, 'Dagelijks', NULL, '2021-12-24 10:59:34', 2, 1),
+(3, 4, 1, 1, 'Dienst/service', 'Vijvers', 'Nieuw vijver', 'Ik wil graag een nieuwe vijver voor in mijn tuin', 'Een nieuwe vijver', '2021-12-23', '2021-12-23', 'Weekelijks', NULL, '2021-12-23 10:51:53', 4, NULL),
+(4, 2, 1, 1, 'Product', 'Gereedschap opslag', 'Boormachine', 'Ik wil een nieuwe boormachine', 'nieuwe boormachine', '2021-12-23', NULL, 'N.V.T', NULL, '2021-12-23 10:52:17', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -119,6 +119,13 @@ CREATE TABLE `issue_message` (
   `date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Gegevens worden geëxporteerd voor tabel `issue_message`
+--
+
+INSERT INTO `issue_message` (`id`, `issue_id`, `message_id`, `date`) VALUES
+(46, 1, 46, '2021-12-24 11:38:39');
+
 -- --------------------------------------------------------
 
 --
@@ -132,6 +139,13 @@ CREATE TABLE `message` (
   `message` varchar(100) NOT NULL,
   `appendex_url` varchar(128) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Gegevens worden geëxporteerd voor tabel `message`
+--
+
+INSERT INTO `message` (`message_id`, `user_id`, `date`, `message`, `appendex_url`) VALUES
+(46, 1, '2021-12-24', 'Test bericht ', '../assets/issueFiles/1/Banana.gif');
 
 -- --------------------------------------------------------
 
@@ -162,11 +176,10 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`user_id`, `company_id`, `auth_id`, `profilepicture`, `name`, `postalcode`, `city`, `streetname`, `house_number`, `phone_number`, `email_adres`, `hash_password`, `status`, `passwordForget_token`, `token_expireDate`) VALUES
-(1, 1, 3, NULL, 'admin', '4953PG', 'Emmen', 'Steenstraat', 23, '394394', 'steffanhenrybart@gmail.com', '$2y$10$TvYzf.Zi96CKrO2wt1FyUO42lx8TH0SkBU.ga039chPuZNYuTgCI.', 1, NULL, NULL),
+(1, 1, 3, '../assets/img/pfpic/1/20986040.jpg', 'admin', '4953PG', 'Emmen', 'Steenstraat', 23, '394394', 'test@gmail.com', '$2y$10$TvYzf.Zi96CKrO2wt1FyUO42lx8TH0SkBU.ga039chPuZNYuTgCI.', 1, NULL, NULL),
 (2, 2, 1, NULL, 'Mac Donalds', '9531pg', 'Borger', 'Deksteen', 1, '324435', 'Donald@gmail.com', '$2y$10$LXSLDp3sCREnc3Al1zoHxucFokLTwFTyLEKhUpHl3IE3OkhDBgXba', 0, NULL, NULL),
 (3, 3, 2, NULL, 'fia', '3939PG', 'London', 'Kingstreet', 343, '934939', 'Fia@gmail.com', '$2y$10$7vrIGvKXUS.YbKFUgFP6HOjJlBq4RANJblBbZ9gRXGG2R6yX/K3Ui', 0, NULL, NULL),
-(4, NULL, 0, NULL, 'Andr&eacute;', '9531PG', 'Borger', 'Deksteen', 1, '0611775675', 'Test@gmail.com', '$2y$10$kZHavAjnf.OkwwSUlGMYfuHZVYXWmfcLkWERo2NUtQgPdat3A/Oo2', 1, NULL, NULL),
-(9, 1, 4, NULL, 'Ticketbeheer', '6574AR', 'Amsterdam', 'straatingen', 98, '0623241210', 'koertvanhaan@gmail.com', '$2y$10$vR89oCj3k8/JncKXPTgVuO3sRxfmj6iPW02pUtebAwkmisx2mrfrq', 1, NULL, NULL);
+(4, 1, 4, NULL, 'Ticketbeheer', '6574AR', 'Amsterdam', 'straatingen', 98, '0623241210', 'koertvanhaan@gmail.com', '$2y$10$vR89oCj3k8/JncKXPTgVuO3sRxfmj6iPW02pUtebAwkmisx2mrfrq', 1, NULL, NULL);
 
 --
 -- Indexen voor geëxporteerde tabellen
@@ -233,19 +246,19 @@ ALTER TABLE `company`
 -- AUTO_INCREMENT voor een tabel `issue`
 --
 ALTER TABLE `issue`
-  MODIFY `issue_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `issue_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT voor een tabel `issue_message`
 --
 ALTER TABLE `issue_message`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
 --
 -- AUTO_INCREMENT voor een tabel `message`
 --
 ALTER TABLE `message`
-  MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
 --
 -- AUTO_INCREMENT voor een tabel `user`
