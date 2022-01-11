@@ -330,7 +330,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                                         </td>
                                     </tr>
                                     <?php
-                                    // Showing the company name if the Id is not NULL
+                                    // compare the company name if the Id is not NULL
                                     if ($companyId != NULL) {
                                     ?>
                                         <tr>
@@ -341,7 +341,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                                         </tr>
                                     <?php
                                     }
-                                    // Showing a clickable link for the appendix if the variable is not NULL
+                                    // compere a clickable link for the appendix if the variable is not NULL
                                     if ($appendex != NULL) {
                                     ?>
                                         <tr>
