@@ -30,6 +30,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                             
                             // Updating the data if the issue details have been changed
                             issueStatusUpdate($db, $_SESSION['userId'], $id, $issueStatus);
+                            notifyPriUser($db, $id, $issuePir);
                             $stmt = mysqli_prepare($db, " 
                                     UPDATE  issue 
                                     SET     priority = ?,
@@ -164,11 +165,12 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                     } else {
                         uploadMessage($db, $_SESSION['userId'], $issue_message, $id);
                         $messageId = getLastId($db);
-                        uploadActionIssue($db, $id, $action_point);
+                        echo notifyAction($db, $id, $action_point, $messageId);
                         // Checking if the actions of the issue & the radio buttons are the same & updating this
                         if ($issue_action != $action_point) {
                             updateIssueAction($db, $_SESSION['userId'], $id, $action_point);
                         }
+                        uploadActionIssue($db, $id, $action_point);
                     }
                 } else {
                     echo "<div class='alert alert-danger'>De optie van actie Bottom Up of Actie Klant is niet ingevuld</div>";
@@ -381,7 +383,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                                                 <input type="file" name="b_file" title="Kies uw profielfoto" class="custom-file-input" id="customFile">
                                                 <label class="custom-file-label" for="customFile">Kies Bestand</label>
                                             </div>
-                                            <input type="submit" class="upload_message" name="upload_message" value="Versturen" />
+                                            <input type="submit" class="upload_message pointer" name="upload_message" value="Versturen" />
                                         </form>
                                     </div>
                                 <?php

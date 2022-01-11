@@ -149,6 +149,64 @@ function updateIssueAction($db, $userId, $issueId, $action)
 
 /**
  * @param: $db: return mysqli object
+ * @param: $issueId: returns id from user
+ * @param: $action: returns id from the issue
+ * @param: $messageId: returns which user has to take action
+ * @return: mail function
+ */
+
+function notifyAction($db, $issueId, $action, $messageId)
+{
+    if ($action == 1) {
+        $stmt = mysqli_prepare($db, " 
+                SELECT  issue.title,
+                        user.name,
+                        user.email_adres,
+                        issue.issue_action
+                FROM issue
+                INNER JOIN user
+                ON user.user_id = issue.user_id
+                WHERE issue_id = ?
+            ") or die(mysqli_error($db));
+            mysqli_stmt_bind_param($stmt, "i", $issueId) or die(mysqli_error($db));
+            mysqli_stmt_execute($stmt) or die(mysqli_error($db));
+            mysqli_stmt_bind_result($stmt, $issueTitle, $userName, $email, $dbAction);
+            mysqli_stmt_fetch($stmt);
+            mysqli_stmt_close($stmt);
+
+            if($dbAction != $action){
+                $stmt = mysqli_prepare($db, " 
+                SELECT  message,
+                        date
+                FROM message
+                WHERE message_id = ?
+                ") or die(mysqli_error($db));
+                mysqli_stmt_bind_param($stmt, "i", $messageId) or die(mysqli_error($db));
+                mysqli_stmt_execute($stmt) or die(mysqli_error($db));
+                mysqli_stmt_bind_result($stmt, $dbMessage, $date);
+                mysqli_stmt_fetch($stmt);
+                mysqli_stmt_close($stmt); 
+                
+                mail(
+                    $email,
+                    "De actie is aangepast",
+                    "<h1>Geachte dhr/mevr {$userName},</h1>
+                    <p>Betreffende de issue: {$issueTitle} </p>
+                    <p>U heeft op ".date('d-m-Y', strtotime($date)) . " een antwoord ontvangen in uw issue met het volgende bericht: </p>
+                    <p>'{$dbMessage}'</p>
+                    <p>De actie van de issue ligt nu bij U.</p>
+                    <br>
+                    <p>Met vriendelijke groet,</p>
+                    <p>Bottom up</p>
+                    ",
+                    MAIL_HEADERS
+                );
+            }
+    }
+}
+
+/**
+ * @param: $db: return mysqli object
  * @param: $userId: returns id from user
  * @param: $issueId: returns id from the url
  * @param: $status: returns int with status
@@ -158,13 +216,18 @@ function updateIssueAction($db, $userId, $issueId, $action)
 function issueStatusUpdate($db, $userId, $issueId, $status)
 {
     $stmt = mysqli_prepare($db, " 
-        SELECT issue.status
+        SELECT issue.status,
+               issue.title,
+               user.name,
+               user.email_adres
         FROM issue
+        INNER JOIN user
+        ON user.user_id = issue.user_id
         WHERE issue_id = ?
     ") or die(mysqli_error($db));
     mysqli_stmt_bind_param($stmt, "i", $issueId) or die(mysqli_error($db));
     mysqli_stmt_execute($stmt) or die(mysqli_error($db));
-    mysqli_stmt_bind_result($stmt, $dbStatus);
+    mysqli_stmt_bind_result($stmt, $dbStatus, $issueTitle, $userName, $email);
     mysqli_stmt_fetch($stmt);
     mysqli_stmt_close($stmt);
     if ($dbStatus != $status) {
@@ -200,9 +263,73 @@ function issueStatusUpdate($db, $userId, $issueId, $status)
 
         linkMessagetoIssue($db, getLastId($db), $issueId);
 
+        mail(
+            $email,
+            "Issue status aangepast",
+            "<h1>Geachte dhr/mevr {$userName},</h1>
+            <p>Betreffende de issue: {$issueTitle} </p>
+            <p>{$message}</p>
+            <br>
+            <p>Met vriendelijke groet,</p>
+            <p>Bottom up</p>
+            ",
+            MAIL_HEADERS
+        );
+
         return true;
     } else {
         return false;
+    }
+}
+
+/**
+ * @param: $db: return mysqli object
+ * @param: $issueId: returns id from the url
+ * @param: $issuePri: returns int with priority
+ */
+
+function notifyPriUser($db, $issueId, $issuePri)
+{
+    $stmt = mysqli_prepare($db, " 
+        SELECT issue.priority,
+               issue.title,
+               user.name,
+               user.email_adres
+        FROM issue
+        INNER JOIN user
+        ON user.user_id = issue.user_id
+        WHERE issue_id = ?
+    ") or die(mysqli_error($db));
+    mysqli_stmt_bind_param($stmt, "i", $issueId) or die(mysqli_error($db));
+    mysqli_stmt_execute($stmt) or die(mysqli_error($db));
+    mysqli_stmt_bind_result($stmt, $dbPri, $issueTitle, $userName, $email);
+    mysqli_stmt_fetch($stmt);
+    mysqli_stmt_close($stmt);
+    if ($dbPri != $issuePri) {
+
+        $message = "Het prioriteitsniveau van uw issue is: ";
+        if ($issuePri == 1) {
+            $message .= "Laag";
+        } else if ($issuePri == 2) {
+            $message .= "Gemiddeld";
+        } else if ($issuePri == 3) {
+            $message .= "Hoog";
+        } else {
+            $message = "U heeft geen geldig prioriteitsniveau aangegeven.";
+        }
+
+        mail(
+            $email,
+            "Issue prioriteit aangepast",
+            "<h1>Geachte dhr/mevr {$userName},</h1>
+            <p>Betreffende de issue: {$issueTitle} </p>
+            <p>{$message}</p>
+            <br>
+            <p>Met vriendelijke groet,</p>
+            <p>Bottom up</p>
+            ",
+            MAIL_HEADERS
+        );
     }
 }
 

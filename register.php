@@ -361,6 +361,7 @@ if (isset($_POST['register'])) {
         </div>
     </div>
     <script>
+        // This function switches between showing and hiding businessforms
         function switchForm(radio) {
             let elements = document.getElementsByClassName('buisness');
             if (radio.value == 0) {
