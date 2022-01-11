@@ -194,7 +194,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                         <div class="col-lg-2 my-auto text-right">
                             <?php
                             // Adding a button to update the issue details after the edit button has been pressed
-                            if (isset($_GET['edit']) && $_SESSION["accountType"] == 3 || $_SESSION['accountType'] == 4) {
+                            if (isset($_GET['edit']) && $_SESSION["accountType"] == 3 || isset($_GET['edit']) && $_SESSION['accountType'] == 4) {
                             ?>
                                 <form id="editForm" class="d-inline" action="<?= htmlentities($_SERVER['PHP_SELF']) ?>?id=<?= $id ?>" method="POST">
                                     <button class="btn d-inline btn-primary" name="updateIssue" type="submit"><span class="material-icons align-middle">done</span></button>
@@ -203,7 +203,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                             <?php
                             }
                             // Checking if the account is a ticket administrator & make a ticket editable
-                            if ($_SESSION["accountType"] == 3) {
+                            if ($_SESSION["accountType"] == 3 || $_SESSION['accountType'] == 4) {
                             ?>
                                 <a href="./issue_detail.php?id=<?= $id ?>&amp;edit=true" class="btn d-inline btn-primary"><span class="material-icons align-middle">edit</span></a>
                             <?php
@@ -222,7 +222,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                                         <td class="td-right text-right">
                                             <?php
                                             // Editing the status of an issue
-                                            if (isset($_GET['edit']) && $_SESSION["accountType"] == 3 || $_SESSION['accountType'] == 4) {
+                                            if (isset($_GET['edit']) && $_SESSION["accountType"] == 3 ||isset($_GET['edit']) && $_SESSION['accountType'] == 4) {
                                             ?>
                                                 <select name="issueStatus" class="form-control" form="editForm">
                                                     <option value="1" <?= ($status == 1 ? "selected" : "") ?>>Nieuw</option>
@@ -244,7 +244,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                                         <td class="td-right text-right">
                                             <?php
                                             // Showing the priority options the editor can choose from
-                                            if (isset($_GET['edit']) && $_SESSION["accountType"] == 3 || $_SESSION['accountType'] == 4) {
+                                            if (isset($_GET['edit']) && $_SESSION["accountType"] == 3 ||isset($_GET['edit']) && $_SESSION['accountType'] == 4) {
                                             ?>
                                                 <select name="issuePir" class="form-control" form="editForm">
                                                     <option value="1" <?= ($priority == 1 ? "selected" : "") ?>>Laag</option>
@@ -290,7 +290,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                                         <td class="td-right text-right">
                                             <?php
                                             // Showing the categories the editor can choose from
-                                            if (isset($_GET['edit']) && $_SESSION["accountType"] == 3 || $_SESSION['accountType'] == 4) {
+                                            if (isset($_GET['edit']) && $_SESSION["accountType"] == 3 || isset($_GET['edit']) && $_SESSION['accountType'] == 4) {
                                             ?>
                                                 <select name="issueCat" class="form-control" form="editForm" id="isCat">
                                                     <option value="Dienst/service" <?= ($category == "Dienst/service" ? "selected" : "") ?>>Dienst / Service</option>
@@ -311,7 +311,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                                         <td class="td-right text-right">
                                             <?php
                                             // Showing the subcategories the editor can choose from
-                                            if (isset($_GET['edit']) && $_SESSION["accountType"] == 3 || $_SESSION['accountType'] == 4) {
+                                            if (isset($_GET['edit']) && $_SESSION["accountType"] == 3 || isset($_GET['edit']) && $_SESSION['accountType'] == 4) {
                                             ?>
                                                 <select name="issueSCat" class="form-control" form="editForm">
                                                     <?= getCatOptions($category, $subCat) ?>
@@ -332,7 +332,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                                         </td>
                                     </tr>
                                     <?php
-                                    // Showing the company name if the Id is not NULL
+                                    // compare the company name if the Id is not NULL
                                     if ($companyId != NULL) {
                                     ?>
                                         <tr>
@@ -343,7 +343,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                                         </tr>
                                     <?php
                                     }
-                                    // Showing a clickable link for the appendix if the variable is not NULL
+                                    // compere a clickable link for the appendix if the variable is not NULL
                                     if ($appendex != NULL) {
                                     ?>
                                         <tr>

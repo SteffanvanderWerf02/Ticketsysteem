@@ -40,7 +40,7 @@ function getLastId($db)
 
 function CheckAcces($loggedIn, $link)
 {
-    if (substr($link, -9) == "index.php" || strpos($link, "password_forget.php") || substr($link, -14) == "Ticketsysteem/") {
+    if (substr($link, -9) == "index.php" || strpos($link, "password_forget.php") || substr($link, -14) == "Ticketsysteem/" || substr($link, -12) == "register.php") {
         return true;
     } else {
         if (!$loggedIn) {

@@ -1,5 +1,6 @@
 <?php
 include_once("./config.php");
+include_once("./components/functions.php");
 include_once("./connection.php");
 // Checking if the register button has been pressed & if the fields have been filled in & filtering 
 if (isset($_POST['register'])) {
