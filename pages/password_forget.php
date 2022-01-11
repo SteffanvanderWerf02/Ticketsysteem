@@ -1,10 +1,8 @@
 <?php
 include_once("../config.php");
+// Adding basic functions
 include_once("../components/functions.php");
 include_once("../connection.php");
-// adding basic functions
-
-
 
 if (isset($_POST['passwordConfirm'])) {
     if (isset($_POST['email']) && $email = filter_input(INPUT_POST, "email", FILTER_VALIDATE_EMAIL)) {
@@ -24,7 +22,7 @@ if (isset($_POST['passwordConfirm'])) {
                         mysqli_stmt_bind_result($stmt, $expireDate);
                         mysqli_stmt_fetch($stmt);
                         mysqli_stmt_close($stmt);
-                        $date_now = date("Y-m-d h:i:s"); // this format is string comparable
+                        $date_now = date("Y-m-d h:i:s"); // This format is string comparable
                         if ($date_now < $expireDate) {
                             if ($password == $repeatPassword) {
                                 $hashPassword = password_hash($password, PASSWORD_DEFAULT);
@@ -62,10 +60,9 @@ if (isset($_POST['passwordConfirm'])) {
     }
 }
 
-
+// Checking if the e-mail address is valid
 if (isset($_POST['generateToken'])) {
     if (isset($_POST['email_adres']) && $email = filter_input(INPUT_POST, "email_adres", FILTER_VALIDATE_EMAIL)) {
-
         $stmt = mysqli_prepare($db, "
             SELECT  user_id,
                     name
@@ -81,15 +78,15 @@ if (isset($_POST['generateToken'])) {
             mysqli_stmt_fetch($stmt);
             mysqli_stmt_close($stmt);
 
-            //Generate a random string.
+            //Generating a random string
             $token = openssl_random_pseudo_bytes(16);
 
-            //Convert the binary data into hexadecimal representation.
+            //Converting the binary data to hexadecimal representation
             $token = bin2hex($token);
             $t = time() + 3600 * 24;
             $expireDate = date("Y-m-d h:m:s", $t);
 
-            // update token into Database
+            // Updating the token in the Database
             $stmt = mysqli_prepare($db, "
             UPDATE user
             SET passwordForget_token = ?,
@@ -100,7 +97,7 @@ if (isset($_POST['generateToken'])) {
             mysqli_stmt_execute($stmt) or die(mysqli_error($db));
             mysqli_stmt_close($stmt);
 
-            // send mail to user to change password
+            // Sending a mail to the user to change their password
             mail(
                 $email,
                 "Wachtwoord veranderen",
@@ -144,6 +141,7 @@ if (isset($_POST['generateToken'])) {
                                     </a>
                                 </div>
                                 <?php
+                                // Giving the option to request a password change
                                 if (!isset($_GET['token'])) {
                                 ?>
                                     <div class="row">
@@ -165,6 +163,7 @@ if (isset($_POST['generateToken'])) {
                                         </div>
                                     </div>
                                 <?php
+                                // Giving the option to change your password
                                 } else {
                                 ?>
                                     <input type="hidden" name="token" value="<?= $_GET["token"] ?>">

@@ -4,7 +4,7 @@ include_once("./components/functions.php");
 include_once("./connection.php");
 
 
-// Delete all session data when logout button is pressed
+// Delete all the session data when the logout button is pressed
 if (isset($_POST['logout'])) {
     session_destroy();
     ?>
@@ -13,9 +13,8 @@ if (isset($_POST['logout'])) {
     </div>
     <?php
 }
-
+// Checking if the username and password are correct & filtering
 if (isset($_POST['login'])) {
-
     if (isset($_POST['username']) && $username = filter_input(INPUT_POST, "username", FILTER_DEFAULT)) {
         if (isset($_POST['password']) && $password = filter_input(INPUT_POST, "password", FILTER_DEFAULT)) {
             $stmt = mysqli_prepare($db, "
@@ -39,7 +38,7 @@ if (isset($_POST['login'])) {
                     if ($companyId == NULL) {
                         $_SESSION["loggedIn"] = true;
                         $_SESSION["userId"] = $userId;
-                        $_SESSION["accountType"] = $authId; // 0 = Particulier account  
+                        $_SESSION["accountType"] = $authId; // 0 = Private Account 
                         $_SESSION["companyId"] = NULL;
                         header("Location: ./pages/ticket_overview.php");                     
                     } else if ($companyId == 1) {
@@ -58,7 +57,7 @@ if (isset($_POST['login'])) {
                                 mysqli_stmt_close($stmt);
                                 $_SESSION["loggedIn"] = true;
                                 $_SESSION["userId"] = $userId;
-                                $_SESSION["accountType"] = $authId; // 2 = Bottom up user
+                                $_SESSION["accountType"] = $authId; // 2 = Bottom Up User
                                 $_SESSION["companyId"] = $companyId;
 
                                 header("Location: ./pages/ticket_overview.php");  
@@ -86,7 +85,7 @@ if (isset($_POST['login'])) {
                                 mysqli_stmt_close($stmt);
                                 $_SESSION["loggedIn"] = true;
                                 $_SESSION["userId"] = $userId;
-                                $_SESSION["accountType"] = $authId; // 1 = Zakelijk account type
+                                $_SESSION["accountType"] = $authId; // 1 = Corporate Account
                                 $_SESSION["companyId"] = $companyId;
 
                                 header("Location: ./pages/ticket_overview.php");

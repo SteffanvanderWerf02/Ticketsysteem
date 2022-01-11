@@ -1,9 +1,11 @@
 <?php
 include_once("../config.php");
+// Adding basic functions
 include_once("../components/functions.php");
 include_once("../connection.php");
 
 
+// Checking if values have been set & filtering them
 if (isset($_POST['submit'])) {
     if (isset($_POST['auth']) && $auth = filter_input(INPUT_POST, "auth", FILTER_SANITIZE_NUMBER_INT)) {
         if (isset($_POST['email']) && $email = filter_input(INPUT_POST, "email", FILTER_VALIDATE_EMAIL)) {
@@ -15,11 +17,11 @@ if (isset($_POST['submit'])) {
                                 if (isset($_POST['housenumber']) && $housenumber = filter_input(INPUT_POST, "housenumber", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
                                     if (isset($_POST['phonenumber']) && $phonenumber = filter_input(INPUT_POST, "phonenumber", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
                                         $stmt = mysqli_prepare($db, "
-                                    SELECT 1
-                                    FROM user
-                                    WHERE name = ?
-                                    AND email_adres = ?
-                                ") or die(mysqli_error($db));
+                                            SELECT 1
+                                            FROM user
+                                            WHERE name = ?
+                                            AND email_adres = ?
+                                        ") or die(mysqli_error($db));
                                         mysqli_stmt_bind_param($stmt, "ss", $username, $email);
                                         mysqli_stmt_execute($stmt) or die(mysqli_error($db));
                                         mysqli_stmt_store_result($stmt) or die(mysqli_error($db));
@@ -92,14 +94,14 @@ if (isset($_POST['submit'])) {
     } else {
         echo "<div class='alert alert-danger'> U heeft de rechten niet correct ingevuld.</div>";
     }
-
+    // Checking if a file has been uploaded
     if (checkIfFile("pfp")) {
         if (checkFileSize("pfp")) {
             if (checkFileType("pfp", $acceptedFileTypesPP)) {
                 if (makeFolder($lastUserId, "../assets/img/pfpic/")) {
                     if (!checkFileExist("../assets/img/pfpic/" . $lastUserId . "/", $_FILES["pfp"]["name"])) {
                         if (deleteFile("../assets/img/pfpic/" . $lastUserId . "/")) {
-                            //for mac
+                            // For Mac
                             if (OS) {
                                 if (uploadFile($db, "pfp", "user", "profilepicture", "user_id", $lastUserId, "/assets/img/pfpic/" . $lastUserId . "/")) {
                                     echo "<div class='alert alert-success'>Uw profielfoto is succesvol geüpload</div>";
@@ -107,7 +109,7 @@ if (isset($_POST['submit'])) {
                                     echo "<div class='alert alert-danger'>Uw profielfoto is niet toegevoegd, probeer het opnieuw</div>";
                                 }
                             } else {
-                                //for windwos
+                                // For Windows
                                 if (uploadFile($db, "pfp", "user", "profilepicture", "user_id", $lastUserId, "../assets/img/pfpic/" . $lastUserId . "/")) {
                                     echo "<div class='alert alert-success'>Uw profielfoto is succesvol geüpload</div>";
                                 } else {

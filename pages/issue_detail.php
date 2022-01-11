@@ -1,8 +1,10 @@
 <?php
 include_once("../config.php");
+// Adding basic functions
 include_once("../components/functions.php");
 include_once("../connection.php");
 
+// Filtering the Id
 if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
 ?>
     <!DOCTYPE html>
@@ -18,11 +20,15 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
 
     <body>
         <?php
+
+        // Checking if the issue details have been changed
         if (isset($_POST['updateIssue'])) {
             if (isset($_POST['issueStatus']) && $issueStatus = filter_input(INPUT_POST, 'issueStatus', FILTER_SANITIZE_NUMBER_INT)) {
                 if (isset($_POST['issuePir']) && $issuePir = filter_input(INPUT_POST, 'issuePir', FILTER_SANITIZE_NUMBER_INT)) {
                     if (isset($_POST['issueCat']) && $issueCat = filter_input(INPUT_POST, 'issueCat', FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
                         if (isset($_POST['issueSCat']) && $issueSCat = filter_input(INPUT_POST, 'issueSCat', FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
+                            
+                            // Updating the data if the issue details have been changed
                             issueStatusUpdate($db, $_SESSION['userId'], $id, $issueStatus);
                             $stmt = mysqli_prepare($db, " 
                                     UPDATE  issue 
@@ -35,8 +41,9 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                             mysqli_stmt_bind_param($stmt, "iissi", $issuePir, $issueStatus, $issueCat, $issueSCat, $id) or die(mysqli_error($db));
                             mysqli_stmt_execute($stmt) or die(mysqli_error($db));
                             mysqli_stmt_close($stmt);
-
-                            if ($issueStatus == 4) {
+                            
+                            // Closing the issue
+                            if($issueStatus == 4) {
                                 $stmt = mysqli_prepare($db, " 
                                         UPDATE  issue 
                                         SET     closed_at = NOW()
@@ -56,6 +63,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                                 mysqli_stmt_close($stmt);
                             }
 
+                            //Updating the frequency of an issue & filtering
                             if ($issueCat == "Dienst/service" && $_SESSION['accountType'] == 3 || $issueCat == "Dienst/service" && $_SESSION['accountType'] == 4) {
                                 if ($frequency = filter_input(INPUT_POST, 'issueFreq', FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
                                     $stmt = mysqli_prepare($db, " 
@@ -116,21 +124,29 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
         mysqli_stmt_fetch($stmt);
         mysqli_stmt_close($stmt);
 
+        // Checking if the button has been pressed & filtering
         if (isset($_POST['upload_message'])) {
             if (!empty($_POST['issue_message']) && $issue_message = filter_input(INPUT_POST, 'issue_message', FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
                 if (isset($_POST['action_point']) && $action_point = filter_input(INPUT_POST, 'action_point', FILTER_SANITIZE_NUMBER_INT)) {
 
+                    // Checking if the file meets the requirements
                     if (checkIfFile("b_file")) {
                         if (checkFileSize("b_file")) {
                             if (checkFileType("b_file", $acceptedFileTypes)) {
                                 if (makeFolder($id, "../assets/issueFiles/")) {
+
+                                    // Checking if the file already exists
                                     if (!checkFileExist("../assets/issueFiles/" . $id . "/", $_FILES["b_file"]["name"])) {
                                         uploadMessage($db, $_SESSION['userId'], $issue_message, $id);
                                         $messageId = getLastId($db);
                                         uploadActionIssue($db, $id, $action_point);
+                                        
+                                        // Checking if the actions of the issue & the radio buttons are the same & updating this
                                         if ($issue_action != $action_point) {
                                             updateIssueAction($db, $_SESSION['userId'], $id, $action_point);
                                         }
+                                        
+                                        // Uploading the file
                                         if (uploadFile($db, "b_file", "message", "appendex_url", "message_id", $messageId, "../assets/issueFiles/" . $id . "/")) {
                                         } else {
                                             echo "<div class='alert alert-danger'>Uw bijlage is niet toegevoegd, probeer het opnieuw</div>";
@@ -149,6 +165,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                         uploadMessage($db, $_SESSION['userId'], $issue_message, $id);
                         $messageId = getLastId($db);
                         uploadActionIssue($db, $id, $action_point);
+                        // Checking if the actions of the issue & the radio buttons are the same & updating this
                         if ($issue_action != $action_point) {
                             updateIssueAction($db, $_SESSION['userId'], $id, $action_point);
                         }
@@ -174,6 +191,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                         </div>
                         <div class="col-lg-2 my-auto text-right">
                             <?php
+                            // Adding a button to update the issue details after the edit button has been pressed
                             if (isset($_GET['edit']) && $_SESSION["accountType"] == 3 || isset($_GET['edit']) && $_SESSION['accountType'] == 4) {
                             ?>
                                 <form id="editForm" class="d-inline" action="<?= htmlentities($_SERVER['PHP_SELF']) ?>?id=<?= $id ?>" method="POST">
@@ -182,6 +200,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
 
                             <?php
                             }
+                            // Checking if the account is a ticket administrator & make a ticket editable
                             if ($_SESSION["accountType"] == 3 || $_SESSION['accountType'] == 4) {
                             ?>
                                 <a href="./issue_detail.php?id=<?= $id ?>&amp;edit=true" class="btn d-inline btn-primary"><span class="material-icons align-middle">edit</span></a>
@@ -200,6 +219,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                                         <td class="text-left td-left">Status:</td>
                                         <td class="td-right text-right">
                                             <?php
+                                            // Editing the status of an issue
                                             if (isset($_GET['edit']) && $_SESSION["accountType"] == 3 ||isset($_GET['edit']) && $_SESSION['accountType'] == 4) {
                                             ?>
                                                 <select name="issueStatus" class="form-control" form="editForm">
@@ -221,6 +241,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                                         <td class="text-left td-left">Prioriteit:</td>
                                         <td class="td-right text-right">
                                             <?php
+                                            // Showing the priority options the editor can choose from
                                             if (isset($_GET['edit']) && $_SESSION["accountType"] == 3 ||isset($_GET['edit']) && $_SESSION['accountType'] == 4) {
                                             ?>
                                                 <select name="issuePir" class="form-control" form="editForm">
@@ -242,6 +263,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                                             <td class="text-left td-left">Herhaling:</td>
                                             <td class="td-right text-right">
                                                 <?php
+                                                // Showing the frequencies the editor can choose from
                                                 if (isset($_GET['edit']) && $_SESSION["accountType"] == 3 || isset($_GET['edit']) && $_SESSION['accountType'] == 4) {
                                                 ?>
                                                     <select name="issueFreq" class="form-control" form="editForm">
@@ -265,9 +287,10 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                                         <td class="text-left td-left">Categorie:</td>
                                         <td class="td-right text-right">
                                             <?php
+                                            // Showing the categories the editor can choose from
                                             if (isset($_GET['edit']) && $_SESSION["accountType"] == 3 || isset($_GET['edit']) && $_SESSION['accountType'] == 4) {
                                             ?>
-                                                <select name="issueCat" class="form-control" form="editForm" id="test">
+                                                <select name="issueCat" class="form-control" form="editForm" id="isCat">
                                                     <option value="Dienst/service" <?= ($category == "Dienst/service" ? "selected" : "") ?>>Dienst / Service</option>
                                                     <option value="Ticket" <?= ($category == "Ticket" ? "selected" : "") ?>>Ticket</option>
                                                     <option value="Product" <?= ($category == "Product" ? "selected" : "") ?>>Product</option>
@@ -282,9 +305,10 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="text-left td-left">Sub categorie:</td>
+                                        <td class="text-left td-left">Subcategorie:</td>
                                         <td class="td-right text-right">
                                             <?php
+                                            // Showing the subcategories the editor can choose from
                                             if (isset($_GET['edit']) && $_SESSION["accountType"] == 3 || isset($_GET['edit']) && $_SESSION['accountType'] == 4) {
                                             ?>
                                                 <select name="issueSCat" class="form-control" form="editForm">
@@ -306,6 +330,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                                         </td>
                                     </tr>
                                     <?php
+                                    // Showing the company name if the Id is not NULL
                                     if ($companyId != NULL) {
                                     ?>
                                         <tr>
@@ -316,6 +341,7 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                                         </tr>
                                     <?php
                                     }
+                                    // Showing a clickable link for the appendix if the variable is not NULL
                                     if ($appendex != NULL) {
                                     ?>
                                         <tr>
@@ -339,7 +365,9 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
                                     </div>
                                     <?= getMessage($db, $id); ?>
                                 </div>
-                                <?php if ($status != 4) {
+                                <?php 
+                                // Checking which side has to take the next action in an issue if the ticket is still opened
+                                if ($status != 4) {
                                 ?>
                                     <div class="col-lg-12 ticket-form">
                                         <form method="post" action="<?= htmlspecialchars($_SERVER["PHP_SELF"]) ?>?id=<?= $id ?>" enctype="multipart/form-data">
@@ -372,12 +400,15 @@ if ($id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT)) {
             </div>
         </div>
         <script>
+            // On change isCat will submit editForm
             $(document).ready(function() {
-                $("#test").on("change", function() {
+                $("#isCat").on("change", function() {
                     let form = $("#editForm");
                     form.find("button[type=submit]").click();
                 })
             })
+
+            // All images with the data attribute 'data-fancybox="gallery"' will have the function carousel from Fancybox
             Fancybox.bind('[data-fancybox="gallery"]', {
                 caption: function(fancybox, carousel, slide) {
                     return (

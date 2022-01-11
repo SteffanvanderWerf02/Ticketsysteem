@@ -1,6 +1,6 @@
 <?php
 include_once("../config.php");
-// adding basic functions
+// Adding basic functions
 require_once("../components/functions.php");
 include_once("../connection.php");
 
@@ -28,11 +28,12 @@ include_once("../connection.php");
         mysqli_stmt_store_result($stmt) or die(mysqli_error($db));
         mysqli_stmt_bind_result($stmt, $email, $name);
 
-        if (mysqli_stmt_num_rows($stmt) > 0) { //check if there is an company with that Id
+        // Checking if there is a company with that Id
+        if (mysqli_stmt_num_rows($stmt) > 0) { 
             mysqli_stmt_fetch($stmt);
             mysqli_stmt_close($stmt);
 
-            // updates the status from company to active
+            // Updating the status from company to active
             $stmt = mysqli_prepare($db, "
                 UPDATE  company
                 SET     status = 1
@@ -42,7 +43,7 @@ include_once("../connection.php");
             mysqli_stmt_execute($stmt) or die(mysqli_error($db));
             mysqli_stmt_close($stmt);
 
-            // send mail to company that account is activated
+            // Sending a mail to the company that the account has been activated
             mail(
                 $email,
                 "Zakelijk bedrijf geactiveerd",
@@ -66,12 +67,12 @@ include_once("../connection.php");
         mysqli_stmt_store_result($stmt) or die(mysqli_error($db));
         mysqli_stmt_bind_result($stmt, $userEmail, $username);
 
-        //check if there is an user with that Id
+        // Checking if there is an user with that Id
         if (mysqli_stmt_num_rows($stmt) > 0) { 
             mysqli_stmt_fetch($stmt);
             mysqli_stmt_close($stmt);
 
-            // updates the status from user acount(s) from the activated company
+            // Updating the status from user acount(s) from the registered company
             $stmt = mysqli_prepare($db, "
                 UPDATE  user
                 SET     status = 1
@@ -81,7 +82,7 @@ include_once("../connection.php");
             mysqli_stmt_execute($stmt) or die(mysqli_error($db));
             mysqli_stmt_close($stmt);
 
-            // send mail to user that account is activated
+            // Sending a mail to the user that the account has been activated
             mail(
                 $userEmail,
                 "Uw account is geactiveerd",
@@ -115,12 +116,12 @@ include_once("../connection.php");
         mysqli_stmt_store_result($stmt) or die(mysqli_error($db));
         mysqli_stmt_bind_result($stmt, $email, $name);
 
-        //check if there is an company with that Id
+        // Checking if there is a company with that Id
         if (mysqli_stmt_num_rows($stmt) > 0) { 
             mysqli_stmt_fetch($stmt);
             mysqli_stmt_close($stmt);
 
-            // Delete the denied company
+            // Deleting the denied company
             $stmt = mysqli_prepare($db, "
                 DELETE FROM company
                 WHERE company_id = ?
@@ -129,7 +130,7 @@ include_once("../connection.php");
             mysqli_stmt_execute($stmt) or die(mysqli_error($db));
             mysqli_stmt_close($stmt);
 
-             // send mail to company that account is deleted and not activated
+             // Sending a mail to the company that the account has been deleted and not activated
              mail(
                 $email,
                 "Zakelijk bedrijf afgekeurd",
@@ -160,12 +161,12 @@ include_once("../connection.php");
         mysqli_stmt_store_result($stmt) or die(mysqli_error($db));
         mysqli_stmt_bind_result($stmt, $userEmail, $username);
         
-        //check if there is an user with that Id
+        // Checking if there is an user with that Id
         if (mysqli_stmt_num_rows($stmt) > 0) { 
             mysqli_stmt_fetch($stmt);
             mysqli_stmt_close($stmt);
             
-            // updates the status from user acount(s) from the activated company
+            // Updating the status from user acount(s) from the registered company
             $stmt = mysqli_prepare($db, "
                 DELETE FROM user
                 WHERE company_id = ?
@@ -174,7 +175,7 @@ include_once("../connection.php");
             mysqli_stmt_execute($stmt) or die(mysqli_error($db));
             mysqli_stmt_close($stmt);
 
-            // send mail to user that account is not activated and deleted
+            // Sending a mail to the user that the account has not been activated and has been deleted
             mail(
                 $userEmail,
                 "Uw account is niet goedgekeurd",

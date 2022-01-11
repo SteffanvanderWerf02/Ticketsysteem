@@ -1,13 +1,17 @@
-<?php include_once("../config.php"); ?>
-<?php include_once("../components/functions.php");
+<?php 
+include_once("../config.php");
+// Adding basic functions
+include_once("../components/functions.php");
 include_once("../connection.php");
 
+// Checking if there are any search requests to filter on
 if (isset($_GET['filter'])) {
     $filter = filter_input(INPUT_GET, "filter", FILTER_SANITIZE_NUMBER_INT);
 } else {
     $filter = NULL;
 }
 
+// Filtering the tickets by the values from the search request
 if (isset($_GET['submit'])) {
     $ticket_id = filter_input(INPUT_GET, "ticket_id", FILTER_SANITIZE_SPECIAL_CHARS);
     $ticket_title = filter_input(INPUT_GET, "ticket_title", FILTER_SANITIZE_SPECIAL_CHARS);
@@ -86,6 +90,7 @@ if (isset($_GET['submit'])) {
             <div class="col-lg-11">
                 <?php echo getIssueOverview($db, $_SESSION['companyId'], $_SESSION['userId'], "product", $filter, $ticket_id, $ticket_title); ?>
                 <script>
+                    // When clicked on the object with the class action, the user will be redirected to the ticket detail page
                     $(document).ready(function($) {
                         $(".action").click(function() {
                             window.location = $(this).data("href");

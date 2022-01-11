@@ -1,6 +1,7 @@
 <?php
 include_once("./config.php");
 include_once("./connection.php");
+// Checking if the register button has been pressed & if the fields have been filled in & filtering 
 if (isset($_POST['register'])) {
     if (isset($_POST['account']) && $acountType = filter_input(INPUT_POST, "account", FILTER_SANITIZE_NUMBER_INT)) {
         if ($acountType == 1) {
@@ -12,11 +13,11 @@ if (isset($_POST['register'])) {
                     echo "<div class='alert alert-danger'>Uw kvk nummer bevat letters in plaats van cijfers</div>";
                 }
             } else {
-                echo "<div class='alert alert-danger'>De naam van uw bedrijf bevat speciale tekens die niet zijn toegestaan.</div>";
+                echo "<div class='alert alert-danger'>De naam van uw bedrijf bevat speciale tekens die niet zijn toegestaan</div>";
             }
         }
     }
-
+    // Checking if the input fields have been filled in & filtering
     if (isset($_POST['email']) && $email = filter_input(INPUT_POST, "email", FILTER_VALIDATE_EMAIL)) {
         if (isset($_POST['username']) && $username = filter_input(INPUT_POST, "username", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
             if (isset($_POST['password']) && $password = filter_input(INPUT_POST, "password", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
@@ -64,7 +65,7 @@ if (isset($_POST['register'])) {
                                                 if (mysqli_stmt_num_rows($stmt) == 0) {
                                                     mysqli_stmt_close($stmt);
                                                     
-                                                    // added company
+                                                    // Adding a company in the database
                                                     $stmt = mysqli_prepare($db, "
                                                         INSERT
                                                         INTO company 
@@ -97,7 +98,7 @@ if (isset($_POST['register'])) {
                                                     mysqli_stmt_store_result($stmt) or die(mysqli_error($db));
                                                     mysqli_stmt_close($stmt);
 
-                                                    // added user
+                                                    // Adding a user in the database
                                                     $companyStmt = mysqli_prepare($db, "
                                                         SELECT company_id
                                                         FROM company
@@ -312,7 +313,7 @@ if (isset($_POST['register'])) {
                                 <div class="row mb-2">
                                     <div class="col-lg-12">
                                         <label for="phonenumber">
-                                            Telefoon nummer
+                                            Telefoonnummer
                                         </label>
                                     </div>
                                     <div class="col-lg-12">
