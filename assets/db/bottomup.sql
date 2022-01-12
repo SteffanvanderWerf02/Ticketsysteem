@@ -41,7 +41,7 @@ INSERT INTO `authentication` (`auth_id`, `name`, `description`) VALUES
 (1, 'particulier', 'de particulieren klant'),
 (2, 'zakelijk account', 'de zakelijke klant/medewerker'),
 (3, 'Beheerder', 'De beheerder van het systeem'),
-(4, 'Ticketmaster', 'De ticket beheerder van het systeem');
+(4, 'Issuemaster', 'De issue beheerder van het systeem');
 
 -- --------------------------------------------------------
 
