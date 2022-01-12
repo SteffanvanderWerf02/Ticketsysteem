@@ -21,6 +21,7 @@ include_once("../connection.php");
                             <h1 class="error-title">403</h1>
                             <h3>Forbidden</h3>
                             <p>U heeft geen toegang deze server</p>
+                            <a  class="dec-underline" href="../index.php"><span class="material-icons align-middle">login</span> Klik hier om in te loggen</a>
                         </div>
                     </div>
                 </div>
