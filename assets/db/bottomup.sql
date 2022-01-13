@@ -199,7 +199,7 @@ CREATE TABLE `user` (
 
 INSERT INTO `user` (`user_id`, `company_id`, `auth_id`, `profilepicture`, `name`, `postalcode`, `city`, `streetname`, `house_number`, `phone_number`, `email_adres`, `hash_password`, `status`, `passwordForget_token`, `token_expireDate`) VALUES
 (1, 1, 3, '../assets/img/pfpic/1/20986040.jpg', 'Beheer', '4953PG', 'Emmen', 'Steenstraat', 23, '394394', 'Steffan.van.der.werf@student.nhlstenden.com', '$2y$10$mjHDMve0IZArJEIDurvNtOLN16iRdStIOBHl8yvdomJ2olGtxXUxS', 1, NULL, NULL),
-(4, 1, 4, NULL, 'Ticketbeheer', '6574AR', 'Amsterdam', 'straatingen', 98, '0623241210', 'Steffan.van.der.werf@student.nhlstenden.com', '$2y$10$mjHDMve0IZArJEIDurvNtOLN16iRdStIOBHl8yvdomJ2olGtxXUxS', 1, NULL, NULL),
+(4, 1, 4, NULL, 'Issuebeheer', '6574AR', 'Amsterdam', 'straatingen', 98, '0623241210', 'Steffan.van.der.werf@student.nhlstenden.com', '$2y$10$mjHDMve0IZArJEIDurvNtOLN16iRdStIOBHl8yvdomJ2olGtxXUxS', 1, NULL, NULL),
 (10, NULL, 0, NULL, 'Henk', '9394PE', 'Emmen', 'Wilaministraat', 112, '394349', 'Steffanhenrybart@gmail.com', '$2y$10$.LkHAPxs3eINDnYNafbwfet6Ts4yRZ1HHF3ViD4yPY6f2Cz9WV9Rm', 1, NULL, NULL),
 (11, 4, 2, NULL, 'Nhl Stenden', '3421TH', 'Emmen', 'Pindakaasstraat', 33, '49604059', 'test@gmail.com', '$2y$10$SH7itHprzSP.xMQm9fpD1O6xz66KXDUzjYe4t7OajPl1u5Phz/PcK', 0, NULL, NULL),
 (12, 5, 2, NULL, 'Test bedrijf', '9531PG', 'Borger', 'Deksteen', 1, '0611775675', 'Test2343@gmail.com', '$2y$10$O.zmr5ypSJxMd6Fmahf7/ew7yj1lxfOoBPwRmYa7vjyp72PcL5yDW', 0, NULL, NULL);
