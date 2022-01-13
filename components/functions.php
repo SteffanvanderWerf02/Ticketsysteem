@@ -596,9 +596,9 @@ function getIssueOverview($db, $companyId, $userId, $issueType, $filterStatus, $
         }
     } else {
         if (!empty($searchTitle) || !empty($searchId)) {
-            $return .= "<td colspan='10'>U heeft momenteel geen nieuwe {$issueType} aanvragen of u filter heeft geen resultaten opgeleverd</td>";
+            $return .= "<td colspan='11'>U heeft momenteel geen nieuwe {$issueType} aanvragen of u filter heeft geen resultaten opgeleverd</td>";
         } else {
-            $return .= "<td colspan='10'>U heeft momenteel geen nieuwe {$issueType} aanvragen.</td>";
+            $return .= "<td colspan='11'>U heeft momenteel geen nieuwe {$issueType} aanvragen.</td>";
         }
     }
     $return .= "</tbody></table>";
