@@ -168,40 +168,40 @@ function notifyAction($db, $issueId, $action, $messageId)
                 ON user.user_id = issue.user_id
                 WHERE issue_id = ?
             ") or die(mysqli_error($db));
-            mysqli_stmt_bind_param($stmt, "i", $issueId) or die(mysqli_error($db));
-            mysqli_stmt_execute($stmt) or die(mysqli_error($db));
-            mysqli_stmt_bind_result($stmt, $issueTitle, $userName, $email, $dbAction);
-            mysqli_stmt_fetch($stmt);
-            mysqli_stmt_close($stmt);
+        mysqli_stmt_bind_param($stmt, "i", $issueId) or die(mysqli_error($db));
+        mysqli_stmt_execute($stmt) or die(mysqli_error($db));
+        mysqli_stmt_bind_result($stmt, $issueTitle, $userName, $email, $dbAction);
+        mysqli_stmt_fetch($stmt);
+        mysqli_stmt_close($stmt);
 
-            if($dbAction != $action){
-                $stmt = mysqli_prepare($db, " 
+        if ($dbAction != $action) {
+            $stmt = mysqli_prepare($db, " 
                 SELECT  message,
                         date
                 FROM message
                 WHERE message_id = ?
                 ") or die(mysqli_error($db));
-                mysqli_stmt_bind_param($stmt, "i", $messageId) or die(mysqli_error($db));
-                mysqli_stmt_execute($stmt) or die(mysqli_error($db));
-                mysqli_stmt_bind_result($stmt, $dbMessage, $date);
-                mysqli_stmt_fetch($stmt);
-                mysqli_stmt_close($stmt); 
-                
-                mail(
-                    $email,
-                    "De actie is aangepast",
-                    "<h1>Geachte dhr/mevr {$userName},</h1>
+            mysqli_stmt_bind_param($stmt, "i", $messageId) or die(mysqli_error($db));
+            mysqli_stmt_execute($stmt) or die(mysqli_error($db));
+            mysqli_stmt_bind_result($stmt, $dbMessage, $date);
+            mysqli_stmt_fetch($stmt);
+            mysqli_stmt_close($stmt);
+
+            mail(
+                $email,
+                "De actie is aangepast",
+                "<h1>Geachte dhr/mevr {$userName},</h1>
                     <p>Betreffende de issue: {$issueTitle} </p>
-                    <p>U heeft op ".date('d-m-Y', strtotime($date)) . " een antwoord ontvangen in uw issue met het volgende bericht: </p>
+                    <p>U heeft op " . date('d-m-Y', strtotime($date)) . " een antwoord ontvangen in uw issue met het volgende bericht: </p>
                     <p>'{$dbMessage}'</p>
                     <p>De actie van de issue ligt nu bij U.</p>
                     <br>
                     <p>Met vriendelijke groet,</p>
                     <p>Bottom up</p>
                     ",
-                    MAIL_HEADERS
-                );
-            }
+                MAIL_HEADERS
+            );
+        }
     }
 }
 
@@ -360,31 +360,39 @@ function getMessage($db, $issueId)
     mysqli_stmt_execute($stmt) or die(mysqli_error($db));
     mysqli_stmt_bind_result($stmt, $message, $name, $appendex_url, $message_date);
 
-    $return = "";
-    while (mysqli_stmt_fetch($stmt)) {
-        if ($message == "De actie ligt bij: Bottom Up" || $message == "De actie ligt bij: De klant") {
-            $return .= "<div class='col-lg-12 issue_choice'>";
-            $return .= "<span class='d-block text-right mt-1'>" . date("H:i d-m-Y", strtotime($message_date)) . "</span>";
-            $return .= "<p class='action_message'>{$message}</p>";
-            $return .= "</div>";
-        } else if ($message == "De status van uw issue is: Nieuw" || $message == "De status van uw issue is: In behandeling" || $message == "De status van uw issue is: On hold" || $message == "De status van uw issue is: Gesloten") {
-            $return .= "<div class='col-lg-12 issue_choice'>";
-            $return .= "<span class='d-block text-right mt-1'>" . date("H:i d-m-Y", strtotime($message_date)) . "</span>";
-            $return .= "<p class='action_message'>{$message}</p>";
-            $return .= "</div>";
-        } else {
-            $return .= "<div class='col-lg-12 message-view'>";
-            $return .= "<p>" . ucFirst($name) . "<span class='float-right'>" . date("H:i d-m-Y", strtotime($message_date)) . "</span></p>";
-            $return .= "<p class='title-messages'>" . nl2br($message) . "</p>";
-            if ($appendex_url != NULL) {
-                $fileInfo = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $appendex_url);
-                if (in_array($fileInfo, ["image/jpg", "image/jpeg", "image/png", "image/gif"])) {
-                    $return .= "<p class='title-message mt-4'><img data-fancybox='gallery' class='img-appendex pointer' src='{$appendex_url}' alt='bijlagen'></p>";
+    // check if there are messages
+    mysqli_stmt_store_result($stmt);
+    if (mysqli_stmt_num_rows($stmt) > 0) {
+        $return = "";
+        while (mysqli_stmt_fetch($stmt)) {
+            if ($message == "De actie ligt bij: Bottom Up" || $message == "De actie ligt bij: De klant") {
+                $return .= "<div class='col-lg-12 issue_choice'>";
+                $return .= "<span class='d-block text-right mt-1'>" . date("H:i d-m-Y", strtotime($message_date)) . "</span>";
+                $return .= "<p class='action_message'>{$message}</p>";
+                $return .= "</div>";
+            } else if ($message == "De status van uw issue is: Nieuw" || $message == "De status van uw issue is: In behandeling" || $message == "De status van uw issue is: On hold" || $message == "De status van uw issue is: Gesloten") {
+                $return .= "<div class='col-lg-12 issue_choice'>";
+                $return .= "<span class='d-block text-right mt-1'>" . date("H:i d-m-Y", strtotime($message_date)) . "</span>";
+                $return .= "<p class='action_message'>{$message}</p>";
+                $return .= "</div>";
+            } else {
+                $return .= "<div class='col-lg-12 message-view'>";
+                $return .= "<p>" . ucFirst($name) . "<span class='float-right'>" . date("H:i d-m-Y", strtotime($message_date)) . "</span></p>";
+                $return .= "<p class='title-messages'>" . nl2br($message) . "</p>";
+                if ($appendex_url != NULL) {
+                    $fileInfo = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $appendex_url);
+                    if (in_array($fileInfo, ["image/jpg", "image/jpeg", "image/png", "image/gif"])) {
+                        $return .= "<p class='title-message mt-4'><img data-fancybox='gallery' class='img-appendex pointer' src='{$appendex_url}' alt='bijlagen'></p>";
+                    }
+                    $return .= "<p class='title-message'><a target='blank' class='dec-underline' href='{$appendex_url}'>Bijlage Bekijken.</a></p>";
                 }
-                $return .= "<p class='title-message'><a target='blank' class='dec-underline' href='{$appendex_url}'>Bijlage Bekijken.</a></p>";
+                $return .= "</div>";
             }
-            $return .= "</div>";
         }
+    } else {
+        $return = "<div class='col-lg-12 issue_choice'>";
+        $return .= "<p class='action_message'>Er zijn nog geen berichten gevonden.</p>";
+        $return .= "</div>";
     }
     mysqli_stmt_close($stmt);
 
@@ -430,7 +438,6 @@ function issueActionCheck($actionValue)
  * @param: $db: returns mysqli object
  * @param: $issueId: returns the issueId that belongs to the issue in question
  * @param: $issueAction: returns the action which has been chosen for the customer or admin
- * @return: Object: $db, Int: $issueId, Int: $issueAction.
  */
 
 function uploadActionIssue($db, $issueId, $issueAction)
@@ -773,7 +780,7 @@ function uploadFile($db, $file, $tableName, $recordName, $relationId, $Id, $dire
 /**
  * @param: $category string: returns category of issue 
  * @param: $subCat string: returns subcategory of issue
- * @return: returns options for dropdown menu
+ * @return: returns Array options for dropdown menu
  */
 
 function getCatOptions($category, $subCat = "")
